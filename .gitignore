@@ -7,7 +7,6 @@ t"
 *.class
 
 # eclipse specific git ignore
-
 .project
 .metadata
 bin/**
