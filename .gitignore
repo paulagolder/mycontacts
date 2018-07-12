@@ -1,1 +1,24 @@
-/bin/
+t"
+
+*target*
+*.jar
+*.war
+*.ear
+*.class
+
+# eclipse specific git ignore
+
+.project
+.metadata
+bin/**
+tmp/**
+tmp/**/*
+lib/**
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.classpath
+.settings/
+.loadpath
