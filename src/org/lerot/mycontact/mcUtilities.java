@@ -762,5 +762,11 @@ public class mcUtilities
 		    }
 		return true;
 	}
+
+	public static float toFloat(String astring)
+	{
+		float f = Float.parseFloat(astring);
+		return f;
+	}
 	
 }

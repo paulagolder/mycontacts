@@ -157,7 +157,14 @@ public class mcLetter
 	{
 		String name = selcontact.getName("sn fn");
 		name = name.replace(" ", "");
-		String date = mcDateDataType.getNow("_yyyymmdd");
+		String date = mcDateDataType.getNow("_yyyyMMdd");
+		return name + date;
+	}
+	
+	public static String makeFileName(String name)
+	{
+		name = name.replace(" ", "");
+		String date = mcDateDataType.getNow("_yyyyMMdd");
 		return name + date;
 	}
 }

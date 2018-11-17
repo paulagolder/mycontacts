@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 //import java.util.Vector;
 
+import org.apache.commons.lang3.BooleanUtils;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 //import org.apache.commons.lang3.StringEscapeUtils;
@@ -34,36 +35,39 @@ public class mcPDF
 	private static Font smallNormal = new Font(Font.FontFamily.HELVETICA, 10,
 			Font.NORMAL);
 	private static Font selectedfont;
-	private static Map<String, Map<String, String>> labeltemplates = null;
+
 	Document document;
 	PdfWriter writer;
-	PdfContentByte canvas;
-	int a4h = 842;
-	int a4w = 595;
-	private float lm, rm, bm, tm, tw, th;
+	PdfContentByte canvas; //595 × 842 points
+	//int a4h = 842;
+	//int a4w = 595;
+	float a4w = (PageSize.A4).getWidth();
+    float a4h = (PageSize.A4).getHeight();
+	private float lm, rm, bm, tm, tw, th, ch;
 	private String title;
 	private int nrows;
 	private int ncols;
 	private int ncells;
 	private float cellheight;
-	//private float cellwidth;
+
 	private float[] collist;
-	//private float padding;
+
 	private float pb;
 	private float pr;
 	private float pl;
 	private float pt;
 	private boolean rotate;
+	private boolean border;
 	
 
-	public mcPDF(File outfile, String atitle, String layout)
+	public mcPDF(File outfile, String atitle)
 	{
 		title = atitle;
-		if (labeltemplates == null)
+		if (mcdb.labeltemplates == null)
 		{
-			labeltemplates = readTemplates();
+			mcdb.labeltemplates = readTemplates();
 		}
-		setLayout(layout);
+		
 		document = new Document(PageSize.A4, lm, rm, tm, bm);
 		try
 		{
@@ -78,6 +82,8 @@ public class mcPDF
 		document.open();
 		
 	}
+	
+
 
 	private void addMetaData()
 	{
@@ -109,17 +115,22 @@ public class mcPDF
 	{
 		addMetaData();
 		document.newPage();
-
+		document.setMargins(lm, rm, tm, bm);
+		int iborder = 0;
 		int k = 0;
 		int p = 1;
 
 		try
 		{
 			document.newPage();
+		
 			PdfPTable table = new PdfPTable(ncols);
 			table.setTotalWidth(tw);
 			table.setLockedWidth(true);
-			table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
+			if(!border)
+				   table.getDefaultCell().setBorder(iborder);
+				else
+					table.getDefaultCell().setBorder(1);
 
 			table.setWidths(collist);
 			Paragraph p0 = new Paragraph();
@@ -130,7 +141,7 @@ public class mcPDF
 			c0.setPaddingRight(pr);
 			c0.setPaddingTop(pt);
 			c0.setPaddingBottom(pb);
-			c0.setBorder(Rectangle.NO_BORDER);
+			c0.setBorder(iborder);
 			if (startcell > 1)
 			{
 				for (int i = 1; i < startcell; i++)
@@ -150,7 +161,7 @@ public class mcPDF
 				c1.setPaddingRight(pr);
 				c1.setPaddingTop(pt);
 				c1.setPaddingBottom(pb);			 
-				c1.setBorder(Rectangle.NO_BORDER);
+				c1.setBorder(iborder);
 				if (rotate)
 				{
 					c1.setRotation(90);
@@ -182,18 +193,17 @@ public class mcPDF
 	{
 		addMetaData();
 		document.newPage();
-
+		document.setMargins(lm, rm, tm, bm);
 		int k = 0;
 		int p = 1;
-
+        int iborder =  BooleanUtils.toInteger(border);
 		try
 		{
 			document.newPage();
 			PdfPTable table = new PdfPTable(ncols);
 			table.setTotalWidth(tw);
 			table.setLockedWidth(true);
-			table.getDefaultCell().setBorder(Rectangle.NO_BORDER);
-
+			table.getDefaultCell().setBorder(iborder);
 			table.setWidths(collist);
 			Paragraph p0 = new Paragraph();
 			p0.add(new Phrase(" ", selectedfont));
@@ -203,7 +213,7 @@ public class mcPDF
 			c0.setPaddingRight(pr);
 			c0.setPaddingTop(pt);
 			c0.setPaddingBottom(pb);
-			c0.setBorder(Rectangle.NO_BORDER);
+			c0.setBorder(iborder);
 			if (startcell > 1)
 			{
 				for (int i = 1; i < startcell; i++)
@@ -225,8 +235,10 @@ public class mcPDF
 					c1.setPaddingLeft(pl);
 					c1.setPaddingRight(pr);
 					c1.setPaddingTop(pt);
-					c1.setPaddingBottom(pb);		
-					c1.setBorder(Rectangle.NO_BORDER);
+					c1.setPaddingBottom(pb);	
+					
+					c1.setBorder(iborder);
+					
 					if (rotate)
 					{
 						c1.setRotation(90);
@@ -271,7 +283,7 @@ public class mcPDF
 		return makeBlockAddress(acontact,false);
 	}
 
-	public Map<String, Map<String, String>> readTemplates()
+	public static Map<String, Map<String, String>> readTemplates()
 	{
 		try
 		{
@@ -304,30 +316,17 @@ public class mcPDF
 
 	public void setLayout(String layout)
 	{
-		Map<String, String> tlayout = labeltemplates.get("3by3");
-		collist = new float[] { 1, 1, 1 };
-		if (layout.contains("3 x 7"))
-		{
-			tlayout = labeltemplates.get("3by7");
-			collist = new float[] { 1, 1, 1 };
-		} else if (layout.contains("2 x 4"))
-		{
-			tlayout = labeltemplates.get("2by4");
+		Map<String, String> tlayout = mcdb.labeltemplates.get(layout);
+		ncols = mcUtilities.toInteger(tlayout.get("ncols"));
+		if(ncols==3)
+		   collist = new float[] { 1, 1, 1 };
+		else if (ncols==2)
 			collist = new float[] { 1, 1 };
-		} else if (layout.contains("3 x 3"))
-		{
-			tlayout = labeltemplates.get("3by3");
-			collist = new float[] { 1, 1, 1 };
-		}
-		else if (layout.contains("A4 Envelope"))
-		{
-			tlayout = labeltemplates.get("1by1");
+		 else if (ncols==1)
 			collist = new float[] { 1};
-		}
 
 		rotate = mcUtilities.toBoolean(tlayout.get("rotate"));
 		nrows = mcUtilities.toInteger(tlayout.get("nrows"));
-		ncols = mcUtilities.toInteger(tlayout.get("ncols"));
 		lm = mcUtilities.toInteger(tlayout.get("leftmargin"));
 		tm = mcUtilities.toInteger(tlayout.get("topmargin"));
 		pt = mcUtilities.toInteger(tlayout.get("toppadding"));
@@ -335,12 +334,16 @@ public class mcPDF
 		pr = mcUtilities.toInteger(tlayout.get("rightpadding"));
 		pb = mcUtilities.toInteger(tlayout.get("bottompadding"));
 		bm = mcUtilities.toInteger(tlayout.get("bottommargin"));
-		rm = mcUtilities.toInteger(tlayout.get("rightmargin"));
+		ch = mcUtilities.toFloat(tlayout.get("cellheight"));
+		border =  mcUtilities.toBoolean(tlayout.get("border"));
 		ncells = nrows * ncols;
-		tw = a4w - lm - rm;
+		tw = a4w - lm - rm - 100;
 		th = a4h - tm - bm;
-		cellheight = th / nrows;
-		//cellwidth = tw / ncols;
+		if(ch>0)
+			cellheight = ch;
+		else
+		  cellheight = (th / nrows);
+		System.out.println("cellheight="+cellheight);
 		selectedfont = smallNormal;
 		if (tlayout.get("font").equalsIgnoreCase("largeBold"))
 		{

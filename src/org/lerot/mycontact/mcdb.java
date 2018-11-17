@@ -55,10 +55,10 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 12.0(64)";
+	static String version = "V 13.0";
 	public static mcSelectorBox selbox;
 	public static String letterfolder;
-	
+	public static Map<String, Map<String, String>> labeltemplates = null;
 
 	public static void main(String[] args)
 	{
@@ -70,7 +70,7 @@ public class mcdb extends JFrame implements ActionListener
 		{
 		}
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-
+	
 		JFrame mframe = new mcdb(800, 400);
 		mframe.addWindowListener(new WindowAdapter()
 		{
@@ -139,8 +139,9 @@ public class mcdb extends JFrame implements ActionListener
 		} else
 		{
 			dotcontacts = "/home/" + user + "/.mccontacts/";
-			letterfolder = "/home/" + user + "/Documents/correspondance";
+			
 			desktop = "/home/" + user + "/Desktop/";
+			letterfolder =  desktop+ "Labels and Letters/";
 		}
 		java.net.URL jstatIconURL = ClassLoader.getSystemClassLoader().getResource("mccontacts.png");
 		
@@ -207,6 +208,9 @@ public class mcdb extends JFrame implements ActionListener
 		asearchpanel.makesearchPanel(selbox, this);
 		abrowsepanel = new browsePanel();
 		aneditpanel = new editPanel();
+		
+			labeltemplates =  mcPDF.readTemplates();
+		
 		toolspanel = new ToolsPanel(this);
 		// aneditpanel.showEditPanel();
 		selbox.setEnabled(true);
@@ -260,6 +264,7 @@ public class mcdb extends JFrame implements ActionListener
 		selbox.setSearchterm("");
 		selbox.setBrowseStatus("BROWSE");
 		mcLetter.getTemplates(dotcontacts);
+		labeltemplates =  mcPDF.readTemplates();
 		refresh();
 	}
 

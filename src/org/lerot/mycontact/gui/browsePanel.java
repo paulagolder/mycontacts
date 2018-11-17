@@ -675,11 +675,17 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	private void printlabel(String address)
 	{
-		JFileChooser fc = new JFileChooser();
+		
+		JFileChooser fc = new JFileChooser(mcdb.letterfolder);
 		fc.setDialogTitle("Specify a file to save label");
+		String labelname = mcLetter.makeFileName(selcontact);
+		fc.setSelectedFile(
+				new File(mcdb.letterfolder + "/" + labelname + ".pdf"));
+	;
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("PDF",
 				"pdf");
 		fc.setFileFilter(filter);
+	;
 		int returnVal = fc.showSaveDialog(this);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION)
@@ -698,9 +704,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			addressarea.setText(address);
 			jswDropDownBox pagelayout = new jswDropDownBox("Layout", true,
 					false);
-			pagelayout.addElement("3 x 7");
-			pagelayout.addElement("2 x 4");
-			pagelayout.addElement("A4 Envelope");
+			for (Entry<String, Map<String, String>> entry: mcdb.labeltemplates.entrySet())
+			{
+			    pagelayout.addElement(entry.getKey() );
+			}
 			jswThumbwheel startpos = new jswThumbwheel("Starting Position", 1,
 					10);
 			startpos.setValue(1);
@@ -723,8 +730,9 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 				int sp = startpos.getValue();
 				address = addressarea.getText();
 				String sellayout = pagelayout.getSelectedValue();
-				mcPDF labelpages = new mcPDF(afile, "Lerot Contacts Labels",
-						sellayout);
+				System.out.println("selectedlayout "+sellayout);
+				mcPDF labelpages = new mcPDF(afile, "Lerot Contacts Labels");
+				labelpages.setLayout(sellayout);
 				int ncount = labelpages.makeLabelPage(address, sp);
 			}
 

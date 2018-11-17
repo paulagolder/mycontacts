@@ -377,7 +377,9 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		String name = TID;
 		mcAttribute nameat = attributes.find("name");
-		String fname = nameat.getFormattedValue(fmt).trim();
+		String fname=null;
+		if(nameat!=null) 
+		 fname = nameat.getFormattedValue(fmt).trim();
 		if (fname != null && !fname.isEmpty()) name = fname;
 		return name;
 	}
