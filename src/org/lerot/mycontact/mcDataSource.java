@@ -21,10 +21,36 @@ public class mcDataSource
 	Connection con;
 	String dbname="";
 	private String errorMessage;
+	String path="";
 
-	public mcDataSource(String path)
+	public mcDataSource(String apath)
 	{
-		String connectstring ="";
+		path= apath;
+		
+	}
+	
+	public Connection getConnection()
+	{
+		 connect();
+		 return con;
+	}
+	
+	
+	public void disconnect()
+	{
+	 try
+	{
+		con.close();
+	} catch (SQLException e)
+	{
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	}
+	
+	public void connect()
+	{
+		String connectstring = "";
 		if (checkFileCanRead(path))
 		{
 			try
@@ -38,6 +64,7 @@ public class mcDataSource
 				{
 				  //System.out.println("Can connect to " + connectstring);
 					dbname = dbfile.getName();
+					//System.out.println("opened :"+ dbname);
 				}
 				else
 					System.out.println("Cannot connect to " + connectstring);
@@ -60,7 +87,8 @@ public class mcDataSource
 		PreparedStatement preparedStatement = null;
 		checks.put("dbname", dbname);
 		try
-		{
+		{ 
+			connect();
 			preparedStatement = con
 					.prepareStatement(" select value as val  from parameters where key='Title'; ");
 			ResultSet rs = preparedStatement.executeQuery();
@@ -95,6 +123,7 @@ public class mcDataSource
 			// System.err.println(errorMessage);
 			checks.put("Valid", "no");
 		}
+		disconnect();
 		return checks;
 	}
 

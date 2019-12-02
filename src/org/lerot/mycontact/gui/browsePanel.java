@@ -63,9 +63,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	private static jswStyles linktablestyles;
 
-	private jswHorizontalPanel buttonpanel;
 
-	// ActionListener plistener = null;
 	mcContact selcontact;
 	private String vcarddirectory = "";
 
@@ -121,8 +119,32 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 		} else if (action.startsWith("MAIL:"))
 		{
-			String selatt = action.substring(5);
-			email(selatt);
+			String atkey = action.substring(5);
+			mcAttribute selatt = selcontact.getAttributebyKey(atkey);
+			String emailaddress = selatt.getValue();
+		;
+			System.out.println(" use email " + selcontact.getTID());
+			
+
+			String[] options = new String[] {  "EMAIL", "Copy",
+					"Cancel" };
+			TextTransfer textTransfer = new TextTransfer();
+			textTransfer.setClipboardContents(emailaddress);
+			int n = JOptionPane.showOptionDialog(this,
+					"Use this email\n" + emailaddress, "EMail",
+					JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null,
+					options, options[0]);
+			System.out.println("action is " + n);
+			if (n != 2)
+			{
+				 if (n == 0)
+				{
+					email(atkey);
+				} else if (n == 1)
+				{
+					textTransfer.setClipboardContents(emailaddress);
+				}
+			}
 
 		} else if (action.startsWith("COPY:"))
 		{
@@ -293,7 +315,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		mcContacts list = new mcContacts();
 		if (selcontact != null)
 		{
-			mcAttributes getlinked = mcAttributes.FindByAttributeValue(selector,
+			mcAttributes getlinked = (new mcAttributes()).FindByAttributeValue(selector,
 					selcontact.getTID());
 			for (Entry<String, mcAttribute> anentry : getlinked.entrySet())
 			{
@@ -371,7 +393,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 		if (selcontact != null)
 		{
-			mcAttributes getlinked = mcAttributes.FindByAttributeValue(selector,
+			mcAttributes getlinked = (new mcAttributes()).FindByAttributeValue(selector,
 					selcontact.getTID());
 			int row = 0;
 			for (Entry<String, mcAttribute> anentry : getlinked.entrySet())
@@ -840,6 +862,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		mainpanel.removeAll();
 		mainpanel.setLayout(new jswVerticalLayout());
 		// new jswHorizontalPanel();
+		if(selcontact != null)
+		{
 		String group = selcontact.getKind();
 		mcAttributes attributes = selcontact.getAttributes();
 		jswHorizontalPanel idbox = new jswHorizontalPanel("idbox", false);
@@ -885,14 +909,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		mcContacts relationlist = makeLinkToList(selcontact, "related");
 		mcContacts memberoflist = makeLinkToList(selcontact, "member");
 		mcContacts hasmemberslist = makeLinkToList(selcontact, "org");
-
-		if (relationlist != null)
-			System.out.println(" rel=" + relationlist.size());
-		if (memberoflist != null)
-			System.out.println(" mem=" + memberoflist.size());
-		if (hasmemberslist != null)
-			System.out.println(" org=" + hasmemberslist.size());
-
 		mcContacts exrelnlist = makeLinkedFromList(selcontact, "related");
 		mcContacts exmemberoflist = makeLinkedFromList(selcontact, "org");
 		mcContacts exhasmemberslist = makeLinkedFromList(selcontact, "member");
@@ -920,7 +936,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					exhasmemberslist, "ex-memberof");
 			mainpanel.add(exhasmemberspanel);
 		}
-
+		}
 		Dimension d = mainpanel.getMinimumSize();
 		Rectangle fred = mainpanel.getBounds();
 		fred.width = d.width;
@@ -928,7 +944,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		Rectangle actual = mcdb.topgui.getBounds();
 		if (fred.width > actual.width) actual.width = fred.width;
 		if (fred.height + 60 > actual.height) actual.height = fred.height + 60;
-		mcdb.topgui.setBounds(actual);
+		//mcdb.topgui.setBounds(actual);
 		mcdb.topgui.setVisible(true);
 		mainpanel.repaint();
 		mcdb.topgui.getContentPane().validate();

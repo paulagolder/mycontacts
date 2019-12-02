@@ -68,6 +68,20 @@ public class jswVerticalLayout extends jswLayout
 
 			}
 		}
+		else
+		{
+			Container p2 = parent;
+			while (p2 != null)
+			{
+				Dimension p2size = p2.getSize();
+				if (theparent == null
+						&& p2.getClass().getSimpleName()
+								.equalsIgnoreCase("jswVerticalPanel"))
+					theparent = p2;
+				p2 = p2.getParent();
+			}
+				
+		}
 		if (theparent == null) theparent = parent;
 		Dimension parentSize = theparent.getSize();
 		int usableWidth = parentSize.width - insets.left - insets.right;
@@ -163,10 +177,14 @@ public class jswVerticalLayout extends jswLayout
 							dheight = (int) (dheight * fillratio);
 					} else if (s.isTrue("SCROLLH"))
 					{
-						// if (ncomponents == 1) dheight = availableHeight;
+						//if (ncomponents == 1) dheight = availableHeight;
 						// else
-						dheight = (int) (dheight * scrollratio) - 40;
+						if(dheight<availableHeight) dheight = availableHeight;
+						else
+						dheight = (int) (dheight * scrollratio) - 65;
 						// paul fix needs sorting
+						//System.out.println("scrollh"
+						//		+ (availableHeight) + " h=" + dheight+" sr="+scrollratio);
 					}
 					if (s.isTrue("BOTTOM"))
 					{

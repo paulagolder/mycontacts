@@ -32,19 +32,21 @@ public class mcAttribute extends mcDataObject
 		return newatt;
 	}
 
-	public static void dbDeleteAttribute(Integer acid, String aroot,
+	public void dbDeleteAttribute(Integer acid, String aroot,
 			String aqual)
 	{
 		PreparedStatement st;
 		String query = "delete from attributeValues where cid= ?  && root = ? && qualifier = ? ";
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setInt(1, acid);
 			st.setString(2, aroot);
 			st.setString(3, aqual);
 			st.executeUpdate();
 			st.close();
+			disconnect();
 
 		} catch (SQLException e)
 		{
@@ -97,9 +99,8 @@ public class mcAttribute extends mcDataObject
 		setValue("");
 	}
 
-	public String arrayToArrayString(Map<String, String> valuelist)
+	public String xxarrayToArrayString(Map<String, String> valuelist)
 	{
-
 		return attributetype.arrayToArrayString(valuelist);
 	}
 
@@ -108,9 +109,7 @@ public class mcAttribute extends mcDataObject
 		if (attributevalue.isNull()) return false;
 		String value = attributevalue.stringvalue;
 		mcDataType type = getType();
-
 		return type.valueContained(testvalue, value);
-
 	}
 
 	public void dbdeleteAttribute()
@@ -119,12 +118,14 @@ public class mcAttribute extends mcDataObject
 		String query = "delete from attributeValues where cid= ?  and root = ? and qualifier = ? ";
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setInt(1, cid);
 			st.setString(2, getRoot());
 			st.setString(3, getQualifier());
 			st.executeUpdate();
 			st.close();
+			disconnect();
 
 		} catch (SQLException e)
 		{
@@ -140,6 +141,7 @@ public class mcAttribute extends mcDataObject
 		String query = "insert into attributeValues(cid,root, qualifier,value, update_dt)  values( ?, ?,?, ?, ?)";
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setInt(1, cid);
 			st.setString(2, getRoot());
@@ -148,6 +150,7 @@ public class mcAttribute extends mcDataObject
 			st.setString(5, getDateTime());
 			st.executeUpdate();
 			st.close();
+			disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -171,11 +174,12 @@ public class mcAttribute extends mcDataObject
 
 	public void dbupdateAttribute()
 	{
-
+		//(new mcDataObject()).setConnection(mcdb.topgui.currentcon);
 		PreparedStatement st;
 		String query = "update attributeValues set 'value' = ? , 'update_dt'= ? where cid= ? and root=?  and qualifier= ? ";
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, getValue());
 			st.setString(2, getDateTime());
@@ -184,10 +188,12 @@ public class mcAttribute extends mcDataObject
 			st.setString(5, getQualifier());
 			st.executeUpdate();
 			st.close();
+			disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
+	
 	}
 
 	public void dbupsertAttribute()
@@ -198,6 +204,7 @@ public class mcAttribute extends mcDataObject
 			String query = " UPDATE attributeValues "
 					+ " SET   value = ? , update_dt = ? "
 					+ " WHERE   cid = ?  and root = ? and qualifier = ?  ";
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, getValue());
 			String update = getUpdate();
@@ -209,13 +216,15 @@ public class mcAttribute extends mcDataObject
 			st.setInt(3, cid);
 			st.setString(4, getRoot());
 			st.setString(5, getQualifier());
-			st.executeUpdate();
+			st.executeUpdate();	
 			int rescount = st.getUpdateCount();
+			st.close();
+			disconnect();
 			if (rescount == 0)
 			{
 				dbinsertAttribute();
 			}
-			st.close();
+	
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -224,7 +233,7 @@ public class mcAttribute extends mcDataObject
 
 	public void deleteTags(Set<String> ataglist)
 	{
-		String newtagvalues = mcTextListDataType.deleteTags(this.getValue(),
+		String newtagvalues = mcTagListDataType.deleteTags(this.getValue(),
 				ataglist);
 		setValue(newtagvalues);
 		// updateAttributeValue();
@@ -328,6 +337,7 @@ public class mcAttribute extends mcDataObject
 
 	public mcDataType getType()
 	{
+		 if(attributetype == null) return new mcTextDataType();
 		return attributetype.getDatatype();
 	}
 	
@@ -365,7 +375,7 @@ public class mcAttribute extends mcDataObject
 
 	public void insertValues(Set<String> ataglist)
 	{
-		String newtagvalues = mcTextListDataType.insertTags(this.getValue(),
+		String newtagvalues = mcTagListDataType.insertTags(this.getValue(),
 				ataglist);
 		setValue(newtagvalues);
 	}
@@ -566,7 +576,9 @@ public class mcAttribute extends mcDataObject
 
 	private void setType()
 	{
-		attributetype = mcdb.topgui.attributetypes.findType(getKey());
+		String attkey = getKey();
+		mcAttributeTypes attypes = mcdb.topgui.attributetypes;
+		attributetype = attypes.findType(attkey);
 		if (attributetype == null)
 			attributetype = mcdb.topgui.attributetypes.findType(root);
 		if (attributetype == null)
@@ -601,6 +613,12 @@ public class mcAttribute extends mcDataObject
 		attributevalue = new mcAttributeValue(this, arrayvaluestring);
 
 	}
+	
+	public void setValue(Set<String> tokenlist)
+	{
+			String tokenstring = attributetype.arrayToString(tokenlist);
+			attributevalue = new mcAttributeValue(this, tokenstring);
+	}
 
 	public void setValue(String strvalue)
 	{
@@ -629,7 +647,10 @@ public class mcAttribute extends mcDataObject
 				;
 			} else if (attype.isType("textlist"))
 			{
-
+				newvalue = newvalue.trim();
+			}else if (attype.isType("taglist"))
+			{
+				newvalue = newvalue.trim();
 			} else if (attype.isType("cumulativetext"))
 			{
 				System.out.println(" updating cumtextlist for " + this);
@@ -641,6 +662,46 @@ public class mcAttribute extends mcDataObject
 
 		attributevalue = new mcAttributeValue(this, newvalue);
 	}
+	
+	public void addTag(String strvalue)
+	{
+		String newvalue = strvalue.trim();
+		if (!newvalue.isEmpty())
+		{
+			mcDataType attype = getType();
+			 if (attype.isType("taglist"))
+			{
+                 Set<String> oldtags = getTags();
+                 if(oldtags == null)
+                 {
+                	 
+                 }
+                 oldtags.add(newvalue);
+                 setValue(oldtags);
+			}
+			 else if (attype.isType("textlist"))
+				{
+	                 Set<String> oldtags = getTags();
+	                 oldtags.add(newvalue);
+	                 setValue(oldtags); 
+				}else if (attype.isType("cumulativetext"))
+			{
+				System.out.println(" updating cumtextlist for " + this);
+				String oldvalue = getValue();
+				newvalue = oldvalue + ";"
+						+ mcUtilities.formatCumulativeText(newvalue);
+				attributevalue = new mcAttributeValue(this, newvalue);
+			}
+			else
+			{
+				setValue(strvalue);
+			}
+		}
+
+		
+	}
+	
+	
 
 	public void setValue(Vector<String> valuelist)
 	{
@@ -714,6 +775,7 @@ public class mcAttribute extends mcDataObject
 		{
 			try
 			{
+				getConnection();
 				PreparedStatement st;
 				String query = " UPDATE attributeValues "
 						+ " SET   qualifier= ?   "
@@ -725,6 +787,7 @@ public class mcAttribute extends mcDataObject
 				st.setString(4, oq);
 				st.executeUpdate();
 				st.close();
+				disconnect();
 			} catch (SQLException e)
 			{
 				e.printStackTrace();
@@ -733,5 +796,7 @@ public class mcAttribute extends mcDataObject
 		setQualifier(newqualifier);
 
 	}
+
+	
 
 }

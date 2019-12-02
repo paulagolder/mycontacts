@@ -1,6 +1,5 @@
 package org.lerot.mycontact.gui;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,24 +8,15 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
-import java.util.Vector;
-
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lerot.mycontact.mcImportexception;
 import org.lerot.mycontact.mcDateDataType;
-import org.lerot.mycontact.mcImportLdif;
-import org.lerot.mycontact.mcImportVcard;
 import org.lerot.mycontact.mcImportXML;
-import org.lerot.mycontact.mcImports;
 import org.lerot.mycontact.mcMappings;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswLabel;
 import org.lerot.mycontact.gui.widgets.jswTextField;

@@ -23,6 +23,10 @@ public class jswHorizontalLayout extends jswLayout // implements LayoutManager
 		this.hgap = hgap;
 	}
 
+	public void setGap(int hgap)
+	{
+		this.hgap = hgap;
+	}
 	@Override
 	public void layoutContainer(Container parent)
 	{
@@ -41,7 +45,7 @@ public class jswHorizontalLayout extends jswLayout // implements LayoutManager
 		int ncomponents = parent.getComponentCount();
 		if (ncomponents < 2) this.hgap = 0;
 		Insets insets = parent.getInsets();
-
+        // insets =new Insets(0,2,0,2);
 		Dimension parentSize = parent.getSize();
 		int usableWidth = parentSize.width - insets.left - insets.right - 3;
 		// paul fix is border
@@ -147,6 +151,7 @@ public class jswHorizontalLayout extends jswLayout // implements LayoutManager
 								dwidth = (int) (dwidth * prefillratio);
 						} else
 							dwidth = (int) (dwidth * fillratio);
+						dwidth=dwidth-10;//paul fix
 					}
 					if (s.isTrue("MIDDLE"))
 					{

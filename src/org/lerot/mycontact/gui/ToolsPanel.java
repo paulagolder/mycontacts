@@ -25,17 +25,11 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 	int toolstab;
 
 	private importTabPanel importpanel;
-
 	private ExportTabPanel exportpanel;
-
 	private OtherTabPanel otherpanel;
-
 	private manageTagsPanel manageTagspanel2;
-
 	private jswTabbedPanel toolstabbedPane;
-
 	private backupTabPanel backuppanel;
-
 	private importBackupPanel importBackupPane;
 
 	public ToolsPanel(ActionListener parentlistener)
@@ -58,7 +52,6 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 		toolstabbedPane.setLayout(new jswVerticalLayout());
 		backuppanel = new backupTabPanel();
 		toolstabbedPane.addTab("Backup", backuppanel);
-
 		importpanel = new importTabPanel();
 		toolstabbedPane.addTab("Import", importpanel);
 		exportpanel = new ExportTabPanel();
@@ -75,7 +68,6 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 		importpanel.showImportPanel();
 		exportpanel.showExportPanel();
         backuppanel.showBackupPanel();
-
 		repaint();
 		mcdb.topgui.getContentPane().validate();
 	}
@@ -88,13 +80,6 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 		othertabno = index;
 		String seltab = sourceTabbedPane.getTitleAt(index);
 		System.out.println("Tab changed to: " + seltab);
-
-		//if (seltab.equals("Edit Attributes"))
-		//{
-		//	attedpanel1.showAttributeEditPanel();
-		//	attedpanel1.setVisible(true);
-		//	attedpanel1.validate();
-		//}
 		if (seltab.equals("Manage Tags"))
 		{
 			manageTagspanel2.refresh();

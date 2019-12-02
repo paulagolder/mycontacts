@@ -16,11 +16,11 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.lerot.mycontact.gui.widgets.jswCheckbox;
+import org.lerot.mycontact.gui.widgets.jswDropDownBox;
 
 public class mcContacts extends mcDataObject
 {
 
-	//public static mcContacts allgroups;
 
 	public static mcContacts createList(TreeSet<mcContact> searchresults)
 	{
@@ -32,6 +32,16 @@ public class mcContacts extends mcDataObject
 		return newlist;
 	}
 
+	public mcContacts createCopy()
+	{
+		mcContacts newlist = new mcContacts();
+		for (Entry<String, mcContact> entry : contactlist.entrySet())
+		{
+			newlist.put(entry.getValue());
+		}
+		return newlist;
+	}
+	
 	public static mcContact createNewContact()
 	{
 		mcContact newcontact = new mcContact();
@@ -44,7 +54,7 @@ public class mcContacts extends mcDataObject
 		return newcontact;
 	}
 
-	public static int getNewID()
+	public  int getNewID()
 	{
 		PreparedStatement st;
 		String query = "SELECT max(cid) as ncid  FROM attributeValues";
@@ -100,6 +110,8 @@ public class mcContacts extends mcDataObject
 	private String textfilter = "";
 
 	boolean textfiltererror;
+
+	private String browsefilter;
 
 	public mcContacts()
 	{
@@ -172,7 +184,7 @@ public class mcContacts extends mcDataObject
 
 	}
 
-	Set<Entry<String, mcContact>> entrySet()
+	public Set<Entry<String, mcContact>> entrySet()
 	{
 		return contactlist.entrySet();
 	}
@@ -244,7 +256,10 @@ public class mcContacts extends mcDataObject
 		for (Entry<String, mcContact> anentry : contactlist.entrySet())
 		{
 			mcContact acontact = anentry.getValue();
-			if (acontact.getSimpleIDstr().equalsIgnoreCase(selcontactID))
+			String strid = acontact.getSimpleIDstr();
+			String strid2 = acontact.getIDstr();
+			int id3 = acontact.getID();
+			if (strid2.equalsIgnoreCase(selcontactID))
 				return acontact;
 		}
 		return null;
@@ -577,7 +592,7 @@ public class mcContacts extends mcDataObject
 	}
 
 
-	private void put(String id, mcContact acontact)
+	void put(String id, mcContact acontact)
 	{
 		contactlist.put(id, acontact);
 
@@ -999,20 +1014,10 @@ public class mcContacts extends mcDataObject
 		mcContacts found = new mcContacts();
 		String ntid = mcUtilities.tidyValue(searchterm);
 		System.out.println("searching "+searchterm);
-		//for (Entry<String, mcContact> anentry : contactlist.entrySet())
-		//{
-		//	mcContact acontact = anentry.getValue();
-		//	String ctid = acontact.getTID().toLowerCase();
-		//	if (ctid.contains(ntid)) found.put(acontact.getIDstr(), acontact);
-		//}
 		TreeSet<String> foundids = searchAttributes(searchterm);
-		//System.out.println("found "+foundids.size());
 		for (String id : foundids)
 		{
-			
-			//System.out.println("found :"+id+":");
 			mcContact fcontact = this.FindbystrID(id);
-			//System.out.println("found "+fcontact);
 			if (fcontact!=null)
 				found.put(fcontact.getIDstr(), fcontact);
 		}
@@ -1026,22 +1031,18 @@ public class mcContacts extends mcDataObject
 		PreparedStatement st;
 		try
 		{
+			con = datasource.getConnection();
 			String qterm =  "%" + searchterm + "%";
 			st = con.prepareStatement(query);
 			st.setString(1,qterm );
 			st.setString(2, "%photo%");
 			st.setString(3, "%tag%");
-
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
 			{
 				int cid = resset.getInt("cid");
 				String idstr = String.valueOf(resset.getInt("cid"));
-			
-				//if (contactlist.containsKey(idstr))
-				{
 					searchresults.add(idstr);
-				}
 			}
 			st.close();
 			return searchresults;
@@ -1054,18 +1055,28 @@ public class mcContacts extends mcDataObject
 		return searchresults;
 	}
 
-	public mcContacts searchTag(String searchterm)
+	public mcContacts xsearchTag(String tag)
 	{
 		mcContacts found = new mcContacts();
-
-		TreeSet<String> foundids = searchTags(searchterm);
-		for (String id : foundids)
+		if(tag=="all") 
 		{
-			mcContact fcontact = mcdb.selbox.FindbyID(id);
+			found = this.createCopy();
+			return found;
+		}
+		else if(tag=="selection") 
+		{
+			found = this.createCopy();
+			return found;
+		}
+		TreeSet<String> foundids = searchTags(tag);
+		for (String id : foundids)
+		{	
+			//System.out.println(" foundid " + id);
+			mcContact fcontact = this.FindbyID(id);
 			if (fcontact != null)
 				found.put(fcontact.getIDstr(), fcontact);
 			else
-				System.out.println(" problem with " + id);
+				System.out.println(" problem with " + tag);
 		}
 		return found;
 	}
@@ -1083,12 +1094,13 @@ public class mcContacts extends mcDataObject
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
 			{
-				String idstr = String.valueOf(resset.getInt("cid"));
+				String idstr = mcContact.makeIDstr(String.valueOf(resset.getInt("cid")));
+				//public static String makeIDstr(String id)
 				if (contactlist.containsKey(idstr))
 				{
 					searchresults.add(idstr);
 				}
-				searchresults.add(idstr.toLowerCase().trim());
+				//searchresults.add(idstr.toLowerCase().trim());
 			}
 			st.close();
 			return searchresults;
@@ -1101,16 +1113,17 @@ public class mcContacts extends mcDataObject
 		return searchresults;
 	}
 
-	public void selectAllContacts()
+	public void refreshAllContacts()
 	{
-
+		System.out.println("reloading all contacts ");
 		contactlist = new TreeMap<String, mcContact>(new MyContactComparator());
-
+        
 		String query = " select * from proup where 1  order by lower(TID) ";
 		PreparedStatement st;
 		// System.out.println("Select all contacts");
 		try
 		{
+			con= datasource.getConnection();
 			st = con.prepareStatement(query);
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
@@ -1120,17 +1133,20 @@ public class mcContacts extends mcDataObject
 				if (acontact.CID > 0)
 				{
 					acontact.fillContact();
-					//contactlist.put(acontact.getIDstr(), acontact);  paul experiment fix
-					contactlist.put(acontact.getTID(), acontact);
+					contactlist.put(acontact.getIDstr(), acontact);  //paul experiment fix
+					//contactlist.put(acontact.getTID(), acontact);
 				}
 			}
 			st.close();
+			datasource.disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 
 	}
+	
+	
 
 	public void setContactlist(TreeMap<String, mcContact> contactlist)
 	{
@@ -1149,8 +1165,14 @@ public class mcContacts extends mcDataObject
 			}
 		}
 	}
+	
+	public void xxsetBrowseFilter(jswDropDownBox sb)
+	{
+		browsefilter = sb.getSelectedValue();
+		
+	}
 
-	public void setGroupFilter(String[] gf)
+	public void xxsetGroupFilter(String[] gf)
 	{
 		groupfilter.clear();
 		for (String agf : gf)
@@ -1170,7 +1192,6 @@ public class mcContacts extends mcDataObject
 	public int size()
 	{
 		return contactlist.size();
-
 	}
 
 }

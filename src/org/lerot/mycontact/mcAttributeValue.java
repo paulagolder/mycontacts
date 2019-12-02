@@ -38,7 +38,7 @@ public class mcAttributeValue
 	{
 		if (isArrayType())
 		{
-			return mcArrayDataType.formattedArrayValue(stringvalue);
+			return mcKeyValueDataType.formattedArrayValue(stringvalue);
 		} else
 			return stringvalue;
 	}
@@ -50,7 +50,7 @@ public class mcAttributeValue
 			if(isArrayData(stringvalue)) return stringvalue;
 			else
 			{
-				mcArrayDataType dt = (mcArrayDataType) parent.getType();
+				mcKeyValueDataType dt = (mcKeyValueDataType) parent.getType();
 				String arraydata = dt.makeArray(stringvalue);
 				return arraydata;
 			}

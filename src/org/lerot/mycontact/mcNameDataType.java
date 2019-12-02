@@ -7,7 +7,7 @@ import java.util.Vector;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-public class mcNameDataType extends mcArrayDataType
+public class mcNameDataType extends mcKeyValueDataType
 {
 	static String[]Namefields = { "Sn", "Fn", "Mn", "Title" };
 	
@@ -79,7 +79,7 @@ public class mcNameDataType extends mcArrayDataType
 		} else
 		{
 			// todo make more intelligent
-			Vector<String> namearry = mcArrayDataType.ToVector(value);
+			Vector<String> namearry = mcKeyValueDataType.ToVector(value);
 			if (namearry.size() > 0)
 			{
 				String name = namearry.get(0);

@@ -2,21 +2,15 @@ package org.lerot.mycontact.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
-
-import org.lerot.mycontact.mcAttribute;
-import org.lerot.mycontact.mcAttributes;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.gui.widgets.jswButton;
 import org.lerot.mycontact.gui.widgets.jswCheckbox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswImage;
 import org.lerot.mycontact.gui.widgets.jswLabel;
 import org.lerot.mycontact.gui.widgets.jswTable;
 import org.lerot.mycontact.gui.widgets.jswTextField;
@@ -128,8 +122,8 @@ public class deleteContactPanel extends jswVerticalPanel implements
 
 	public void initialise()
 	{
-		nsearchcontacts = mcdb.selbox.getSelectedcontactlist().size();
-		deleteablelist = mcdb.selbox.getSelectedcontactlist();
+		nsearchcontacts = mcdb.selbox.getSearchResultList().size();
+		deleteablelist = mcdb.selbox.getSearchResultList();
 
 		resulttable.removeAll();
 		if (nsearchcontacts == 0)
@@ -169,7 +163,7 @@ public class deleteContactPanel extends jswVerticalPanel implements
 	public void refresh()
 	{
 		nsearchcontacts = deleteablelist.size();
-		//deleteablelist = mcdb.selbox.getSelectedcontactlist();
+		//deleteablelist = mcdb.selbox.getSearchResultList();
 
 		resulttable.removeAll();
 		if (nsearchcontacts == 0)

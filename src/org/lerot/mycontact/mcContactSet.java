@@ -5,6 +5,11 @@ import java.util.TreeSet;
 
 public class mcContactSet extends TreeSet<mcContact>
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	class ContactComp implements Comparator<mcContact>
 	{
 		@Override

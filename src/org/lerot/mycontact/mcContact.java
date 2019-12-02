@@ -51,7 +51,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public mcContact(mcImportContact impcontact)
 	{
-		CID = mcContacts.getNewID();
+		CID = (new mcContacts()).getNewID();
 		String fn = "";
 		attributes = new mcAttributes();
 		for (Entry<String, mcImportAttribute> arec : impcontact.getAttributes()
@@ -169,7 +169,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	public void fillContact()
 	{
 		int id = this.CID;
-		attributes = mcAttributes.getAttributes(id);
+		attributes = (new mcAttributes()).getAttributes(id);
 		if (attributes == null)
 		{
 			System.out.println(" no attributes for contact " + id + " +TID");
@@ -232,7 +232,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		if (attributes == null || attributes.size() == 0)
 		{
-			attributes = mcAttributes.getAttributes(this.CID);
+			attributes = (new mcAttributes()).getAttributes(this.CID);
 		}
 		return attributes;
 	}
@@ -395,7 +395,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		mcAttribute tagat = getAttributebyKey("tags");
 		if (tagat == null) return null;
-		Set<String> tags = mcTextListDataType.getTags(tagat);
+		Set<String> tags = mcTagListDataType.getTags(tagat);
 		return tags;
 	}
 
@@ -463,7 +463,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public int insertNewContact()
 	{
-		int nid = mcContacts.getNewID();
+		int nid = (new  mcContacts()).getNewID();
 		// int nid = getID();
 		PreparedStatement st;
 		String query = "insert into attributeValues(cid, root,qualifier,value )  values(?, ?,?,?)";
@@ -674,7 +674,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public mcAttributes refreshAttributes()
 	{
-		attributes = mcAttributes.getAttributes(this.CID);
+		attributes = (new mcAttributes()).getAttributes(this.CID);
 		return attributes;
 	}
 

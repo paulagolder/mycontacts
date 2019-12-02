@@ -2,6 +2,7 @@ package org.lerot.mycontact;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -93,7 +94,10 @@ public class mcTextDataType extends mcDataType
 		return -1;
 	}
 
-	
+	public String asetToString(Set<String> tokenlist)
+	{
+		return mcUtilities.settoString(tokenlist);
+	}
 	
 
 }

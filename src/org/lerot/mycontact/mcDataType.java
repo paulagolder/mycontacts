@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 public abstract class mcDataType extends mcDataObject
@@ -39,6 +40,8 @@ public abstract class mcDataType extends mcDataObject
 			return new mcImageDataType();
 		case "textlist":
 			return new mcTextListDataType();
+		case "taglist":
+			return new mcTagListDataType();
 		case "name":
 			return new mcNameDataType();
 		case "address":
@@ -56,7 +59,7 @@ public abstract class mcDataType extends mcDataObject
 		case "tid":
 			return new mcTIDDataType();
 		case "cid":
-			return new mcTIDDataType();
+			return new mcCIDDataType();
 		case "timestamp":
 			return new mcTimeDataType();
 		default:
@@ -104,14 +107,14 @@ public abstract class mcDataType extends mcDataObject
 
 	public boolean isArrayType()
 	{
-		if (this instanceof mcArrayDataType) return true;
+		if (this instanceof mcKeyValueDataType) return true;
 		else
 			return false;
 	}
 
 	public String arrayToArrayString(Vector<String> valuelist)
 	{
-		if (this.isArrayType()) return ((mcArrayDataType) this)
+		if (this.isArrayType()) return ((mcKeyValueDataType) this)
 				.makeValuefromVector(valuelist);
 		else
 		{
@@ -153,8 +156,8 @@ public abstract class mcDataType extends mcDataObject
 
 	public String arrayToString(Map<String, String> valuelist)
 	{
-		if (this.isArrayType()) return ((mcArrayDataType) this)
-				.arrayToArrayString(valuelist);
+		if (this.isArrayType()) return ((mcKeyValueDataType) this)
+				.keyvaluesToArrayString(valuelist);
 		else
 		{
 			System.out.println(" should we be here dtats ");
@@ -169,6 +172,8 @@ public abstract class mcDataType extends mcDataObject
 			return outstring;
 		}
 	}
+	
+	
 
 	public String getFormattedValue(String value)
 	{
@@ -215,6 +220,40 @@ public abstract class mcDataType extends mcDataObject
 	public abstract boolean matchesVcardValue(String avalue, String bvalue);
 
 	public  abstract int compareTo(String aarray, String barray);
+
+	public String setToString(Set<String> tokenlist)
+	{
+		switch (datatype)
+		{
+		case "text":
+			return ((mcTextDataType) this)
+			.asetToString(tokenlist);
+		case "textlist":
+			return ((mcTextListDataType) this)
+					.makeString(tokenlist);
+		case "taglist":
+			return ((mcTagListDataType) this)
+					.makeString(tokenlist);
+		case "image":
+		case "name":
+		case "address":
+		case "date":
+		case "phone":
+		case "email":
+		case "http":
+		case "tid":
+		case "cid":
+		case "timestamp":
+		case "cellphone":
+			return null;
+		
+		default:
+			System.out.println(" unrecognised datatype " + datatype);
+			return null;
+		}
+	}
+
+	
 	
 	
 

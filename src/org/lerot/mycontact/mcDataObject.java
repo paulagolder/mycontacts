@@ -15,18 +15,37 @@ import java.util.Map;
 
 public class mcDataObject
 {
-
-	protected static Connection con = null;
+	mcDataSource datasource;
+	protected  Connection con = null;
 	public static String errorMessage = "";
 
 	public mcDataObject()
 	{
-        
+        //System.out.println( " starting dataobject ");
+       datasource = mcdb.topgui.currentcon;
 	}
 	
-	public static void setConnection(mcDataSource source)
+	public  void setConnection(mcDataSource source)
 	{
 		con = source.con;
+	}
+	
+	
+	public void getConnection()
+	{
+		con = datasource.getConnection();
+	}
+	
+	public  void disconnect()
+	{
+		try
+		{
+			con.close();
+		} catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
 	}
 	
 	public void doDelete(String table, String sqlstr)
@@ -75,7 +94,10 @@ public class mcDataObject
 		Statement stmt = null;
 		ResultSet rs = null;
 		try
-		{
+		{  
+			//mcDataSource ds = mcdb.topgui.currentcon;
+			datasource.connect();
+			con =datasource.getConnection();
 			stmt = con.createStatement();
 			if (stmt == null)
 				System.out.println(" Processing error " + sqlstr);
@@ -96,6 +118,7 @@ public class mcDataObject
 			}
 			rs.close();
 			stmt.close();
+			datasource.disconnect();
 			return Rowlist;
 		} catch (SQLException e)
 		{
@@ -103,6 +126,7 @@ public class mcDataObject
 			System.err.println(errorMessage);
 			return null;
 		}
+		
 
 	}
 

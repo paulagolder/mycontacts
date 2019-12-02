@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,31 @@ public class mcUtilities
 		System.out.println(" address " + outline);
 		return outline;
 	}
+	
+	public static String settoString(Set<String> tokenlist, String sep,
+			boolean ignoreblanklines)
+	{
+		String outline = "";
+		for (String atoken : tokenlist)
+		{
+			if (atoken == null) atoken = "";
+			atoken = atoken.trim();
+			if (ignoreblanklines)
+			{
+				if (!atoken.isEmpty()) outline += atoken + sep;
+			} else
+			{
+				outline += atoken + sep;
+			}
+		}
+		return outline;
+	}
+	
+	public static String settoString(Set<String> tokenlist)
+	{
+		return  settoString( tokenlist, ",",	true);
+	}
+	
 
 	public static boolean containedBy(String testvalues, String value)
 	{
@@ -667,7 +693,7 @@ public class mcUtilities
 		return tidyvalue.trim();
 	}
 
-	public static String toArray(Map<String, String> addmap, String sep)
+	public static String keyvaluesmaptoArrayString(Map<String, String> addmap, String sep)
 	{
 		String out = "{";
 		for (Entry<String, String> line : addmap.entrySet())
@@ -746,13 +772,20 @@ public class mcUtilities
 		return toInteger(sint,-1);
 	}
 	
+	public static boolean toBoolean(String sbool, boolean def)
+	{
+		if(sbool == null || sbool.isEmpty())  return def;
+		return (sbool.equalsIgnoreCase("true"));
+	}
+	
 	public static boolean toBoolean(String sbool)
 	{
-		return (sbool.equalsIgnoreCase("true"));
+		return toBoolean(sbool, false);	
 	}
 
 	public static boolean IsInteger(String atoken)
 	{
+		if(atoken == null || atoken.isEmpty())  return false;
 		 try { 
 		        Integer.parseInt(atoken); 
 		    } catch(NumberFormatException e) { 
@@ -762,11 +795,16 @@ public class mcUtilities
 		    }
 		return true;
 	}
-
-	public static float toFloat(String astring)
+	
+	public static float toFloat(String astring )
 	{
-		float f = Float.parseFloat(astring);
-		return f;
+		return toFloat(astring, (float) 0.0);
+	}
+
+	public static float toFloat(String astring, float def )
+	{
+		if(astring == null || astring.isEmpty())  return def;
+		return Float.parseFloat(astring);
 	}
 	
 }

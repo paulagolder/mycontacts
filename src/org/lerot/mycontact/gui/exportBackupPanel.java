@@ -10,26 +10,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lerot.mycontact.mcAttribute;
-import org.lerot.mycontact.mcAttributes;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcDateDataType;
-import org.lerot.mycontact.mcMappings;
 import org.lerot.mycontact.mcUtilities;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
 import org.lerot.mycontact.gui.widgets.jswDropDownBox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswLabel;
 import org.lerot.mycontact.gui.widgets.jswOption;
 import org.lerot.mycontact.gui.widgets.jswOptionset;
-import org.lerot.mycontact.gui.widgets.jswPanel;
 import org.lerot.mycontact.gui.widgets.jswTextField;
 import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
@@ -80,7 +75,7 @@ public class exportBackupPanel extends jswVerticalPanel
 				false);
 		browsecontacts.setTag("browse");
 		selectedcontacts = optionset.addNewOption("Selected Contacts "
-				+ mcdb.selbox.getSelectedcontactlist().size(), false);
+				+ mcdb.selbox.getSearchResultList().size(), false);
 		selectedcontacts.setTag("selected");
 		filterbar.add(" LEFT ", allcontacts);
 		filterbar.add(" MIDDLE ", browsecontacts);
@@ -179,7 +174,7 @@ public class exportBackupPanel extends jswVerticalPanel
 				exportsource = mcdb.selbox.getAllcontactlist();
 			else if (selection.equals("selected"))
 			{
-				exportsource = mcdb.selbox.getSelectedcontactlist();
+				exportsource = mcdb.selbox.getSearchResultList();
 			} else
 				exportsource = mcdb.selbox.getBrowsecontactlist();
 			try
@@ -274,7 +269,7 @@ public class exportBackupPanel extends jswVerticalPanel
 	public void refresh()
 	{
 		int ncontacts = mcdb.selbox.countAll();
-		int nsearchcontacts = mcdb.selbox.getSelectedcontactlist().size();
+		int nsearchcontacts = mcdb.selbox.getSearchResultList().size();
 		int nbrowsecontacts = mcdb.selbox.getBrowsecontactlist().size();
 		allcontacts.setText("All Contacts (" + ncontacts + ")");
 		browsecontacts.setText("Browse Contacts (" + nbrowsecontacts + ")");

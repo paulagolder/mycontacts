@@ -25,6 +25,7 @@ public class mcDataTypes extends mcDataObject
 
 	public  void loadTypes()
 	{
+		con = datasource.getConnection();
 		typelist = new HashMap<String, mcDataType>();
 		String datatype = "+";
 		String query = "select * from dataType order by key ";
@@ -51,6 +52,8 @@ public class mcDataTypes extends mcDataObject
 			mcDataType atype = entry.getValue();
 			vectoroftypes.add(atype);
 		}
+		System.out.println("loaded datatypes " +vectoroftypes.size());
+		datasource.disconnect();
 	}
 
 }

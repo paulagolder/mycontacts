@@ -36,7 +36,7 @@ public class jswHorizontalPanel extends jswContainer
 		cwidth += w;
 		if (c.jswGetHeight() > cheight) cheight = c.jswGetHeight();
 		c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-		c.setPreferredSize(new Dimension(cwidth, cheight));
+		c.setPreferredSize(new Dimension(cwidth+5, cheight));//paul fix
 	}
 
 	public void setEnabled(boolean e)

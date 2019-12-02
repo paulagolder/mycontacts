@@ -136,14 +136,14 @@ public class mergeContactPanel extends jswVerticalPanel implements
 
 	public void refresh()
 	{
-		nsearchcontacts = mcdb.selbox.getSelectedcontactlist().size();
-		found = mcdb.selbox.getSelectedcontactlist();
+		nsearchcontacts = mcdb.selbox.getSearchResultList().size();
+		found = mcdb.selbox.getSearchResultList();
 
 		resulttable.removeAll();
 		if (nsearchcontacts == 0)
 		{
 			resulttable.addCell(new jswLabel(" no contact selected "), 0, 0);
-		} else if (nsearchcontacts < 6)
+		} else if (nsearchcontacts < 4)
 		{
 			checkboxlist = new jswCheckbox[nsearchcontacts];
 			bg = new ButtonGroup();
@@ -158,10 +158,7 @@ public class mergeContactPanel extends jswVerticalPanel implements
 				jswLabel atTID = new jswLabel(acontact.getTID());
 				resulttable.addCell(atid, row, 0);
 				resulttable.addCell(atTID, row, 1);
-				// jswVerticalPanel details = new jswVerticalPanel();
-				// details.add(atTID);
 				jswTable atttable = makeAttributePanel(acontact, "");
-				// details.add(atttable);
 				resulttable.addCell(atttable, row, 2);
 				jswHorizontalPanel optionpanel = new jswHorizontalPanel();
 				checkboxlist[row] = new jswCheckbox("from");
@@ -177,7 +174,7 @@ public class mergeContactPanel extends jswVerticalPanel implements
 
 		} else
 		{
-			resulttable.addCell(new jswLabel(" Too many contacts selected  "),
+			resulttable.addCell(new jswLabel(" Too many contacts selected (>3) "),
 					0, 0);
 		}
 

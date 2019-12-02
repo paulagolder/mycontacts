@@ -120,7 +120,7 @@ public class mcAttributeType extends mcDataObject
 
 	public boolean isArray()
 	{
-		if (dt instanceof mcArrayDataType) return true;
+		if (dt instanceof mcKeyValueDataType) return true;
 		else
 			return false;
 	}
@@ -162,7 +162,7 @@ public class mcAttributeType extends mcDataObject
 
 	public Set<String> getTags(String value)
 	{
-		if (isType("textlist")) return mcTextListDataType.getTags(value);
+		if (isType("taglist")) return mcTagListDataType.getTags(value);
 		else
 			return null;
 	}
@@ -171,6 +171,13 @@ public class mcAttributeType extends mcDataObject
 	{
 		return dt.toXML(attributevalue.getValue());
 	}
+
+	public String arrayToString(Set<String> tokenlist)
+	{
+		return dt.setToString(tokenlist);
+	}
+
+	
 
 	
 

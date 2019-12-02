@@ -10,55 +10,110 @@ import java.util.Vector;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
-public class mcTextListDataType extends mcDataType
+public class mcTagListDataType extends mcTextListDataType
 {
 
-	
-	private static String makeSimpleString(Set<String> tokenlist)
+	public static String deleteTags(String att, Set<String> ataglist)
 	{
-		String tokenstring = "";
-		for (String atoken : tokenlist)
+		SortedSet<String> oldtags = getTags(att);
+		for (String atag : ataglist)
 		{
-			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null") )
-			{
-				tokenstring = tokenstring + atoken + ", ";
-			}
+			oldtags.remove(atag);
 		}
-		return tokenstring;
+		return makeTagString(oldtags);
 	}
 
-	static String makeString(Set<String> tokenlist)
+	public static Set<String> getTags(mcAttribute tatt)
 	{
-		String tokenstring = "";
-		for (String atoken : tokenlist)
+		return getTags(tatt.getValue());
+	}
+
+	static SortedSet<String> getTags(String tags)
+	{
+		SortedSet<String> tokens = new TreeSet<String>();
+		char sep =';';
+		if(!tags.contains(";"))  sep=',';
+         Vector<String> tokenarray = parseTagString(tags,sep);
+		for (String token : tokenarray)
+		{
+			token = token.trim();
+			if (!token.isEmpty() && !token.equals(";") && !token.equals("null")
+					&& !tokens.contains(token) && token.length()>1)
+			{
+				token = token.replace("#", "");
+				token= token.replace(";", "");
+				tokens.add(token);
+			}
+		}
+		return tokens;
+	}
+
+	public static String insertTags(String att, Set<String> ataglist)
+	{
+		Set<String> oldtags = getTags(att);
+		for (String atag : ataglist)
+		{   if(atag.length()>1)
+		{
+			if(atag.contains(";")) atag.replace(";",":");
+			oldtags.add(atag);
+		}
+		}
+		return makeTagString(oldtags);
+	}
+
+	private static String xxmakeSimpleString(Set<String> taglist)
+	{
+		String outtags = "";
+		for (String atag : taglist)
+		{
+			if (!atag.isEmpty() && !atag.equalsIgnoreCase("null") )
+			{
+				outtags = outtags + atag + ", ";
+			}
+		}
+		return outtags;
+	}
+
+	public static String makeString(Set<String> taglist)
+	{
+		String outtags = "";
+		for (String atag : taglist)
 		{
 			//System.out.println("|"+atag+"|"+atag.length());
-			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null") && atoken.length() >2)
+			if (!atag.isEmpty() && !atag.equalsIgnoreCase("null") && atag.length() >2)
 			{
-				tokenstring = tokenstring + atoken + "; ";
+				outtags = outtags + atag + "; ";
 			}
 			
 		}
-		return tokenstring;
+		return outtags;
 	}
 
-	
-	
-
-	public mcTextListDataType()
+	public static String makeTagString(Set<String> taglist)
 	{
-		super("textlist", "textlist");
+		String outtags = "";
+		for (String atag : taglist)
+		{
+			//System.out.println("|"+atag+"|"+atag.length());
+			if (!atag.isEmpty() && !atag.equalsIgnoreCase("null") && atag.length() >2)
+			{
+				outtags = outtags +"#"+ atag + "; ";
+			}
+			
+		}
+		return outtags;
 	}
+	
 
-	public mcTextListDataType(String astring, String bstring)
+	public mcTagListDataType()
 	{
-		super(astring,  bstring);
+		super("taglist", "taglist");
 	}
 
 	public int compareTo(String aarray, String barray)
 	{
-		SortedSet<String> aset = getTokens(aarray); 
-		SortedSet<String> bset = getTokens(barray);
+		SortedSet<String> aset = getTags(aarray); 
+		SortedSet<String> bset = getTags(barray);
 		for (final Iterator<String> it = bset.iterator(); it.hasNext();)
 		{
 			String btag = it.next();
@@ -92,7 +147,7 @@ public class mcTextListDataType extends mcDataType
 
 	public String getFormattedValue(String value, String fmt)
 	{
-		Set<String> str = getTokens(value);
+		Set<String> str = getTags(value);
 		return makeString(str);
 	}
 
@@ -106,12 +161,12 @@ public class mcTextListDataType extends mcDataType
 	public Map<String, String> getTextListMap(String value)
 	{
 		Map<String, String> sortedmap = new LinkedHashMap<String, String>();
-		SortedSet<String> tokens = getTokens(value);
+		SortedSet<String> tags = getTags(value);
 		int k = 0;
-		for (String atoken : tokens)
+		for (String atag : tags)
 		{
 			String akey = new Integer(k).toString();
-			sortedmap.put(akey, atoken);
+			sortedmap.put(akey, atag);
 		}
 		return sortedmap;
 	}
@@ -119,12 +174,12 @@ public class mcTextListDataType extends mcDataType
 	@Override
 	public String toVcardValue(String value)
 	{
-		SortedSet<String> tokenlist = getTokens(value);
+		SortedSet<String> taglist = getTags(value);
 		String outlist = "";
-		for(String token:tokenlist)
+		for(String tag:taglist)
 		{
 			//if(tag.contains(";")) tag.replace(";",":");// should not be necessary if data properly formated paul fix
-			outlist += token+";";
+			outlist += tag+";";
 		}
 		return outlist;
 	}
@@ -141,12 +196,12 @@ public class mcTextListDataType extends mcDataType
 	@Override
 	public String toXML(String value)
 	{
-		SortedSet<String> tokenlist = getTokens(value);
+		SortedSet<String> taglist = getTags(value);
 		String outxml = "<value>";
 		String sep="";
-		for (String atoken : tokenlist)
+		for (String atag : taglist)
 		{
-			String outtag = StringEscapeUtils.escapeXml(atoken);
+			String outtag = StringEscapeUtils.escapeXml(atag);
 			if(outtag.contains(",")) outtag = "\""+outtag+"\"";
 			outxml +=  sep+outtag;
 			sep = ",";
@@ -157,12 +212,15 @@ public class mcTextListDataType extends mcDataType
 
 	public boolean valueContained(String testvalue, String attvalue)
 	{
-		SortedSet<String> taglist = getTokens(attvalue);
+		// attvalue = attvalue;
+		SortedSet<String> taglist = getTags(attvalue);
+		;
+
 		if (taglist.contains(testvalue)) { return true; }
 		return false;
 	}
 	
-	public static Vector<String> parseTokenString(String csv_string, char delimiter)
+	public static Vector<String> parseTagString(String csv_string, char delimiter)
 	{ 
 		Vector<String> outarray = new Vector<String>();
 		int l = csv_string.length();
@@ -209,24 +267,4 @@ public class mcTextListDataType extends mcDataType
 		return outarray;
 	}
 
-	
-	static SortedSet<String> getTokens(String tags)
-	{
-		SortedSet<String> tokens = new TreeSet<String>();
-		char sep =';';
-		if(!tags.contains(";"))  sep=',';
-         Vector<String> tokenarray = parseTokenString(tags,sep);
-		for (String token : tokenarray)
-		{
-			token = token.trim();
-			if (!token.isEmpty() && !token.equals(";") && !token.equals("null")
-					&& !tokens.contains(token) && token.length()>1)
-			{
-				token = token.replace("#", "");
-				token= token.replace(";", "");
-				tokens.add(token);
-			}
-		}
-		return tokens;
-	}
 }

@@ -11,7 +11,7 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
-public class mcAddressDataType extends mcArrayDataType
+public class mcAddressDataType extends mcKeyValueDataType
 {
 	static String[] Addressfields = { "pobox", "building", "street", 
 			"city", "county", "postcode", "country" };
@@ -292,7 +292,7 @@ public class mcAddressDataType extends mcArrayDataType
 			return address;
 		} else
 		{
-			Vector<String> namearry = mcArrayDataType.ToVector(avalue);
+			Vector<String> namearry = mcKeyValueDataType.ToVector(avalue);
 			if (namearry.size() > 0)
 			{
 				String name = namearry.get(0);

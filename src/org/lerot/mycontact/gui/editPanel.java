@@ -126,7 +126,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			{
 				String imaddr = textArea.getText();
 				Map<String, String> addmap = mcAddressDataType.parse(imaddr);
-				String addarray = mcUtilities.toArray(addmap, "=");
+				String addarray = mcUtilities.keyvaluesmaptoArrayString(addmap, "=");
 				edattribute.setValue(addarray);
 				edattribute.dbupdateAttribute();
 				edit = "";
@@ -247,7 +247,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			String newattributevalue = atteditbox.getText();
 			String newattributequalifier = atype.getText();
-			edattribute.updateQualifier(newattributequalifier);
+			//edattribute.updateQualifier(newattributequalifier);
 			edattribute.setValue(newattributevalue);
 			edattribute.dbupdateAttribute();
 			edit = "";
@@ -463,7 +463,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 		if (selcontact != null)
 		{
-			mcAttributes getlinked = mcAttributes.FindByAttributeValue(selector,
+			mcAttributes getlinked = (new mcAttributes()).FindByAttributeValue(selector,
 					selcontact.getTID());
 			int row = 0;
 			for (Entry<String, mcAttribute> anentry : getlinked.entrySet())

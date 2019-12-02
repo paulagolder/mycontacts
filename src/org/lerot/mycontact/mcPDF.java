@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 //import java.util.Vector;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 //import org.apache.commons.lang3.StringEscapeUtils;
@@ -20,12 +19,11 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.text.BaseColor;
+
 
 public class mcPDF
 {
@@ -43,12 +41,12 @@ public class mcPDF
 	//int a4w = 595;
 	float a4w = (PageSize.A4).getWidth();
     float a4h = (PageSize.A4).getHeight();
-	private float lm, rm, bm, tm, tw, th, ch;
+	private float lm, rm, bm, tm, tw, th, ch,cw;
 	private String title;
 	private int nrows;
 	private int ncols;
 	private int ncells;
-	private float cellheight;
+	private float cellheight,cellwidth;
 
 	private float[] collist;
 
@@ -128,9 +126,9 @@ public class mcPDF
 			table.setTotalWidth(tw);
 			table.setLockedWidth(true);
 			if(!border)
-				   table.getDefaultCell().setBorder(iborder);
+				   table.getDefaultCell().setBorder(0);
 				else
-					table.getDefaultCell().setBorder(1);
+					table.getDefaultCell().setBorder(1+2+4+8);
 
 			table.setWidths(collist);
 			Paragraph p0 = new Paragraph();
@@ -157,6 +155,7 @@ public class mcPDF
 				p1.add(new Phrase(address, selectedfont));
 				PdfPCell c1 = new PdfPCell(p1);
 				c1.setFixedHeight(cellheight);
+				
 				c1.setPaddingLeft(pl);
 				c1.setPaddingRight(pr);
 				c1.setPaddingTop(pt);
@@ -194,15 +193,20 @@ public class mcPDF
 		addMetaData();
 		document.newPage();
 		document.setMargins(lm, rm, tm, bm);
+		 
 		int k = 0;
 		int p = 1;
-        int iborder =  BooleanUtils.toInteger(border);
+		int iborder =0;
+		if(border)
+            iborder = 1+2+4+8; //BooleanUtils.toInteger(border);
 		try
 		{
 			document.newPage();
+			document.setMargins(lm, rm, tm, bm);
 			PdfPTable table = new PdfPTable(ncols);
-			table.setTotalWidth(tw);
-			table.setLockedWidth(true);
+			table.setWidthPercentage(100);
+			//table.setTotalWidth(tw);
+			//table.setLockedWidth(true);
 			table.getDefaultCell().setBorder(iborder);
 			table.setWidths(collist);
 			Paragraph p0 = new Paragraph();
@@ -250,9 +254,11 @@ public class mcPDF
 					{
 						document.add(table);
 						document.newPage();
+						document.setMargins(lm, rm, tm, bm);
 						table = new PdfPTable(ncols);
-						table.setTotalWidth(tw);
-						table.setLockedWidth(true);
+						table.setWidthPercentage(100);
+					//	table.setTotalWidth(tw);
+					//	table.setLockedWidth(true);
 						table.setWidths(collist);
 						k = 0;
 						p++;
@@ -327,23 +333,31 @@ public class mcPDF
 
 		rotate = mcUtilities.toBoolean(tlayout.get("rotate"));
 		nrows = mcUtilities.toInteger(tlayout.get("nrows"));
-		lm = mcUtilities.toInteger(tlayout.get("leftmargin"));
-		tm = mcUtilities.toInteger(tlayout.get("topmargin"));
-		pt = mcUtilities.toInteger(tlayout.get("toppadding"));
-		pl = mcUtilities.toInteger(tlayout.get("leftpadding"));
-		pr = mcUtilities.toInteger(tlayout.get("rightpadding"));
-		pb = mcUtilities.toInteger(tlayout.get("bottompadding"));
-		bm = mcUtilities.toInteger(tlayout.get("bottommargin"));
+		rm = mcUtilities.toFloat(tlayout.get("rightmargin"));
+		lm = mcUtilities.toFloat(tlayout.get("leftmargin"));
+		tm = mcUtilities.toFloat(tlayout.get("topmargin"));
+		pt = mcUtilities.toFloat(tlayout.get("toppadding"));
+		pl = mcUtilities.toFloat(tlayout.get("leftpadding"));
+		pr = mcUtilities.toFloat(tlayout.get("rightpadding"));
+		pb = mcUtilities.toFloat(tlayout.get("bottompadding"));
+		bm = mcUtilities.toFloat(tlayout.get("bottommargin"));
 		ch = mcUtilities.toFloat(tlayout.get("cellheight"));
+		cw = mcUtilities.toFloat(tlayout.get("cellwidth"));
 		border =  mcUtilities.toBoolean(tlayout.get("border"));
 		ncells = nrows * ncols;
-		tw = a4w - lm - rm - 100;
+		tw = a4w - lm - rm ;
 		th = a4h - tm - bm;
 		if(ch>0)
 			cellheight = ch;
 		else
 		  cellheight = (th / nrows);
+		if(cw>0)
+			cellwidth = cw;
+		else
+		  cellwidth = (tw / ncols);
+		System.out.println("tw="+tw+" "+lm +" "+rm);
 		System.out.println("cellheight="+cellheight);
+		System.out.println("cellwidth="+cellwidth);
 		selectedfont = smallNormal;
 		if (tlayout.get("font").equalsIgnoreCase("largeBold"))
 		{

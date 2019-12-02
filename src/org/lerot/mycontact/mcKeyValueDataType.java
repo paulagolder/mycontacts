@@ -9,13 +9,13 @@ import java.util.Vector;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.text.WordUtils;
 
-public abstract class mcArrayDataType extends mcDataType
+public abstract class mcKeyValueDataType extends mcDataType
 {
 
 	LinkedHashMap<String, mcfield> fieldlist;
 	Vector<String> keylist;
 
-	public mcArrayDataType(String key, String type)
+	public mcKeyValueDataType(String key, String type)
 	{
 		super(key, type);
 		dbLoadFieldList();
@@ -67,7 +67,7 @@ public abstract class mcArrayDataType extends mcDataType
 		return newstr;
 	}
 
-	public String arrayToArrayString(Map<String, String> vals)
+	public String keyvaluesToArrayString(Map<String, String> vals)
 	{
 
 		Map<mcfield, String> arrayvalues = new LinkedHashMap<mcfield, String>();

@@ -25,6 +25,11 @@ import javax.swing.text.JTextComponent;
 	public class jswTextPrompt extends JLabel
 		implements FocusListener, DocumentListener
 	{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public enum Show
 		{
 			ALWAYS,

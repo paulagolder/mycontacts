@@ -51,7 +51,7 @@ public class mcAttributeTypes extends mcDataObject
 		return attributetypelist;
 	}
 
-	public void dbloadTypeList()
+	public void loadAttributeTypes()
 	{
 		ArrayList<Map<String, String>> rowlist = doQuery("select * from attribute order by displayOrder ");
 		attributetypelist = new LinkedHashMap<String, mcAttributeType>();
@@ -63,6 +63,7 @@ public class mcAttributeTypes extends mcDataObject
 			String akey = alabtype.getKey();
 			attributetypelist.put(akey, alabtype);
 		}
+		System.out.println( " loaded attributetypes "+attributetypelist.size());
 	}
 	
 	

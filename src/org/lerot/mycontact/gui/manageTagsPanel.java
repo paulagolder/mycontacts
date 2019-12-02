@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
@@ -15,6 +16,7 @@ import org.lerot.mycontact.gui.widgets.jswButton;
 import org.lerot.mycontact.gui.widgets.jswCheckbox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswLabel;
+import org.lerot.mycontact.gui.widgets.jswScrollPane;
 import org.lerot.mycontact.gui.widgets.jswTable;
 import org.lerot.mycontact.gui.widgets.jswTextField;
 import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
@@ -28,7 +30,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 	mcContacts found;
 	JRadioButton[] options;
 	private jswCheckbox[] acheck;
-	private Map<String, Integer> taglist;
+	private mctagList tagList;
 	private jswTable atttable;
 
 	@Override
@@ -58,14 +60,19 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			if (row < 1) System.out.println("nothing to merge");
 			else
 			{
+			
+				mergeto.replace(";", "");
+				mergeto = mergeto+";";
 				for (jswCheckbox checkbox : acheck)
 				{
 					if (checkbox != null && checkbox.isSelected())
 					{
 						String mergefrom = checkbox.getTag();
+						mergefrom.replace(";", "");
+						mergefrom = mergefrom+";";
 						if (!mergeto.equals(mergefrom))
 						{
-							mctagList.replaceall("tags", mergefrom, mergeto);
+							tagList.replaceall("tags", mergefrom, mergeto);
 						}
 					}
 				}
@@ -95,7 +102,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 						if (checkbox != null && checkbox.isSelected())
 						{
 							String todelete = checkbox.getTag();
-							mctagList.delete("tags", todelete);
+							(new mctagList()).delete("tags", todelete);
 						}
 					}
 				}
@@ -103,7 +110,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			System.out.println("deleting");
 		} else if (action.equals("NORM"))
 		{
-			mctagList.renorm();
+			tagList.renorm();
 			System.out.println("norminging");
 		} else if (action.equals("RENAME"))
 		{
@@ -111,14 +118,17 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			{
 				if (checkbox != null && checkbox.isSelected())
 				{
-					System.out.println("rename  " + checkbox.getTag());
+					System.out.println("renaming  " + checkbox.getTag());
 					row++;
 				}
 			}
 			if (row < 1) System.out.println("nothing to rename");
 			String newtag = JOptionPane.showInputDialog("Enter New tag name");
+			if(newtag!=null) 
+			{
 			newtag.replace("#", "");
 			newtag.replace(";", "");
+			newtag = "#"+newtag+";";
 			if (newtag.length() > 4)
 			{
 
@@ -127,17 +137,18 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 					if (checkbox != null && checkbox.isSelected())
 					{
 						String changefrom = checkbox.getTag();
-						mctagList.replaceall("tags", changefrom, newtag);
+						tagList.replaceall("tags", changefrom, newtag);
 						row++;
 					}
 				}
 			}
-			// System.out.println("rename to " + path);
+			}
+			
 		} else
 			System.out.println("label print action " + action
 					+ " unrecognised ");
-		mctagList.reloadTags();
-		taglist = mctagList.getAllTags();
+		tagList.reloadTags();
+	
 		buildTagPanel();
 		atttable.repaint();
 		mcdb.topgui.getContentPane().validate();
@@ -145,7 +156,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	public manageTagsPanel()
 	{
-
+		tagList = new mctagList();
 		jswHorizontalPanel header = new jswHorizontalPanel();
 		jswLabel heading = new jswLabel("Manage Tags");
 		header.add(" FILLW ", heading);
@@ -153,16 +164,18 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		jswHorizontalPanel scorebar = new jswHorizontalPanel();
 		this.add(scorebar);
 		jswLabel score;
-		if (taglist == null || taglist.isEmpty())
+		tagList.reloadTags();
+		//tagList.getAllTags();
+		if (tagList == null || tagList.isEmpty())
 		{
 			score = new jswLabel("No tags found ");
 		} else
-			score = new jswLabel(" " + taglist.size()
+			score = new jswLabel(" " + tagList.size()
 					+ " different tags found ");
 		scorebar.add(score);
 		jswHorizontalPanel printbar = new jswHorizontalPanel();
 		this.add(printbar);
-		found = mcdb.selbox.getSelectedcontactlist();
+		found = mcdb.selbox.getSearchResultList();
 		jswButton testbutton = new jswButton(this, "MERGE");
 		printbar.add(" MIDDLE ", testbutton);
 		jswButton deletebutton = new jswButton(this, "DELETE");
@@ -172,7 +185,16 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		jswButton normbutton = new jswButton(this, "NORM");
 		printbar.add(" MIDDLE ", normbutton);
 		atttable = new jswTable("tags", mcdb.topgui.tablestyles);
-		this.add(atttable);
+		jswScrollPane scrollableTextArea = new jswScrollPane(atttable,
+				-4, -4);
+		scrollableTextArea.setName("resultscroll");
+		scrollableTextArea
+				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollableTextArea
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+		this.add(" SCROLLH ", scrollableTextArea);
+		
+
 
 		this.repaint();
 		mcdb.topgui.mainpanel.repaint();
@@ -185,7 +207,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		atttable.removeAll();
 		int row = 0;
 		acheck = new jswCheckbox[40];
-		for (Entry<String, Integer> anentry : taglist.entrySet())
+		for (Entry<String, Integer> anentry : tagList.entrySet())
 		{
 			String attkey = anentry.getKey();
 			int attcount = anentry.getValue();
@@ -203,8 +225,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	public void refresh()
 	{
-		mctagList.reloadTags();
-		taglist = mctagList.getAllTags();
+		tagList.reloadTags();
 		buildTagPanel();
 	}
 }

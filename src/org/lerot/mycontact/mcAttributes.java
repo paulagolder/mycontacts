@@ -10,7 +10,7 @@ import java.util.Vector;
 public class mcAttributes extends mcDataObject
 {
 
-	public static mcAttributes getAttributes(int id)
+	public  mcAttributes getAttributes(int id)
 	{
 		mcAttributes atlist = new mcAttributes();
 		String attkey = "*";
@@ -18,12 +18,14 @@ public class mcAttributes extends mcDataObject
 		PreparedStatement st;
 		
 		try
-		{
+		{ 
+			con=datasource.getConnection();
 			st = con.prepareStatement(query);
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
 			{
 				String attroot = resset.getString("root");
+				attkey=attroot;
 				String attqual = resset.getString("qualifier");
 				String attupdate = resset.getString("update_dt");
 				mcAttribute anattribute = new mcAttribute(id, attroot,attqual,attupdate);
@@ -34,6 +36,7 @@ public class mcAttributes extends mcDataObject
 		{
 			System.out.println(" error in get Attributes " + attkey + " :" +query);
 		}
+		datasource.disconnect();
 		return atlist;
 
 	}
@@ -152,7 +155,7 @@ public class mcAttributes extends mcDataObject
 		return attributelist.size();
 	}
 
-	public static mcAttributes FindByAttributeValue(String root, String tid)
+	public  mcAttributes FindByAttributeValue(String root, String tid)
 	{
 		mcAttributes atlist = new mcAttributes();
 
@@ -160,6 +163,7 @@ public class mcAttributes extends mcDataObject
 		PreparedStatement st;
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, root);
 			st.setString(2, tid);
@@ -173,6 +177,7 @@ public class mcAttributes extends mcDataObject
 				anattribute.load(resset);
 				atlist.put(anattribute.getKey(), anattribute);
 			}
+			disconnect();
 		} catch (Exception e)
 		{
 			System.out.println(" error in get Attributes " +root + " " +tid);

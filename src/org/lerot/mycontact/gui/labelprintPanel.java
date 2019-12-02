@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcLetter;
 import org.lerot.mycontact.mcPDF;
 import org.lerot.mycontact.mcdb;
@@ -35,10 +36,7 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 	private jswLabel prog;
 	private jswDropDownBox layoutpanel;
 	private jswThumbwheel startpos;
-	private jswOptionset optionset;
-	private jswOption allcontacts;
-	private jswOption browsecontacts;
-	private jswOption selectedcontacts;
+	private jswLabel selectedcontacts;
 	private jswCheckbox showcountry;
 	private mcPDF labelpages;
 	@Override
@@ -84,8 +82,10 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 			String pagelayout = layoutpanel.getSelectedValue();
 			labelpages = new mcPDF(afile, "Lerot Contacts Labels");
 			labelpages.setLayout(pagelayout);
+			mcContacts sellist = mcdb.selbox.getBrowsecontactlist();
+			System.out.println("label print : " + sellist.size());
 			int ncount = labelpages.makeLabelsPages(
-					mcdb.selbox.getSelectedcontactlist(), sp,showcountryselected);
+					sellist, sp,showcountryselected);
 			prog.setText(" Printing complete " + ncount + " pages");
 		} else
 			System.out.println("label print action " + action
@@ -97,29 +97,19 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 	public labelprintPanel()
 	{
 		int ncontacts = mcdb.selbox.countAll();
-		int nsearchcontacts = mcdb.selbox.getSelectedcontactlist().size();
 		int nbrowsecontacts = mcdb.selbox.getBrowsecontactlist().size();
-		String searchterm = mcdb.selbox.getSearchterm();
+		//String searchterm = mcdb.selbox.getSearchterm();
 		this.removeAll();
 		jswHorizontalPanel header = new jswHorizontalPanel();
 		jswLabel heading = new jswLabel(" Print address Labels ");
 		header.add(" FILLW ", heading);
 		this.add(header);
 		jswHorizontalPanel filterbar = new jswHorizontalPanel();
-		optionset = new jswOptionset("source", false, this);
-		allcontacts = optionset
-				.addNewOption("All Contacts " + ncontacts, false);
-		allcontacts.setTag("all");
-		browsecontacts = optionset.addNewOption("Browse Contacts "
-				+ nbrowsecontacts, false);
-		browsecontacts.setTag("browse");
-		selectedcontacts = optionset.addNewOption("Selected Contacts "
-				+ nsearchcontacts, false);
-		selectedcontacts.setTag("selected");
-		filterbar.add(" LEFT ", allcontacts);
-		filterbar.add(" MIDDLE ", browsecontacts);
-		browsecontacts.setSelected(true);
-		filterbar.add(" RIGHT ", selectedcontacts);
+		
+		selectedcontacts = new jswLabel("Selected Contacts "
+				+ nbrowsecontacts);
+		
+		filterbar.add(" MIDDLE ", selectedcontacts);
 		add(filterbar);
 		jswHorizontalPanel filebar = new jswHorizontalPanel();
 		selbutton = new jswButton(this, "Select");
@@ -162,13 +152,10 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 
 	public void refresh()
 	{
-		int ncontacts = mcdb.selbox.countAll();
-		int nsearchcontacts = mcdb.selbox.getSelectedcontactlist().size();
+
 		int nbrowsecontacts = mcdb.selbox.getBrowsecontactlist().size();
-		String searchterm = mcdb.selbox.getSearchterm();
-		allcontacts.setText("All Contacts (" + ncontacts + ")");
-		selectedcontacts.setText("Selected contacts (" + nsearchcontacts + ")");
-		browsecontacts.setText("Browse Contacts (" + nbrowsecontacts + ")");
+		//String searchterm = mcdb.selbox.getSearchterm();
+		selectedcontacts.setText("Selected contacts (" + nbrowsecontacts + ")");
 
 	}
 

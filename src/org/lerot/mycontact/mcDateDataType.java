@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class mcDateDataType extends mcArrayDataType
+public class mcDateDataType extends mcKeyValueDataType
 {
 
 	static String[] Datefields = { "year", "month", "day" };

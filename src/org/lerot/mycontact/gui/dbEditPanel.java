@@ -167,7 +167,7 @@ public class dbEditPanel extends jswVerticalPanel implements ActionListener
 
 			mcdb.topgui.currentcon = new mcDataSource(selecteddb);
 			mcdb.topgui.dbsource= selecteddb;
-			mcDataObject.setConnection(mcdb.topgui.currentcon);
+			//(new mcDataObject()).setConnection(mcdb.topgui.currentcon);
 			mcdb.topgui.startup();
 		}
 

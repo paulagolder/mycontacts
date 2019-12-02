@@ -1,6 +1,10 @@
 package org.lerot.mycontact.gui.widgets;
 
+import java.awt.Color;
+
 import javax.swing.JScrollPane;
+
+import org.lerot.mycontact.mcdb;
 
 public class jswScrollPane extends jswPanel
 {
@@ -14,43 +18,31 @@ public class jswScrollPane extends jswPanel
 	public jswScrollPane(jswPanel atarget, int xshift, int yshift)
 	{
 		super("scrollpane");
-		target = atarget;
-		// setBorder(setLineBorder(Color.red, 4));
-		// jswScrollLayout arlayout = new jswScrollLayout(yshift, xshift, 0, 0);
-		// jswVerticalLayout arlayout = new jswVerticalLayout();// yshift,
+		target = atarget;	
 		jswHorizontalLayout arlayout = new jswHorizontalLayout();
-		// xshift,
-		// 0, 0);
 		this.setLayout(arlayout);
-		// this.setTag("trace");
+		jswStyle scrollstyle = mcdb.allstyles.getStyle("jswScrollPaneStyles");
+		Color bcolor = scrollstyle.getColor("backgroundColor", Color.BLUE);
+		setBackground(bcolor);
 		window = new JScrollPane(target);
-		// window.setBorder(setLineBorder(Color.yellow, 4));
 		add(" FILLW ", window);
-		// add(window);
 	}
 
 	public jswScrollPane(jswPanel atarget)
 	{
 		super("scrollpane");
 		target = atarget;
-
-		// jswRectLayout arlayout = new jswRectLayout();
-		// jswVerticalLayout arlayout = new jswVerticalLayout();
-		// jswScrollLayout arlayout = new jswScrollLayout(0, 0, 0, 0);
 		jswHorizontalLayout arlayout = new jswHorizontalLayout();
-		// setBorder(setLineBorder(Color.red, 4));
 		this.setLayout(arlayout);
-		// this.setTag("trace");
 		window = new JScrollPane(target);
-		// window.setBorder(setLineBorder(Color.yellow, 4));
 		add(" FILLW ", window);
-		// add(window);
 	}
 
 	public void setMyBounds(int x, int y, int w, int h)
 	{
-		window.setBounds(x, y, w, h);
-		this.setBounds(x, y, w, h);
+		int deltaw =12; //ALLOW FOR SCROLLBAR
+		window.setBounds(x, y, w-x-deltaw, h-y);
+		this.setBounds(x, y, w-x-deltaw, h-y);
 		// System.out.format(" setting bounds %d %d %d %d %n ", x, y, w, h);
 	}
 

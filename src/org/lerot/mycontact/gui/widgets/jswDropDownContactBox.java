@@ -14,6 +14,7 @@ import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import org.lerot.mycontact.mcContact;
+import org.lerot.mycontact.mcContacts;
 
 public class jswDropDownContactBox extends jswHorizontalPanel
 {
@@ -40,7 +41,7 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		}
 	}
 	private static final long serialVersionUID = 1L;
-	JComboBox<mcContact> datalist;
+	JComboBox<mcContact> contactddbox;
 	JLabel label;
 
 	DefaultComboBoxModel<mcContact> listModel;
@@ -63,9 +64,9 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 			label.setFont(new Font("SansSerif", Font.BOLD, 12));
 		}
 		listModel = new DefaultComboBoxModel<mcContact>();
-		datalist = new JComboBox<mcContact>(listModel);
-		datalist.setPreferredSize(new Dimension(width, 24));
-		datalist.setRenderer(new ContactRenderer());
+		contactddbox = new JComboBox<mcContact>(listModel);
+		contactddbox.setPreferredSize(new Dimension(width, 24));
+		contactddbox.setRenderer(new ContactRenderer());
 		// datalist.setEditable(true);
 		setName(inLabel);
 		if (hasborder)
@@ -75,19 +76,19 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 				setBorder(setcborder(inLabel));
 		} else
 			setBorder(setborder());
-		add("FILLW", datalist);
+		add("FILLW", contactddbox);
 		// datalist.addActionListener(new MyActionListener());
 	}
 
 	public void addActionListener(ActionListener c)
 	{
-		datalist.addActionListener(c);
+		contactddbox.addActionListener(c);
 	}
 
 	public void addActionListener(ActionListener c, String actionlabel)
 	{
-		datalist.addActionListener(c);
-		datalist.setActionCommand(actionlabel);
+		contactddbox.addActionListener(c);
+		contactddbox.setActionCommand(actionlabel);
 	}
 
 	public void addList(Vector<mcContact> list)
@@ -98,7 +99,7 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 			{
 				listModel.addElement(list.get(i));
 			}
-			datalist.setSelectedIndex(0);
+			contactddbox.setSelectedIndex(0);
 		}
 
 	}
@@ -108,20 +109,21 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		mcContact selcon =  getSelectedValue();
 		if(selcon==null)
 		{
-			datalist.setSelectedIndex(0);
+			contactddbox.setSelectedIndex(0);
 		}
 		else
 		{
-		  int currentindex = listModel.getIndexOf(selcon);
+		  int currentindex = contactddbox.getSelectedIndex();
+		  if(currentindex<0 )currentindex=0;
 		  int nextindex = currentindex +1;
-		  if(nextindex < listModel.getSize()) 
+		  if(nextindex < contactddbox.getModel().getSize()) 
 		  {
-			  mcContact next = listModel.getElementAt(nextindex);
-			  datalist.setSelectedItem(next);
+			  mcContact next =contactddbox.getItemAt(nextindex);
+			  contactddbox.setSelectedItem(next);
 		  }
 		  else
 		  {
-			  datalist.setSelectedIndex(0);
+			  contactddbox.setSelectedIndex(0);
 		  }
 		}
 		return getSelectedValue();
@@ -132,19 +134,20 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		mcContact selcon =  getSelectedValue();
 		if(selcon==null)
 		{
-			datalist.setSelectedIndex(0);
+			contactddbox.setSelectedIndex(0);
 		}
 		else
 		{
-		  int currentindex = listModel.getIndexOf(selcon);
+			  int currentindex = contactddbox.getSelectedIndex();
 		  if(currentindex > 0) 
 		  {
-			  mcContact next = listModel.getElementAt(currentindex-1);
-			  datalist.setSelectedItem(next);
+			 int nextindex = currentindex-1;
+			  mcContact next = contactddbox.getItemAt(nextindex);
+			  contactddbox.setSelectedItem(next);
 		  }
 		  else
 		  {
-			  datalist.setSelectedIndex(0);
+			  contactddbox.setSelectedIndex(0);
 		  }
 		}
 		return getSelectedValue();
@@ -152,9 +155,9 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 	
 	public mcContact getSelectedValue()
 	{
-		if (datalist.getSelectedItem() != null)
+		if (contactddbox.getSelectedItem() != null)
 		{
-			return (mcContact) datalist.getSelectedItem();
+			return (mcContact) contactddbox.getSelectedItem();
 		} else
 			return null;
 	}
@@ -171,54 +174,78 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 	public void setEnabled(boolean e)
 	{
 		label.setEnabled(e);
-		datalist.setEnabled(e);
+		contactddbox.setEnabled(e);
 		// listModel.setEnabled(e);
 	}
 
 	public void setSelected(mcContact selitem)
 	{
 		if(contains(selitem))
-	    	datalist.setSelectedItem(selitem);
+	    	contactddbox.setSelectedItem(selitem);
 		else
-			datalist.setSelectedItem(0);
+			contactddbox.setSelectedItem(0);
 	}
 
 	public void setSelected(int selindex)
 	{
-		datalist.setSelectedIndex(selindex);
+		contactddbox.setSelectedIndex(selindex);
 	}
 
 	public void clearList()
 	{
 		listModel.removeAllElements();
-		datalist.removeAllItems();
+		contactddbox.removeAllItems();
 	}
 
-	public void replaceList(Vector<mcContact> list)
+	
+
+	
+
+	
+	public void setList(Vector<mcContact> list)
 	{
-		listModel.removeAllElements();
-		datalist.removeAllItems();
-		addList(list);
+		DefaultComboBoxModel<mcContact> newModel = new  DefaultComboBoxModel<mcContact>();
+		if (list.size() > 0)
+		{
+			for (int i = 0; i < list.size(); i++)
+			{
+				newModel.addElement(list.get(i));
+			}
+			//datalist.setSelectedIndex(0);
+		}
+		contactddbox.setModel( newModel );
+		if(list.size() > 0)
+			contactddbox.setSelectedIndex(0);
+		else
+			contactddbox.setSelectedIndex( -1);
+	}
+	
+	public void setContactList(mcContacts contactlist)
+	{
+		Vector<mcContact> cv =  contactlist.makeOrderedContactsVector();
+		setList(cv);
 	}
 
 	public int countSize()
 	{
-		return listModel.getSize();
+		return contactddbox.getModel().getSize();
 	}
 
 	public void setComboBoxEnabled(boolean b)
 	{
-		datalist.setEnabled(b);
+		contactddbox.setEnabled(b);
 	}
 
 	public void removeActionListener(ActionListener al)
 	{
-		datalist.removeActionListener(al);
+		contactddbox.removeActionListener(al);
 	}
 
 	public void setActionCommand(String cmd)
 	{
-		datalist.setActionCommand(cmd);
+		contactddbox.setActionCommand(cmd);
 	}
+
+	
 
 }

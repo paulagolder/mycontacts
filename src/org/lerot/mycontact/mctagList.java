@@ -5,44 +5,47 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 
 public class mctagList extends mcDataObject
 {
 
-	static Map<String, Integer> taglist;
+	private  Map<String, Integer> taglist;
 
 	public mctagList()
 	{
 		super();
 	}
 
-	public static void reloadTags()
+	public  void reloadTags()
 	{
 		selectAllTags();
 	}
 
-	public static void selectAllTags()
+	public  void selectAllTags()
 	{
+		//System.out.println("reloading tags ");
 		Map<String, Integer> ustaglist = new HashMap<String, Integer>();
 		taglistcomparator comparator = new taglistcomparator(ustaglist);
 
-		taglist = new TreeMap<String, Integer>(comparator);
+		setTaglist(new TreeMap<String, Integer>(comparator));
 		String query = " select * from attributeValues where root = 'tags'  ";
 		PreparedStatement st;
 		int k = 1;
 		try
 		{
+			con =  datasource.getConnection();
 			st = con.prepareStatement(query);
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
 			{
 				mcAttribute tatt = new mcAttribute(k, "tags", "");
 				tatt.load(resset);
-				if (tatt.isType("textlist"))
+				if (tatt.isType("taglist"))
 				{
-					Set<String> tagset = mcTextListDataType.getTags(tatt);
+					Set<String> tagset = mcTagListDataType.getTags(tatt);
 					for (String tag : tagset)
 					{
 						if (ustaglist.containsKey(tag))
@@ -59,9 +62,10 @@ public class mctagList extends mcDataObject
 			}
 			st.close();
 
-			taglist.putAll(ustaglist);
+			getTaglist().putAll(ustaglist);
 			//
 			// System.out.println(taglist);
+			datasource.disconnect();
 
 		} catch (Exception e)
 		{
@@ -70,29 +74,38 @@ public class mctagList extends mcDataObject
 
 	}
 
-	public static void renorm()
+	public  void renorm()
 	{
-		String query = " select * from attributeValues where root LIKE 'tags%'  ";
+		String query = " select * from attributeValues where root =  'tags'   ";
 		PreparedStatement st;
 		int k = 1;
 		try
 		{
+			con =  datasource.getConnection();
 			st = con.prepareStatement(query);
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
 			{
-				mcAttribute tatt = new mcAttribute(k, "tags");
+				mcAttribute tatt = new mcAttribute(k, "tags","");
 				tatt.load(resset);
+				//System.out.print(tatt);
+				//mcTextListDataType.getTags("value");
 				if (tatt.isType("textlist"))
 				{
-					Set<String> tagset = mcTextListDataType.getTags(tatt);
+					Set<String> tagset = mcTagListDataType.getTags(tatt);
 					System.out.println(tagset);
-					mcTextListDataType.insertTags(tatt.getValue(), tagset);
+					mcTagListDataType.insertTags(tatt.getValue(), tagset);
 					tatt.insertValues(tagset);
+				}
+				else
+				{
+					System.out.println("===="+tatt);
+					
+					
 				}
 			}
 			st.close();
-
+			datasource.disconnect();
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -100,24 +113,27 @@ public class mctagList extends mcDataObject
 
 	}
 
-	public static Map<String, Integer> getAllTags()
-	{
-		return taglist;
-	}
+	///public  Map<String, Integer> getAllTags()
+	//{
+	//	return getTaglist();
+	//}
 
-	public static void replaceall(String attkey, String mergefrom,
+	public void replaceall(String attkey, String mergefrom,
 			String mergeto)
 	{
 		String query = " update attributeValues set value = replace(value, ?, ?)  where root LIKE ?  ";
 		PreparedStatement st;
 		try
 		{
+			con =  datasource.getConnection();
 			st = con.prepareStatement(query);
-			st.setString(1, "#" + mergefrom + ";");
-			st.setString(2, "#" + mergeto + ";");
+			st.setString(1,  mergefrom );
+			st.setString(2,  mergeto );
 			st.setString(3, attkey + "%");
+			System.out.println("After : " + st.toString());
 			st.executeUpdate();
 			st.close();
+			datasource.disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -126,21 +142,49 @@ public class mctagList extends mcDataObject
 
 	}
 
-	public static void delete(String attkey, String todelete)
+	public void delete(String attkey, String todelete)
 	{
 		String query = " update attributeValues set value = replace(value, ?, '')  where root LIKE ? ";
 		PreparedStatement st;
 		try
 		{
+			con =  datasource.getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, "#" + todelete + ";");
 			st.setString(2, attkey);
 			st.executeUpdate();
 			st.close();
+			datasource.disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 
+	}
+
+	public  Map<String, Integer> getTaglist()
+	{
+		return taglist;
+	}
+
+	public void setTaglist(Map<String, Integer> ataglist)
+	{
+		taglist = ataglist;
+	}
+
+	public boolean isEmpty()
+	{
+		if(taglist.size()<1) return true;
+		return false;
+	}
+
+	public int size()
+	{
+		return taglist.size();
+	}
+
+	public Set<Entry<String, Integer>> entrySet()
+	{
+		return taglist.entrySet();
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -52,10 +53,11 @@ public class mcdb extends JFrame implements ActionListener
 	public static String certificatepath;
 	
 	private static final long serialVersionUID = 1L;
+	public static  boolean started = false;
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 13.0";
+	static String version = "V 20.0";
 	public static mcSelectorBox selbox;
 	public static String letterfolder;
 	public static Map<String, Map<String, String>> labeltemplates = null;
@@ -83,9 +85,20 @@ public class mcdb extends JFrame implements ActionListener
 		});
 		mframe.getContentPane().setLayout(
 				new BoxLayout(mframe.getContentPane(), BoxLayout.X_AXIS));
-		mframe.setLocation(50, 50);
-		mframe.pack();
-		mframe.setVisible(true);
+		//mframe.setLocation(50, 50);
+		//mframe.pack();
+		Dimension actual = new Dimension();
+		actual.width = 900;
+	    actual.height = 700;
+		mframe.setSize(actual);
+	
+		//mframe.pack();	
+		    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		    int x = (int) ((dimension.getWidth() - mframe.getWidth()) / 2);
+		    int y = (int) ((dimension.getHeight() - mframe.getHeight()) / 2);
+		    mframe.setLocation(x, y);
+		//mframe.pack();	
+		//mframe.setVisible(true);
 	}
 
 	public browsePanel abrowsepanel;
@@ -163,10 +176,14 @@ public class mcdb extends JFrame implements ActionListener
 		budir = props.getProperty("backupdirectory", dotcontacts+"/backup");
 		
 		currentcon = new mcDataSource(dotcontacts + dbsource);
-		mcDataObject.setConnection(currentcon);
+		//(new mcDataObject()).setConnection(currentcon);
 	
 		topgui = this;
-
+		Dimension actual = new Dimension();
+		actual.width = 900;
+	    actual.height = 700;
+	    topgui .setSize(actual);
+		
 		addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -194,27 +211,28 @@ public class mcdb extends JFrame implements ActionListener
 		source= new jswLabel(dbsource);
 		sourceBar.add(source);
 		bigpanel.add(sourceBar);
-
+	
 		selbox = new mcSelectorBox(this, this);
 		bigpanel.add("FILLW", selbox);
 		mainpanel = new jswContainer("fred1");
 		mainpanel.setLayout(new jswVerticalLayout());
 		bigpanel.add(" FILLH ", mainpanel);
-		bigpanel.setBorder(jswPanel.setLineBorder(Color.red, 3));
-		mode = "BROWSE";
+		bigpanel.setBorder(jswPanel.setLineBorder(Color.GRAY ,3));
+
 		abrowsepanel = new browsePanel();
 		mainpanel.add("FILLW", abrowsepanel);
 		asearchpanel = new searchPanel();
 		asearchpanel.makesearchPanel(selbox, this);
 		abrowsepanel = new browsePanel();
 		aneditpanel = new editPanel();
-		
-			labeltemplates =  mcPDF.readTemplates();
-		
-		toolspanel = new ToolsPanel(this);
 		// aneditpanel.showEditPanel();
 		selbox.setEnabled(true);
 		startup();
+		toolspanel = new ToolsPanel(this);
+		selbox.setTaglist();
+		selbox.refreshAllContacts("1");
+		refresh();
+		mcdb.started = true;
 	}
 
 	@Override
@@ -242,7 +260,7 @@ public class mcdb extends JFrame implements ActionListener
 	public void startup()
 	{
 		System.out.println(os + " " + userhome);
-	
+	    //currentcon = new 
 		System.out.println("opening :"+ dbsource);
 		Map<String, String> mychecks = currentcon.checkmcdb();
 	
@@ -255,29 +273,26 @@ public class mcdb extends JFrame implements ActionListener
 		alldatatypes = new mcDataTypes();
 		alldatatypes.loadTypes();
 		attributetypes = new mcAttributeTypes();
-		attributetypes.dbloadTypeList();
-		selbox.setAllContacts();
-		selbox.clearGroupfilter();
-		selbox.addtoGroupfilter("person");
-		selbox.addtoGroupfilter("group");
-		selbox.filterContacts();
-		selbox.setSearchterm("");
-		selbox.setBrowseStatus("BROWSE");
+		attributetypes.loadAttributeTypes();
+
+		selbox.setBrowseFilter("all");
+		selbox.refreshAllContacts("startup");
+		mode = "BROWSE";
+
 		mcLetter.getTemplates(dotcontacts);
 		labeltemplates =  mcPDF.readTemplates();
-		refresh();
+		//refresh();
 	}
 
 	public void refresh()
 	{
 		buttonset.setSelected(mode);
-		selbox.update();
 		if (mode.equals("EDIT"))
 		{
 			selbox.setVisible(true);
 			selbox.navVisible(true);
+			selbox.filterboxVisible(false);
 			mainpanel.removeAll();
-			// aneditpanel = new editPanel();
 			aneditpanel.showEditPanel();
 			mainpanel.add(aneditpanel);
 		} else if (mode.equals("SEARCH"))
@@ -285,15 +300,15 @@ public class mcdb extends JFrame implements ActionListener
 			selbox.setVisible(true);
 			selbox.navVisible(false);
 			mainpanel.removeAll();
-			// asearchpanel = new searchPanel();
 			asearchpanel.makesearchPanel(selbox, this);
 			mainpanel.add(" FILLH ", asearchpanel);
 		} else if (mode.equals("BROWSE"))
 		{
 			selbox.setVisible(true);
+			selbox.refreshAll();;
 			selbox.navVisible(true);
+			selbox.filterboxVisible(false);
 			mainpanel.removeAll();
-			// abrowsepanel = new browsePanel();
 			abrowsepanel.showBrowsePanel();
 			mainpanel.add("FILLW", abrowsepanel);
 		} else if (mode.equals("TOOLS"))
@@ -303,14 +318,6 @@ public class mcdb extends JFrame implements ActionListener
 			toolspanel.refresh();
 			mainpanel.add(" FILLW ", toolspanel);
 		}
-		Dimension d = this.getMinimumSize();
-		Rectangle fred = this.getBounds();
-		fred.width = d.width;
-		fred.height = d.height + 40;
-		Rectangle actual = mcdb.topgui.getBounds();
-		if (fred.width > actual.width) actual.width = fred.width;
-		if (fred.height > actual.height) actual.height = fred.height;
-		mcdb.topgui.setBounds(actual);
 		getContentPane().repaint();
 		getContentPane().validate();
 
@@ -382,9 +389,15 @@ public class mcdb extends JFrame implements ActionListener
 
 		jswStyle jswDropDownContactBoxStyles = allstyles
 				.makeStyle("jswDropDownContactBox");
-		jswDropDownContactBoxStyles.putAttribute("backgroundColor", "blue");
+		jswDropDownContactBoxStyles.putAttribute("backgroundColor", "#C0C0C0");
 		jswDropDownContactBoxStyles.putAttribute("fontsize", "10");
 
+		jswStyle jswScrollPaneStyles = allstyles
+				.makeStyle("jswScrollPaneStyles");
+		jswScrollPaneStyles.putAttribute("backgroundColor", "#C0C0C0");
+		jswScrollPaneStyles.putAttribute("fontsize", "10");
+
+		
 		jswStyle jswBorderStyle = allstyles.makeStyle("borderstyle");
 		jswBorderStyle.putAttribute("borderWidth", "1");
 		// jswBorderStyle.putAttribute("borderColor", "#C0C0C0");
