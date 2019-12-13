@@ -70,7 +70,7 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 20.0";
+	static String version = "V 4.0";
 	public static mcSelectorBox selbox;
 	public static String letterfolder;
 	public static String docsfolder;
