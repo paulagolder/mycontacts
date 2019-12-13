@@ -59,8 +59,16 @@ public class mcAttributes extends mcDataObject
 		for (Entry<String, mcAttribute> anentry : attributelist.entrySet())
 		{
 			mcAttribute anattribute = anentry.getValue();
-			if (anattribute.getRoot().equalsIgnoreCase(aroot)  && anattribute.getQualifier().equalsIgnoreCase(aqualifier) )
-				return anattribute;
+			if(anattribute == null) return null;
+			boolean foundqualifier = false;
+			if(anattribute.getQualifier()==null && aqualifier == null) foundqualifier = true;
+			else if(anattribute.getQualifier().equals("") && aqualifier.equals("")) foundqualifier = true;
+			else if(anattribute.getQualifier()==null) foundqualifier = false;
+			else if( anattribute.getQualifier().equalsIgnoreCase(aqualifier)) foundqualifier = true;
+			boolean foundroot = false;
+			if(anattribute.getRoot()==null ) foundroot = false;
+			else if(anattribute.getRoot().equalsIgnoreCase(aroot) ) foundroot = true;
+			if (foundroot && foundqualifier )return anattribute;
 		}
 		return null;
 	}

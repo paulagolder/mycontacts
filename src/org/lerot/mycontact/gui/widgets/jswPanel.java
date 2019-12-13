@@ -270,6 +270,7 @@ public abstract class jswPanel extends JPanel
 		this.tag = tag;
 	}
 
+	@Override
 	public void paint(Graphics g)
 	{
 		// System.out.println(" freddy ");

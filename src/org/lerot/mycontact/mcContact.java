@@ -1,5 +1,6 @@
 package org.lerot.mycontact;
 
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,13 +24,10 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	mcAttributes attributes = null;
 	int CID = 0;
-	private String kind = null;
-	// Map<String, mcMember> memberof = null;
-	// Map<String, mcMember> members = null;
-	String name = null;
+	private String tags =null;
 	String TID = "new contact";
 	Timestamp update = null;
-	 List noprintlist = new ArrayList();
+	List<String> noprintlist = new ArrayList<String>();
 	  
 	String user = null;
 
@@ -302,25 +300,29 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 			return null;
 	}
 
-	public void getContact(int id)
+	public mcContact getContact(int id)
 	{
-		ArrayList<Map<String, String>> rowlist = doQuery(
-				"select * from proup where cid=" + id);
-		if (rowlist.size() == 1)
+		
+		mcContact acontact = new mcContact();
+		acontact.setID(id);
+		if (acontact.CID > 0)
 		{
-			load(rowlist.get(0));
+			acontact.fillContact();
+		    return acontact;
 		}
+		return null;
 	}
 
-	public void getContact(String tid)
+	public static mcContact getContact(String idstr)
 	{
-		ArrayList<Map<String, String>> rowlist = doQuery(
-				"select * from proup where tid='" + tid + "' ");
-		if (rowlist.size() == 1)
+		mcContact acontact = new mcContact();
+		acontact.setID(Integer.valueOf(idstr));
+		if (acontact.CID > 0)
 		{
-			load(rowlist.get(0));
+			acontact.fillContact();
+		    return acontact;
 		}
-
+		return null;
 	}
 
 	public int getID()
@@ -381,6 +383,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		if(nameat!=null) 
 		 fname = nameat.getFormattedValue(fmt).trim();
 		if (fname != null && !fname.isEmpty()) name = fname;
+		else fname =  getAttributebyKey("email").getValue();
 		return name;
 	}
 
@@ -391,26 +394,27 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		return null;
 	}
 
-	public Set<String> getTags()
+	public Set<String> getTagList()
 	{
 		mcAttribute tagat = getAttributebyKey("tags");
 		if (tagat == null) return null;
 		Set<String> tags = mcTagListDataType.getTags(tagat);
 		return tags;
 	}
+	
+	public String getTags()
+	{
+		return tags;
+	}
 
 	public String getTID()
 	{
-		return TID;
+		//if(TID=="new contact" && getAttributebyKey("email")!= null) return getAttributebyKey("email").getValue();
+		//else 
+			return TID;
 	}
 
-	public String getKind()
-	{
-		if (kind == null || kind.isEmpty())
-			return "person";
-		else
-			return kind;
-	}
+	
 
 	public Timestamp getUpdate()
 	{
@@ -470,6 +474,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setInt(1, nid);
 			st.setString(2, "tid");
@@ -481,9 +486,9 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 			st = con.prepareStatement(query2);
 			st.setInt(1, nid);
-			st.setString(2, "kind");
+			st.setString(2, "tags");
 			st.setString(3, "");
-			st.setString(4, getKind());
+			st.setString(4, "#newcontact;");
 			st.executeUpdate();
 
 			st.close();
@@ -497,6 +502,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 			st.executeUpdate();
 
 			st.close();
+			disconnect();
 			return nid;
 
 		} catch (SQLException e)
@@ -508,7 +514,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public boolean isList()
 	{
-		if (kind.endsWith("list")) return true;
+		if (tags.endsWith("list")) return true;
 		return false;
 	}
 
@@ -517,7 +523,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		if (inmap.containsKey("cid")) CID = Integer.valueOf(inmap.get("cid"));
 		if (inmap.containsKey("tid")) TID = inmap.get("tid");
 		// if (inmap.containsKey("name")) name = inmap.get("name");
-		if (inmap.containsKey("type")) kind = inmap.get("kind");
+		//if (inmap.containsKey("type")) kind = inmap.get("kind");
 		if (inmap.containsKey("user")) user = inmap.get("user");
 	}
 
@@ -527,7 +533,6 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		{
 			CID = inmap.getInt("cid");
 			TID = inmap.getString("tid");
-			kind = inmap.getString("type");
 			user = inmap.getString("user");
 			update = inmap.getTimestamp("update");
 		} catch (SQLException e)
@@ -539,7 +544,8 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public void loadXML(Element ct, int contactnumber)
 	{
-		kind = ct.getAttribute("kind");
+		//kind = ct.getAttribute("kind");
+		//kind = ct.getAttribute("kind");
 		TID = ct.getAttribute("tid");
 		CID = contactnumber;
 	
@@ -550,7 +556,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 			{
 				if(nl.item(i).getNodeType() == Node.ELEMENT_NODE)
 				{
-				Node at = (Node)( nl.item(i));			
+				Node at = ( nl.item(i));			
 				mcAttribute anatt = mcAttribute.attributefromXML(at);
 				anatt.loadXML(at);
 				attributes.put(anatt);
@@ -699,9 +705,9 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		TID = tID;
 	}
 
-	public void setKind(String group)
+	public void xsetKind(String group)
 	{
-		this.kind = group;
+		//this.kind = group;
 	}
 
 	public void setUpdate()
@@ -877,6 +883,11 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		return xmlout;
 	}
 	
+	private String getKind()
+	{
+		return "person";
+	}
+
 	public String toXCard(Vector<String> attkeys, mcMappings notusedhere)
 	{
 		String xmlout = "<contact id='" + StringEscapeUtils.escapeXml(getTID())
@@ -895,7 +906,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		return xmlout;
 	}
 
-	public void updateAttribute(String attroot, String attqual, String newvalue)
+	public mcAttribute updateAttribute(String attroot, String attqual, String newvalue)
 	{
 		mcAttribute anattribute = getAttribute(attroot, attqual);
 
@@ -905,6 +916,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 			attributes.put(anattribute);
 		}
 		anattribute.setValue(newvalue);
+		return anattribute;
 	}
 
 	public void updateAttributebyKey(String editattributekey,
@@ -941,13 +953,13 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		System.out.println(" updating " + newtype + " " + CID + query);
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, newtype);
 			st.setInt(2, CID);
 			st.executeUpdate();
-
 			st.close();
-
+            disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -1028,18 +1040,95 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, newtid);
 			st.setInt(2, CID);
 			st.executeUpdate();
 			st.close();
+			disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
 
+	public void setTags(String tags)
+	{
+		this.tags = tags;
+	}
+
+	public  Vector<mcCorrespondance> getCorrespondance()
+	{
+		Vector<mcCorrespondance> letterlist= new Vector<mcCorrespondance>();
+		ArrayList<Map<String, String>> rowlist = doQuery(
+				"select * from correspondance where cid ="+CID+" order by date");
+		//System.out.println("letters found"+rowlist.size());
+		for (Map<String, String> row : rowlist)
+		{
+			mcCorrespondance aletter = new mcCorrespondance(0);
+			aletter.fill(row);
+
+			letterlist.add(aletter);
+		}
+		return letterlist;
+	}
+
+	public void addCorrespondance(String name, String date, File dest)
+	{
+			PreparedStatement st;
+			String query = "insert into correspondance(cid, date,path,status, subject )  values(?, ?,?,?,?)";
+System.out.println(" adding "+name+" "+dest.toString());
+			try
+			{
+				getConnection();
+				st = con.prepareStatement(query);
+				st.setInt(1, CID);
+				st.setString(2, date);
+				st.setString(3, dest.getPath());
+				st.setString(4, "tofrom");
+				st.setString(5, name);
+				st.execute();
+				st.close();
+			
+				disconnect();
+			
+
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+			
+		}
+
+	public void deleteTag(String tag)
+	{
+		
+			String query = "update attributeValues set value = replace(value, ?, '')  where CID = ? and root = ? ";
+			PreparedStatement st;
+			try
+			{
+				System.out.println("query =" +query+" "+"#" + tag + "; "+CID);
+				getConnection();
+				st = con.prepareStatement(query);
+				st.setString(1, "#" + tag + ";");
+				st.setInt(2, CID);
+				st.setString(3, "tags");
+				st.executeUpdate();
+				st.close();
+				disconnect();
+			} catch (SQLException e)
+			{
+				e.printStackTrace();
+			}
+
+	}
+		
+	}
+
+
+
 	
 
 	
-}
+

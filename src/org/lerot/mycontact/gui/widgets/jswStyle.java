@@ -396,4 +396,6 @@ public class jswStyle
 		return new Color(0, 0, 0, 0);
 	}
 
+	
+
 }

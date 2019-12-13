@@ -21,11 +21,13 @@ public abstract class mcKeyValueDataType extends mcDataType
 		dbLoadFieldList();
 	}
 
+	@Override
 	public Vector<String> getFieldKeyList()
 	{
 		return keylist;
 	}
 
+	@Override
 	public LinkedHashMap<String, mcfield> getFieldList()
 	{
 		return fieldlist;
@@ -142,6 +144,7 @@ public abstract class mcKeyValueDataType extends mcDataType
 			return valuestring;
 	}
 
+	@Override
 	public Map<mcfield, String> getFieldValueMap(String value)
 	{
 
@@ -186,6 +189,7 @@ public abstract class mcKeyValueDataType extends mcDataType
 
 
 
+	@Override
 	public Map<String, String> getKeyValueMap(String value)
 	{
 
@@ -323,6 +327,7 @@ public abstract class mcKeyValueDataType extends mcDataType
 	@Override
 	public abstract String getFormattedValue(String value);
 	
+	@Override
 	public String getFormattedValue(String value, String fmt)
 	{
 
@@ -374,6 +379,7 @@ public abstract class mcKeyValueDataType extends mcDataType
 		}
 	}
 
+	@Override
 	public String toXML(String svalue)
 	{
 		if (isArray(svalue))
@@ -646,6 +652,7 @@ public abstract class mcKeyValueDataType extends mcDataType
 		else return 0;
 	}
 	
+	@Override
 	public boolean matchesVcardValue(String avalue, String bvalue)
 	{ 
 		
@@ -654,6 +661,7 @@ public abstract class mcKeyValueDataType extends mcDataType
 		return false;
 	}
 
+	@Override
 	public int compareTo(String aarray, String barray)
 	{
 		Map<String, String> avaluemap = parseArray(aarray);

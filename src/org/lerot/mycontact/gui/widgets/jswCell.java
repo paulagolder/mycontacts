@@ -25,6 +25,7 @@ public class jswCell extends jswHorizontalPanel
 		col = icol;
 	}
 
+	@Override
 	public void applyStyles(JComponent label, jswStyle usestyles)
 	{
 		jswStyle styles = usestyles;

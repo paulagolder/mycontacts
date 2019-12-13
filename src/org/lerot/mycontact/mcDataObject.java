@@ -15,13 +15,12 @@ import java.util.Map;
 
 public class mcDataObject
 {
-	mcDataSource datasource;
-	protected  Connection con = null;
+	static mcDataSource datasource;
+	protected static  Connection con = null;
 	public static String errorMessage = "";
 
 	public mcDataObject()
 	{
-        //System.out.println( " starting dataobject ");
        datasource = mcdb.topgui.currentcon;
 	}
 	
@@ -31,12 +30,12 @@ public class mcDataObject
 	}
 	
 	
-	public void getConnection()
+	public static void getConnection()
 	{
 		con = datasource.getConnection();
 	}
 	
-	public  void disconnect()
+	public static  void disconnect()
 	{
 		try
 		{
@@ -53,10 +52,12 @@ public class mcDataObject
 		String sql = "DELETE FROM " + table + " WHERE " + sqlstr;
 		PreparedStatement preparedStatement = null;
 		try
-		{
+		{ 
+			 getConnection();
 			preparedStatement = con.prepareStatement(sql);
 			preparedStatement.execute();
 			preparedStatement.close();
+			disconnect();
 
 		} catch (SQLException e)
 		{
@@ -73,9 +74,11 @@ public class mcDataObject
 		PreparedStatement preparedStatement = null;
 		try
 		{
+			getConnection();
 			preparedStatement = con.prepareStatement(sqlstr);
 			preparedStatement.execute();
 			preparedStatement.close();
+			disconnect();
 
 		} catch (SQLException e)
 		{

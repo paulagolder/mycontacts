@@ -50,6 +50,7 @@ public class jswButton extends jswPanel
 		button.setActionCommand(command);
 	}
 
+	@Override
 	public void setEnabled(boolean b)
 	{
 		button.setEnabled(b);

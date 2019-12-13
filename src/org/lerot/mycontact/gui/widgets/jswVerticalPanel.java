@@ -1,7 +1,6 @@
 package org.lerot.mycontact.gui.widgets;
 
 import java.awt.Component;
-import java.awt.Dimension;
 
 public class jswVerticalPanel extends jswContainer
 {
@@ -31,11 +30,11 @@ public class jswVerticalPanel extends jswContainer
 	public void addComponent(jswPanel c)
 	{
 		super.add(c);
-		int h = c.jswGetHeight();
-		cheight += h;
-		if (c.jswGetWidth() > cwidth) cwidth = c.jswGetWidth();
+		//int h = c.jswGetHeight();
+		//cheight += h;
+		//if (c.jswGetWidth() > cwidth) cwidth = c.jswGetWidth();
 		c.setAlignmentX(Component.LEFT_ALIGNMENT);
-		c.setPreferredSize(new Dimension(cwidth, cheight));
+		//c.setPreferredSize(new Dimension(cwidth, cheight));
 	}
 
 	public void setInsets()

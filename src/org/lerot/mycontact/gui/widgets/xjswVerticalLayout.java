@@ -8,18 +8,18 @@ import java.awt.Insets;
 import javax.swing.JComponent;
 import javax.swing.border.Border;
 
-public class jswVerticalLayout extends jswLayout
+public class xjswVerticalLayout extends jswLayout
 {
 
 	private static final int DEFAULT_VGAP = 0;
 	private int vgap;
 
-	public jswVerticalLayout()
+	public xjswVerticalLayout()
 	{
 		this(DEFAULT_VGAP);
 	}
 
-	public jswVerticalLayout(int vgap)
+	public xjswVerticalLayout(int vgap)
 	{
 		this.vgap = vgap;
 	}
@@ -33,7 +33,7 @@ public class jswVerticalLayout extends jswLayout
 		{
 			if (((jswPanel) parent).getTag().equals("trace"))
 			{
-				System.out.println("tracing");
+				System.out.println("tracing"+parent.getName());
 				trace = true;
 			}
 		}
@@ -56,13 +56,13 @@ public class jswVerticalLayout extends jswLayout
 			Container p2 = parent;
 			while (p2 != null)
 			{
-				Dimension p2size = p2.getSize();
-				System.out.print(" p2 =" + p2.getClass().getSimpleName());
+				Dimension p2size = p2.getPreferredSize();
+				System.out.print(" p2 =" + p2.getClass().getSimpleName()+ " "+ p2.getName());
 				System.out.println(" available w=" + p2size.width + " h="
 						+ p2size.height);
 				if (theparent == null
 						&& p2.getClass().getSimpleName()
-								.equalsIgnoreCase("jswVerticalPanel"))
+						.equalsIgnoreCase("jswVerticalPanel"))
 					theparent = p2;
 				p2 = p2.getParent();
 
@@ -76,14 +76,15 @@ public class jswVerticalLayout extends jswLayout
 				Dimension p2size = p2.getSize();
 				if (theparent == null
 						&& p2.getClass().getSimpleName()
-								.equalsIgnoreCase("jswVerticalPanel"))
+						.equalsIgnoreCase("jswVerticalPanel"))
 					theparent = p2;
 				p2 = p2.getParent();
 			}
-				
+
 		}
 		if (theparent == null) theparent = parent;
-		Dimension parentSize = theparent.getSize();
+		theparent = parent;
+		Dimension parentSize = theparent.getSize();//
 		int usableWidth = parentSize.width - insets.left - insets.right;
 		availableHeight = parentSize.height - insets.top - insets.bottom;
 		boolean useMinimum;
@@ -102,8 +103,10 @@ public class jswVerticalLayout extends jswLayout
 							+ comp.getName());
 					d = comp.getPreferredSize();
 					System.out
-							.println(" Wants w=" + d.width + " h=" + d.height);
+					.println(" Wants w=" + d.width + " h=" + d.height);
+				
 				}
+				
 				if (s.isTrue("FILLH"))
 				{
 					cumheight += this.vgap;
@@ -143,21 +146,33 @@ public class jswVerticalLayout extends jswLayout
 		{
 			if (fillheight > 0)
 				fillratio = (float) (availableHeight - cumheight - scrollheight)
-						/ (float) fillheight;
+				/ (float) fillheight;
 		} else
 		{
 			if (scrollheight > 0)
 				scrollratio = (float) (availableHeight - cumheight - fillheight)
-						/ (float) scrollheight;
+				/ (float) scrollheight;
 		}
 		if (trace)
 		{
 			System.out.println(" fillratio =" + fillratio);
 			System.out.println(" scrollratio =" + scrollratio);
+			System.out.println(" cumheight =" + cumheight);
+			System.out.println(" fillheight =" + fillheight);
+			System.out.println(" scrollheight =" + scrollheight);
+			System.out.println(" cumbottom =" + cumbottom);
+			System.out.println(" availableheight =" + availableHeight);		
 		}
 		while (i < ncomponents)
 		{
 			Component comp = parent.getComponent(i);
+			if(comp.getName() != null)
+			{
+				if(comp.getName().equals("correspondance panel")) 
+				{ 
+					System.out.println(" here"+ comp.getName());
+				}
+			}
 			settings s = getSettings(comp);
 			if (comp.isVisible())
 			{
@@ -168,23 +183,29 @@ public class jswVerticalLayout extends jswLayout
 				{
 					indent = s.getInteger("INDENT");
 				}
-				if (!hasMiddle)
+				//if (!hasMiddle)  //paul fix
 				{
 					if (s.isTrue("FILLH"))
 					{
-						if (ncomponents == 1) dheight = availableHeight;
-						else
-							dheight = (int) (dheight * fillratio);
+						//if (ncomponents == 1) dheight = availableHeight;
+						//else
+						dheight = (int) (dheight * fillratio) ;//paulfilx
+						// = availableHeight;
+						System.out.println(" in FILLH "+comp.getClass().getSimpleName()+" "+ comp.getName()+" "+ " gets  h=" + dheight);
 					} else if (s.isTrue("SCROLLH"))
 					{
 						//if (ncomponents == 1) dheight = availableHeight;
 						// else
 						if(dheight<availableHeight) dheight = availableHeight;
 						else
-						dheight = (int) (dheight * scrollratio) - 65;
+							dheight = (int) (dheight * scrollratio);
 						// paul fix needs sorting
 						//System.out.println("scrollh"
 						//		+ (availableHeight) + " h=" + dheight+" sr="+scrollratio);
+					}
+					else
+					{
+						
 					}
 					if (s.isTrue("BOTTOM"))
 					{
@@ -192,18 +213,19 @@ public class jswVerticalLayout extends jswLayout
 						{
 							inBottom = true;
 							y = availableHeight - bottomHeight + this.vgap
-									+ insets.top;
+									+ insets.top ;
+							//dheight = availableHeight;//paul fix
+
 						}
 					}
 				}
 				if (comp instanceof jswScrollPane) ((jswScrollPane) comp)
-						.setMyBounds(x + indent, y, usableWidth, dheight);
+				.setMyBounds(x + indent, y, usableWidth, dheight);
 				else
 					comp.setBounds(x + indent, y, usableWidth, dheight);
 				y += (dheight + this.vgap);
 				if (trace)
-					System.out.println(comp.getClass().getSimpleName()
-							+ " gets w=" + (usableWidth) + " h=" + dheight);
+					System.out.println(comp.getClass().getSimpleName()+" "+ comp.getName()+" "+ " gets w=" + (usableWidth) + " h=" + dheight);
 			}
 			i++;
 		}

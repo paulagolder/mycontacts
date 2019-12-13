@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.Vector;
 
 public class mctagList extends mcDataObject
 {
@@ -81,42 +82,37 @@ public class mctagList extends mcDataObject
 		int k = 1;
 		try
 		{
-			con =  datasource.getConnection();
+			con = datasource.getConnection();
 			st = con.prepareStatement(query);
 			ResultSet resset = st.executeQuery();
+		
+			Vector<mcAttribute> attarr = new Vector<mcAttribute>();
 			while (resset.next())
 			{
 				mcAttribute tatt = new mcAttribute(k, "tags","");
 				tatt.load(resset);
-				//System.out.print(tatt);
-				//mcTextListDataType.getTags("value");
-				if (tatt.isType("textlist"))
+				if (tatt.isType("taglist"))
 				{
-					Set<String> tagset = mcTagListDataType.getTags(tatt);
-					System.out.println(tagset);
-					mcTagListDataType.insertTags(tatt.getValue(), tagset);
-					tatt.insertValues(tagset);
-				}
-				else
-				{
-					System.out.println("===="+tatt);
-					
-					
+					attarr.add(tatt);	
 				}
 			}
 			st.close();
-			datasource.disconnect();
+			disconnect();
+			for (mcAttribute tatt : attarr)
+			{					
+					Set<String> tagset = mcTagListDataType.getTags(tatt);
+					//System.out.println(tagset);
+					mcTagListDataType.insertTags(tatt.getValue(), tagset);
+					tatt.insertValues(tagset);
+					tatt.dbupdateAttribute();
+					System.out.println("===="+tatt.getValue());
+			}
 		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 
 	}
-
-	///public  Map<String, Integer> getAllTags()
-	//{
-	//	return getTaglist();
-	//}
 
 	public void replaceall(String attkey, String mergefrom,
 			String mergeto)

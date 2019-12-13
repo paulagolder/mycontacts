@@ -99,10 +99,6 @@ public class mcAttribute extends mcDataObject
 		setValue("");
 	}
 
-	public String xxarrayToArrayString(Map<String, String> valuelist)
-	{
-		return attributetype.arrayToArrayString(valuelist);
-	}
 
 	public boolean containsValue(String testvalue)
 	{

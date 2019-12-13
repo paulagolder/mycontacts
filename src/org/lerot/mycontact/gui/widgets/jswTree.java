@@ -50,7 +50,7 @@ public class jswTree extends JPanel implements ComponentListener
 			{
 				mcContact so = (mcContact) value;
 
-				setText(so.getName() + "(" + so.getKind() + ")");
+				setText(so.getName() );
 				setFont(new Font("SansSerif", Font.PLAIN, treefont));
 				if (sel) setForeground(Color.red);
 				else

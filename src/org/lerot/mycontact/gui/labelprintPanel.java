@@ -18,8 +18,6 @@ import org.lerot.mycontact.gui.widgets.jswCheckbox;
 import org.lerot.mycontact.gui.widgets.jswDropDownBox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswOption;
-import org.lerot.mycontact.gui.widgets.jswOptionset;
 import org.lerot.mycontact.gui.widgets.jswTextField;
 import org.lerot.mycontact.gui.widgets.jswThumbwheel;
 import org.lerot.mycontact.gui.widgets.jswVerticalPanel;

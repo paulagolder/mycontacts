@@ -2,8 +2,6 @@ package org.lerot.mycontact.gui.widgets;
 
 //import java.awt.Component;
 import java.awt.Component;
-import java.awt.Dimension;
-
 import javax.swing.JComponent;
 
 public class jswHorizontalPanel extends jswContainer
@@ -32,13 +30,14 @@ public class jswHorizontalPanel extends jswContainer
 	public void addComponent(jswPanel c)
 	{
 		super.add(c);
-		int w = c.jswGetWidth();
-		cwidth += w;
-		if (c.jswGetHeight() > cheight) cheight = c.jswGetHeight();
-		c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
-		c.setPreferredSize(new Dimension(cwidth+5, cheight));//paul fix
+		//int w = c.jswGetWidth();
+		//cwidth += w;
+		//if (c.jswGetHeight() > cheight) cheight = c.jswGetHeight();
+		c.setAlignmentX(Component.LEFT_ALIGNMENT);
+		//c.setPreferredSize(new Dimension(cwidth+5, cheight));//paul fix
 	}
 
+	@Override
 	public void setEnabled(boolean e)
 	{
 		int nc = getComponentCount();

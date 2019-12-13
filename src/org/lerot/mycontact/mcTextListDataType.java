@@ -55,6 +55,7 @@ public class mcTextListDataType extends mcDataType
 		super(astring,  bstring);
 	}
 
+	@Override
 	public int compareTo(String aarray, String barray)
 	{
 		SortedSet<String> aset = getTokens(aarray); 
@@ -90,6 +91,7 @@ public class mcTextListDataType extends mcDataType
 		return null;
 	}
 
+	@Override
 	public String getFormattedValue(String value, String fmt)
 	{
 		Set<String> str = getTokens(value);
@@ -155,6 +157,7 @@ public class mcTextListDataType extends mcDataType
 		return outxml;
 	}
 
+	@Override
 	public boolean valueContained(String testvalue, String attvalue)
 	{
 		SortedSet<String> taglist = getTokens(attvalue);

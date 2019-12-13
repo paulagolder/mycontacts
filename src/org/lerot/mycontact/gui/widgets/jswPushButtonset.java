@@ -1,5 +1,6 @@
 package org.lerot.mycontact.gui.widgets;
 
+import java.awt.Component;
 //import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,12 +28,12 @@ public class jswPushButtonset extends jswPanel implements ActionListener
 		if (!isvertical)
 		{
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			setAlignmentY(JComponent.TOP_ALIGNMENT);
+			setAlignmentY(Component.TOP_ALIGNMENT);
 			// setMaximumSize(new Dimension(0, 45));
 		} else
 		{
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			setAlignmentX(JComponent.LEFT_ALIGNMENT);
+			setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
 		if (border)
 		{
@@ -53,12 +54,12 @@ public class jswPushButtonset extends jswPanel implements ActionListener
 		if (!isvertical)
 		{
 			setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-			setAlignmentY(JComponent.TOP_ALIGNMENT);
+			setAlignmentY(Component.TOP_ALIGNMENT);
 			// setMaximumSize(new Dimension(0, 45));
 		} else
 		{
 			setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-			setAlignmentX(JComponent.LEFT_ALIGNMENT);
+			setAlignmentX(Component.LEFT_ALIGNMENT);
 		}
 		setLineBorder();
 		setBorder(setcborder(name));

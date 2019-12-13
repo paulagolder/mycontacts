@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +17,7 @@ import java.util.InvalidPropertiesFormatException;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -44,6 +44,19 @@ import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.theme.DesertBluer;
 
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.text.SimpleDateFormat;
+import java.util.List;
+
 public class mcdb extends JFrame implements ActionListener
 {
 
@@ -60,6 +73,7 @@ public class mcdb extends JFrame implements ActionListener
 	static String version = "V 20.0";
 	public static mcSelectorBox selbox;
 	public static String letterfolder;
+	public static String docsfolder;
 	public static Map<String, Map<String, String>> labeltemplates = null;
 
 	public static void main(String[] args)
@@ -73,7 +87,9 @@ public class mcdb extends JFrame implements ActionListener
 		}
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 	
-		JFrame mframe = new mcdb(800, 400);
+		JFrame mframe = new mcdb(900, 700);
+		 mframe.setVisible(true);
+	
 		mframe.addWindowListener(new WindowAdapter()
 		{
 
@@ -87,6 +103,7 @@ public class mcdb extends JFrame implements ActionListener
 				new BoxLayout(mframe.getContentPane(), BoxLayout.X_AXIS));
 		//mframe.setLocation(50, 50);
 		//mframe.pack();
+	
 		Dimension actual = new Dimension();
 		actual.width = 900;
 	    actual.height = 700;
@@ -99,6 +116,7 @@ public class mcdb extends JFrame implements ActionListener
 		    mframe.setLocation(x, y);
 		//mframe.pack();	
 		//mframe.setVisible(true);
+		    
 	}
 
 	public browsePanel abrowsepanel;
@@ -133,6 +151,7 @@ public class mcdb extends JFrame implements ActionListener
 	public String propsfile;
 	private String dbtitle;
 	public String dbsource;
+	public String docs;
 	private jswLabel title;
 	private jswLabel source;
 	public String budir;
@@ -140,6 +159,7 @@ public class mcdb extends JFrame implements ActionListener
 	public mcdb(int w, int h)
 	{
 		super("MyContacts " + version);
+
 		userdir = System.getProperty("user.dir");
 		userhome = System.getProperty("user.home");
 		user = System.getProperty("user.name");
@@ -149,12 +169,14 @@ public class mcdb extends JFrame implements ActionListener
 		{
 			dotcontacts = "C:/Users/" + user + "/.mccontacts/";
 			letterfolder = "C:/Users/" + user + "/Documents/correspondance";
+			docsfolder = "C:/Users/" + user + "/Documents/correspondance";
 		} else
 		{
 			dotcontacts = "/home/" + user + "/.mccontacts/";
 			
 			desktop = "/home/" + user + "/Desktop/";
 			letterfolder =  desktop+ "Labels and Letters/";
+			docsfolder ="/home/" + user + "/Documents/correspondance";
 		}
 		java.net.URL jstatIconURL = ClassLoader.getSystemClassLoader().getResource("mccontacts.png");
 		
@@ -174,16 +196,19 @@ public class mcdb extends JFrame implements ActionListener
 		props = readProperties(propsfile);
 		dbsource = props.getProperty("database", "mcdb.sqlite");
 		budir = props.getProperty("backupdirectory", dotcontacts+"/backup");
-		
+		docs = props.getProperty("docs", "Documents/correspondance/");
 		currentcon = new mcDataSource(dotcontacts + dbsource);
 		//(new mcDataObject()).setConnection(currentcon);
 	
 		topgui = this;
-		Dimension actual = new Dimension();
-		actual.width = 900;
-	    actual.height = 700;
-	    topgui .setSize(actual);
-		
+	
+	
+
+		//Dimension actual = new Dimension();
+		//actual.width = 9;
+	   // actual.height = 7;
+	   // topgui .setSize(actual);
+		//this.getParent().setVisible(false);
 		addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -194,7 +219,13 @@ public class mcdb extends JFrame implements ActionListener
 		});
 		promptfont = new Font("SansSerif", Font.ITALIC, 9);
 		initiateStyles();
-		bigpanel = new jswVerticalPanel();
+		bigpanel = new jswVerticalPanel("bigpanel",true);
+		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
+		bigpanel.setName("bigpanel");;
+		bigpanel.setTag("trace");
+		bigpanel.setPreferredSize(new Dimension(800,500));
+		bigpanel.setSize(new Dimension(800,500));
+		bigpanel.setMinimumSize(new Dimension(800,500));
 		getContentPane().add(bigpanel);
 		jswHorizontalPanel optionBar = new jswHorizontalPanel();
 		buttonset = new jswPushButtonset(this, "mode", false, false);
@@ -220,10 +251,10 @@ public class mcdb extends JFrame implements ActionListener
 		bigpanel.setBorder(jswPanel.setLineBorder(Color.GRAY ,3));
 
 		abrowsepanel = new browsePanel();
-		mainpanel.add("FILLW", abrowsepanel);
+		mainpanel.add(" FILLH ", abrowsepanel);
 		asearchpanel = new searchPanel();
 		asearchpanel.makesearchPanel(selbox, this);
-		abrowsepanel = new browsePanel();
+		//abrowsepanel = new browsePanel();
 		aneditpanel = new editPanel();
 		// aneditpanel.showEditPanel();
 		selbox.setEnabled(true);
@@ -231,7 +262,8 @@ public class mcdb extends JFrame implements ActionListener
 		toolspanel = new ToolsPanel(this);
 		selbox.setTaglist();
 		selbox.refreshAllContacts("1");
-		refresh();
+		refreshView();
+		initDragAndDrop();
 		mcdb.started = true;
 	}
 
@@ -254,7 +286,7 @@ public class mcdb extends JFrame implements ActionListener
 			if (!mode.equalsIgnoreCase("EDIT")) mode = "BROWSE";
 		} else
 			System.out.println("action  " + action + " unrecognised in main ");
-		refresh();
+		refreshView();
 	}
 
 	public void startup()
@@ -276,7 +308,7 @@ public class mcdb extends JFrame implements ActionListener
 		attributetypes.loadAttributeTypes();
 
 		selbox.setBrowseFilter("all");
-		selbox.refreshAllContacts("startup");
+		//selbox.refreshAllContacts("startup");
 		mode = "BROWSE";
 
 		mcLetter.getTemplates(dotcontacts);
@@ -284,7 +316,7 @@ public class mcdb extends JFrame implements ActionListener
 		//refresh();
 	}
 
-	public void refresh()
+	public void refreshView()
 	{
 		buttonset.setSelected(mode);
 		if (mode.equals("EDIT"))
@@ -305,9 +337,10 @@ public class mcdb extends JFrame implements ActionListener
 		} else if (mode.equals("BROWSE"))
 		{
 			selbox.setVisible(true);
-			selbox.refreshAll();;
+			//selbox.refreshAll();
 			selbox.navVisible(true);
-			selbox.filterboxVisible(false);
+			selbox.filterboxVisible(true);
+			//selbox.update();
 			mainpanel.removeAll();
 			abrowsepanel.showBrowsePanel();
 			mainpanel.add("FILLW", abrowsepanel);
@@ -318,9 +351,12 @@ public class mcdb extends JFrame implements ActionListener
 			toolspanel.refresh();
 			mainpanel.add(" FILLW ", toolspanel);
 		}
-		getContentPane().repaint();
+		//getContentPane().repaint();
+		//getContentPane().validate();
+		
+		setVisible(true);
+		mainpanel.repaint();
 		getContentPane().validate();
-
 	}
 
 	public void initiateStyles()
@@ -437,5 +473,61 @@ public class mcdb extends JFrame implements ActionListener
 		}
 		return null;
 	}
+	
+	 private void initDragAndDrop() {
+	        this.setDropTarget(new DropTarget(){
+	            /**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+               // mcContact selcontact = mcdb.selbox.getSelcontact();
+				@Override
+	            public synchronized void drop(DropTargetDropEvent dtde) {
+	                try {
+	                	mcContact selcontact = mcdb.selbox.getSelcontact();
+	                	 File directory = new File(mcdb.docsfolder+File.separator+selcontact.getID());
+                 	    if (! directory.exists())
+                 	    {
+                 	        directory.mkdir();
+                 	    }
+	                    Transferable transfer = dtde.getTransferable();
+	                    if(transfer.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+	                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+	                        List objects = (List)transfer.getTransferData(DataFlavor.javaFileListFlavor);
+	                        for(Object object : objects) {
+	                        	
+	                            if(object instanceof File) {
+	                                File source = (File)object;
+	                              //  File dest = new File(System.getProperty("user.home")+File.separator+"source.getName());"
+	                                File dest = new File(mcdb.docsfolder+File.separator+selcontact.getID()+File.separator+source.getName());
+		                     	       
+	                                Files.copy(Paths.get(source.getAbsolutePath()), Paths.get(dest.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+	                                SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
+	                            	String date = sdf.format(source.lastModified());
+	                                selcontact.addCorrespondance(source.getName(),date, dest);
+	                                
+	                                System.out.println("File copied from 511 "+source.getAbsolutePath()+" to "+dest.getAbsolutePath());
+	                            }
+	                        }
+	                    } else if(transfer.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+	                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+	                        String type = (String)transfer.getTransferData(DataFlavor.stringFlavor);
+	                        System.out.println("Data flavor not supported: "+type);
+	                    } else {
+	                        System.out.println("Data flavor not supported.");
+	                    }
+	                } catch(UnsupportedFlavorException ex) {
+	                    System.err.println("UFException "+ex.getMessage());
+	                } catch(IOException ex) {
+	                    System.err.println("IOException "+ex.getMessage());
+	                } catch(Exception ex) {
+	                    System.err.println("Exception "+ex.getMessage());
+	                } finally {
+	                    dtde.dropComplete(true);
+	                }
+	            }
+	        });
+	    }
+
 
 }

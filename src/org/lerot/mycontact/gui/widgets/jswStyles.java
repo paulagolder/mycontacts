@@ -30,4 +30,11 @@ public class jswStyles
 		return newstyle;
 	}
 
+	public   void copyStyle(String newname, String oldname)
+	{
+		jswStyle astyle = makeStyle(newname);
+		jswStyle ostyle = getStyle(oldname);
+		astyle.copyAll(ostyle);
+	}
+
 }

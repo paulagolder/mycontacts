@@ -40,11 +40,13 @@ public class jswTextField extends jswPanel
 		this(null);	
 	}
 
+	@Override
 	public void addFocusListener(FocusListener fl)
 	{
 		textbox.addFocusListener(fl);
 	}
 
+	@Override
 	public void addKeyListener(KeyListener kl)
 	{
 		textbox.addKeyListener(kl);
@@ -92,6 +94,7 @@ public class jswTextField extends jswPanel
 		;
 	}
 	
+	@Override
 	public void setSize(int w, int h)
 	{
 		textbox.setSize(w,h);
@@ -107,11 +110,13 @@ public class jswTextField extends jswPanel
 		textbox.setText(t);
 	}
 
+	@Override
 	public void setVisible(boolean e)
 	{
 		textbox.setVisible(e);
 	}
 
+	@Override
 	public Dimension getMinimumSize()
 	{
 		String text = textbox.getText();

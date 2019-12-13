@@ -16,7 +16,6 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
-import org.lerot.mycontact.mcDataObject;
 import org.lerot.mycontact.mcDataSource;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.gui.widgets.jswButton;

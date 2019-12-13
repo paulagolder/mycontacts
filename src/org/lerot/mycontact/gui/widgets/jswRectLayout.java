@@ -41,6 +41,7 @@ public class jswRectLayout extends jswLayout
 		shifts = new Shifts(0, 0, 0, 0);
 	}
 
+	@Override
 	public void layoutContainer(Container parent)
 	{
 		Insets binsets = new Insets(0, 0, 0, 0);
@@ -68,6 +69,7 @@ public class jswRectLayout extends jswLayout
 		// System.out.println(" ");
 	}
 
+	@Override
 	public Dimension minimumLayoutSize(Container parent)
 	{
 		parent.getComponentCount();
@@ -100,6 +102,7 @@ public class jswRectLayout extends jswLayout
 				+ binsets.bottom);
 	}
 
+	@Override
 	public Dimension preferredLayoutSize(Container parent)
 	{
 		Insets binsets = new Insets(0, 0, 0, 0);

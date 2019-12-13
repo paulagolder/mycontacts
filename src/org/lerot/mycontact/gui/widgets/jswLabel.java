@@ -29,6 +29,7 @@ public class jswLabel extends jswPanel
 	public jswLabel(String inLabel)
 	{
 		super(inLabel);
+		//this.setName(label);;
 		label = new JLabel();
 		label.setText(inLabel);
 		add("RIGHT", label);

@@ -61,7 +61,7 @@ public class importBackupPanel extends jswVerticalPanel implements
 	{
 
 		this.removeAll();
-		mcdb.topgui.selbox.setVisible(true);
+		mcdb.selbox.setVisible(true);
 		jswHorizontalPanel header = new jswHorizontalPanel();
 		jswLabel heading = new jswLabel(" import a backup ");
 		header.add(" FILLW ", heading);

@@ -16,6 +16,7 @@ public class mcNameDataType extends mcKeyValueDataType
 		super("name", "name");
 	}
 
+	@Override
 	public String getFormattedValue(String value, String fmt)
 	{
 
@@ -38,6 +39,7 @@ public class mcNameDataType extends mcKeyValueDataType
 		}
 	}
 
+	@Override
 	public String toVcardValue(String value)
 	{
 		String sep = "; ";
@@ -213,6 +215,7 @@ public class mcNameDataType extends mcKeyValueDataType
 		return outxml;
 	}
 
+	@Override
 	public String tidyValue(String sname)
 	{
 		String normname = "";
@@ -233,6 +236,7 @@ public class mcNameDataType extends mcKeyValueDataType
 		return getFormattedValue(value ,  "Sn , Fn Mn Title ## ");
 	}
 	
+	@Override
 	public String makeArray(String value)
 	{
 		return makeArray(Namefields,"Title", value,",");

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -80,6 +79,7 @@ public class jswDropDownBox extends jswHorizontalPanel
 		datalist.setSelectedIndex(0);
 	}
 
+	@Override
 	public Dimension getPreferredSize()
 	{
 		Dimension d1 = datalist.getPreferredSize();
@@ -113,10 +113,11 @@ public class jswDropDownBox extends jswHorizontalPanel
 	@Override
 	public void setEnabled(boolean e)
 	{
-		label.setEnabled(e);
+		if(label!=null) label.setEnabled(e);
 		datalist.setEnabled(e);
 	}
 	
+	@Override
 	public void removeAll()
 	{
 		listModel.removeAllElements();
@@ -148,8 +149,9 @@ public class jswDropDownBox extends jswHorizontalPanel
 				newModel.addElement(list[i]);
 			}
 		}
-		datalist.setSelectedIndex(0);
+		
 		datalist.setModel( newModel );
+		datalist.setSelectedIndex(0);
 	}
 
 	public void setList(Vector<String> list)
@@ -192,6 +194,10 @@ public class jswDropDownBox extends jswHorizontalPanel
 	public void setSelected(String selitem)
 	{
 		datalist.setSelectedItem(selitem);
+	}
+	public String getSelected()
+	{
+		return (String) datalist.getSelectedItem();
 	}
 
 	public void setPreferredize(Dimension dim)

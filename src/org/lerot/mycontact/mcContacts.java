@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.lerot.mycontact.gui.widgets.jswCheckbox;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
 
 public class mcContacts extends mcDataObject
 {
@@ -46,7 +46,7 @@ public class mcContacts extends mcDataObject
 	{
 		mcContact newcontact = new mcContact();
 		newcontact.setTID("new contact");
-		newcontact.setKind("person");
+		newcontact.setTags("newcontact");
 		newcontact.setUpdate();
 		int nid = newcontact.insertNewContact();
 		newcontact.setID(nid);
@@ -61,6 +61,7 @@ public class mcContacts extends mcDataObject
 		int ncid = -1;
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			ResultSet resset = st.executeQuery();
 
@@ -70,6 +71,7 @@ public class mcContacts extends mcDataObject
 
 			}
 			st.close();
+			disconnect();
 			return ncid;
 		} catch (SQLException e)
 		{
@@ -121,7 +123,7 @@ public class mcContacts extends mcDataObject
 
 	private void addTags(Map<String, Integer> taglist, mcContact acontact)
 	{
-		Set<String> tags = acontact.getTags();
+		Set<String> tags = acontact.getTagList();
 		if (tags != null)
 		{
 			for (String atag : tags)
@@ -141,18 +143,7 @@ public class mcContacts extends mcDataObject
 		groupfilter.add(filter);
 	}
 
-	public void browseContacts(mcContacts sourcelist)
-	{
-		contactlist.clear();
-		for (Entry<String, mcContact> entry : sourcelist.entrySet())
-		{
-			mcContact acontact = entry.getValue();
-			if (groupfilter.contains(acontact.getKind()))
-			{
-				contactlist.put(acontact.getIDstr(), acontact);
-			}
-		}
-	}
+	
 
 	void clear()
 	{
@@ -189,29 +180,8 @@ public class mcContacts extends mcDataObject
 		return contactlist.entrySet();
 	}
 
-	public void filterContacts(mcContacts sourcelist)
-	{
-		contactlist.clear();
-		for (Entry<String, mcContact> entry : sourcelist.entrySet())
-		{
-			mcContact acontact = entry.getValue();
-			if (groupfilter.contains(acontact.getKind())
-					&& (textfilter.isEmpty()
-							|| acontact.TID.toLowerCase().contains(textfilter)))
-			{
-				contactlist.put(acontact.getIDstr(), acontact);
-			}
-		}
-		if (contactlist.size() < 1)
-		{
-			textfiltererror = true;
-			for (Entry<String, mcContact> entry : sourcelist.entrySet())
-			{
-				mcContact acontact = entry.getValue();
-				contactlist.put(acontact.getIDstr(), acontact);
-			}
-		}
-	}
+	
+	
 
 	public mcContact findAddress(String sname)
 	{
@@ -294,12 +264,12 @@ public class mcContacts extends mcDataObject
 		return null;
 	}
 
-	public mcContact findFilterContact()
+	public mcContact findFilterContact(String filter)
 	{
 		for (Entry<String, mcContact> entry : contactlist.entrySet())
 		{
 			mcContact acontact = entry.getValue();
-			if (acontact.TID.toLowerCase().contains(textfilter))
+			if (acontact.TID.toLowerCase().contains(filter))
 			{
 				mcContact ancontact = new mcContact(acontact.CID);
 				return ancontact;
@@ -1024,14 +994,14 @@ public class mcContacts extends mcDataObject
 		return found;
 	}
 
-	public TreeSet<String> searchAttributes(String searchterm)
+	public static TreeSet<String> searchAttributes(String searchterm)
 	{
 		TreeSet<String> searchresults = new TreeSet<String>();
 		String query = " select cid from attributeValues where value LIKE ? AND NOT ( root LIKE ? ) AND NOT ( root LIKE ? )";
 		PreparedStatement st;
 		try
 		{
-			con = datasource.getConnection();
+			getConnection();
 			String qterm =  "%" + searchterm + "%";
 			st = con.prepareStatement(query);
 			st.setString(1,qterm );
@@ -1042,44 +1012,18 @@ public class mcContacts extends mcDataObject
 			{
 				int cid = resset.getInt("cid");
 				String idstr = String.valueOf(resset.getInt("cid"));
-					searchresults.add(idstr);
+				searchresults.add(idstr);
 			}
 			st.close();
 			return searchresults;
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		return searchresults;
 	}
 
-	public mcContacts xsearchTag(String tag)
-	{
-		mcContacts found = new mcContacts();
-		if(tag=="all") 
-		{
-			found = this.createCopy();
-			return found;
-		}
-		else if(tag=="selection") 
-		{
-			found = this.createCopy();
-			return found;
-		}
-		TreeSet<String> foundids = searchTags(tag);
-		for (String id : foundids)
-		{	
-			//System.out.println(" foundid " + id);
-			mcContact fcontact = this.FindbyID(id);
-			if (fcontact != null)
-				found.put(fcontact.getIDstr(), fcontact);
-			else
-				System.out.println(" problem with " + tag);
-		}
-		return found;
-	}
+	
 
 	public TreeSet<String> searchTags(String searchterm)
 	{
@@ -1088,6 +1032,7 @@ public class mcContacts extends mcDataObject
 		PreparedStatement st;
 		try
 		{
+			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, "%" + searchterm + "%");
 			st.setString(2, "%tag%");
@@ -1103,49 +1048,97 @@ public class mcContacts extends mcDataObject
 				//searchresults.add(idstr.toLowerCase().trim());
 			}
 			st.close();
+			disconnect();
 			return searchresults;
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		return searchresults;
 	}
 
+	public static TreeSet<String> searchAllTags(String searchterm)
+	{
+		TreeSet<String> searchresults = new TreeSet<String>();
+		String query = " select cid from attributeValues where value LIKE ? AND ( root LIKE ? ) ";
+		PreparedStatement st;
+		try
+		{
+			getConnection();
+			st = con.prepareStatement(query);
+			st.setString(1, "%" + searchterm + "%");
+			st.setString(2, "%tag%");
+			ResultSet resset = st.executeQuery();
+			while (resset.next())
+			{
+				String idstr = mcContact.makeIDstr(String.valueOf(resset.getInt("cid")));
+				searchresults.add(idstr);
+			}
+			st.close();
+			disconnect();
+			return searchresults;
+		} catch (SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return searchresults;
+	}
+
+	
 	public void refreshAllContacts()
 	{
 		System.out.println("reloading all contacts ");
 		contactlist = new TreeMap<String, mcContact>(new MyContactComparator());
-        
-		String query = " select * from proup where 1  order by lower(TID) ";
-		PreparedStatement st;
-		// System.out.println("Select all contacts");
-		try
-		{
-			con= datasource.getConnection();
-			st = con.prepareStatement(query);
-			ResultSet resset = st.executeQuery();
-			while (resset.next())
+		String query = "drop  table if exists allcontacts";
+		doExecute(query);
+		doExecute(query);
+		String query2 = "create table allcontacts  as SELECT  DISTINCT  t1.cid as 'cid' ,'tid' as 'tid' , 'done'  as 'tags' FROM attributeValues as t1 ; "; 
+		doExecute(query2);
+		String query3 = "update allcontacts  set tid = (select value from attributevalues av where allcontacts.cid = av.cid and av.root = 'tid');";
+		doExecute(query3);
+		String query4 = "update allcontacts  set tags = (select value from attributevalues av where allcontacts.cid = av.cid and av.root = 'tags');";
+		doExecute(query4);
+		//String query5 = "select * from allcontacts where not tags like '%.%' ;";
+		String query5 = "select * from allcontacts where tags is null or tags not like '%.%' ;";
+		 ArrayList<Map<String, String>> rows = doQuery(query5);
+		   int n=0;
+			for ( Map<String, String> row : rows)
 			{
 				mcContact acontact = new mcContact();
-				acontact.load(resset);
+				String strid = row.get("cid");
+				acontact.setID(Integer.parseInt(strid));
+			
 				if (acontact.CID > 0)
 				{
+					acontact.setTID(row.get("tid"));
 					acontact.fillContact();
 					contactlist.put(acontact.getIDstr(), acontact);  //paul experiment fix
-					//contactlist.put(acontact.getTID(), acontact);
 				}
+				n++;
 			}
-			st.close();
-			datasource.disconnect();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-		}
-
 	}
 	
+	public  static mcContact retrieveContact(int id)
+	{
+		
+	
+				mcContact acontact = new mcContact();
+                acontact.setID(id);;
+				acontact.fillContact();
+					return acontact;
+	}
+	
+	public static mcContact retrieveContact(String strid)
+	{
+		
+	           int id = Integer.parseInt(strid);
+				mcContact acontact = new mcContact();
+                acontact.setID(id);;
+				acontact.fillContact();
+					return acontact;
+	}
 	
 
 	public void setContactlist(TreeMap<String, mcContact> contactlist)
@@ -1166,23 +1159,7 @@ public class mcContacts extends mcDataObject
 		}
 	}
 	
-	public void xxsetBrowseFilter(jswDropDownBox sb)
-	{
-		browsefilter = sb.getSelectedValue();
-		
-	}
-
-	public void xxsetGroupFilter(String[] gf)
-	{
-		groupfilter.clear();
-		for (String agf : gf)
-		{
-			if (agf != null)
-			{
-				groupfilter.add(agf);
-			}
-		}
-	}
+	
 
 	public void setTextfilter(String text)
 	{
@@ -1193,5 +1170,18 @@ public class mcContacts extends mcDataObject
 	{
 		return contactlist.size();
 	}
+
+	public void deleteAllContacts()
+	{
+		for (Entry<String, mcContact> anentry : contactlist.entrySet())
+		{
+			mcContact acontact = anentry.getValue();
+       	acontact.deleteContact();
+		}
+
+	}
+
+	
+	
 
 }

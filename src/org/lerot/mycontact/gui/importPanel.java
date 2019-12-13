@@ -418,7 +418,7 @@ public class importPanel extends jswVerticalPanel implements ActionListener
 		idpanel2.setText(selcontact.getName());
 		idpanel3 = new jswLabel(" ");
 		idbox.add("RIGHT", idpanel3);
-		idpanel3.setText(selcontact.getKind());
+		idpanel3.setText("MYTAGS");
 		jswTable attributepanel = new jswTable("attributes",
 				mcdb.topgui.tablestyles);
 		add(attributepanel);
@@ -765,10 +765,11 @@ public class importPanel extends jswVerticalPanel implements ActionListener
 		if (newname == null) newname = "anewimportedcontact";
 		newname = mcUtilities.tidyValue(newname);
 		mcContact newcontact = new mcContact();
-		newcontact.setKind(group);
+		//newcontact.setKind(group);
 		newcontact.setTID(newname);
 		newcontact.insertNewContact();
 		newcontact.updateAttributebyKey("name", newname);
+		newcontact.updateAttributebyKey("tags", "imported");
 		// int importrownumber = currentimport.getRownumber();
 		mcImportAttribute tidattribute = new mcImportAttribute("TID", newname,
 				"HIDE");

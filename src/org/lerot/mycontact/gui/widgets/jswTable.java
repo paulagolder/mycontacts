@@ -95,6 +95,7 @@ public class jswTable extends jswPanel
 		return colstyle;
 	}
 
+	@Override
 	public void removeAll()
 	{
 		super.removeAll();

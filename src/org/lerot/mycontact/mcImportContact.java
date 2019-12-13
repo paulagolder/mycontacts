@@ -707,8 +707,6 @@ public class mcImportContact extends mcDataObject
 		boolean match = true;
 		this.TID = newcon.getTID();
 		if (!newcon.getTID().equalsIgnoreCase(econ.getTID())) match = false;
-
-		if (!newcon.getKind().equals(econ.getKind())) match = false;
 		for (Entry<String, mcAttribute> entry : newcon.attributes.entrySet())
 		{
 			mcAttribute newatt = entry.getValue();

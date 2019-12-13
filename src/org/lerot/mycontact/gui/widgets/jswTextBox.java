@@ -49,6 +49,7 @@ public class jswTextBox extends jswPanel
 		textbox.addFocusListener(fl);
 	}
 
+	@Override
 	public void addKeyListener(KeyListener kl)
 	{
 		textbox.addKeyListener(kl);
@@ -81,6 +82,7 @@ public class jswTextBox extends jswPanel
 		return false;
 	}
 
+	@Override
 	public void repaint()
 	{
 		if (textbox != null) textbox.repaint();
@@ -97,6 +99,7 @@ public class jswTextBox extends jswPanel
 		label.setText(t);
 	}
 
+	@Override
 	public void setBackground(Color c)
 	{
 		backgroundcolor = c;

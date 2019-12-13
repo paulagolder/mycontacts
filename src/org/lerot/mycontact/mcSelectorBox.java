@@ -19,9 +19,8 @@ import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.mycontact.gui.widgets.jswDropDownBox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswOption;
-import org.lerot.mycontact.gui.widgets.jswOptionset;
-import org.lerot.mycontact.gui.widgets.jswTextBox;
+import org.lerot.mycontact.gui.widgets.jswPanel;
+import org.lerot.mycontact.gui.widgets.jswTextField;
 import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
@@ -31,23 +30,20 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 	private static final long serialVersionUID = 1L;
 
 	mcImports imported;
-	private jswOptionset xoptionset;
-	private jswCheckbox[] contactselector;
-	private jswButton xrefreshbutton;
-	private String xbrowsestatus = "BROWSE";
-	private jswTextBox filterbox;
+
+	private jswCheckbox[] xxcontactselector;
+	private jswTextField filterbox;
 	private jswDropDownBox browseselectbox;
-	private jswDropDownContactBox contactselectbox;
+	jswDropDownContactBox contactselectbox;
 	private jswLabel allcontacts;
 	private jswLabel browsecontacts;
-	private jswOption xselectedcontacts;
 	
 	private mcContact selcontact;
 	private JButton setposition;
 
 	private mcContacts currentcontactlist;
-	private mcContacts browsecontactlist;
-	private mcContacts searchresultlist;
+	public mcContacts browsecontactlist;
+	public mcContacts searchresultlist;
 	private mcContacts allcontactlist;
 	private String searchterm;
 	private String browsefilter="all";
@@ -83,33 +79,36 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		this.setVisible(true);
 		
 		atitlebox = new jswHorizontalPanel();
+	
 		jswButton previous = new jswButton(this, "Previous");
     
 		atitlebox.add(" LEFT ", previous);
 
-		filterbox = new jswTextBox(null);
+		filterbox = new jswTextField();
+		filterbox.setText("freddy");
+		filterbox.setEnabled(true);
 		filterbox.setPreferredSize(new Dimension(100, 15));
 		filterbox.setMinimumSize(new Dimension(40, 15));
-		// filterbox.setMaximumSize(new Dimension(40, 15));
+		 filterbox.setMaximumSize(new Dimension(40, 15));
 		filterbox.addFocusListener(this);
 		filterbox.addKeyListener(this);
-		atitlebox.add(" MIDDLE HEIGHT=15  ", filterbox);
+		//atitlebox.add("  ", filterbox);
+		atitlebox.add(" MIDDLE ", filterbox);
+		
+		//atitlebox.add(" LEFT ", previous);
+		
 		contactselectbox = new jswDropDownContactBox("Select Contact", true,
 				false, 240);
-		//contactselectbox.setActionCommand("selectcontact");
-		// contactselect.setEnabled(false);
 		atitlebox.add(" MIDDLE ", contactselectbox);
-		// atitlebox.setBorder(jswLabel.setLineBorder(Color.gray, 2));
 		contactselectbox.addList(browsecontactlist.makeOrderedContactsVector());
 		contactselectbox.addActionListener(this, "contactselected");
-		// contactselect.setSelected(parent.selcontact);
 		jswButton next = new jswButton(this, "Next");
 		atitlebox.add(" RIGHT ", next);
 
 		this.add(atitlebox);
         
-		this.setBorder(jswLabel.setLineBorder(Color.gray, 2));
-
+		this.setBorder(jswPanel.setLineBorder(Color.gray, 2));
+         
 	}
 
 	@Override
@@ -119,20 +118,15 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 
 		 if (action.equals("BROWSESELECT"))
 		{
-			  allcontacts.setText("AllContacts =" + allcontactlist.size());
+			   
 			   setBrowseFilter(browseselectbox);
 			   browsecontactlist=searchTag(browsefilter);
-			   browsecontacts.setText("Browse Contacts =" + browsecontactlist.size());
-			  // System.out.println(" ***** " + browsefilter+" "+browsecontactlist.size());
-			   contactselectbox.removeActionListener(this);
-			   contactselectbox.setList(browsecontactlist.makeOrderedContactsVector());
-			   contactselectbox.addActionListener(this, "contactselected");	 
-			   //System.out.println(" started " + mcdb.started);
-			   if(mcdb.started) contactselectbox.setSelected(0);
+			   selcontact=null;
+			   update();
 		}
 		else if (action.equals("REFRESH"))
 		{
-			refreshSelection();
+			//refreshSelection();
 		} else if (action.equals("PREVIOUS"))
 		{
 			selcontact = contactselectbox.setPreviousValue();
@@ -144,12 +138,13 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		} else if (action.equals("CONTACTSELECTED"))
 		{
 			selcontact = contactselectbox.getSelectedValue();
-			  //System.out.println(" contact selected " + selcontact);
+			update2();
+			 
 		} else
 			System.out.println("action  " + action
 					+ " unrecognised in selectorbox ");
 		//update();
-		mcdb.topgui.refresh();
+		mcdb.topgui.refreshView();
 	}
 	
 	public void addtoGroupfilter(String filter)
@@ -176,7 +171,7 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 
 	public void filterContacts()
 	{
-		browsecontactlist.filterContacts(allcontactlist);
+		//browsecontactlist.filterContacts(allcontactlist);
 	}
 
 	public mcContact FindbyID(String id)
@@ -243,9 +238,11 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		if (source instanceof javax.swing.JTextField)
 		{
 			String filter = ((javax.swing.JTextField) source).getText();
-			currentcontactlist.setTextfilter(filter);
-			selcontact = currentcontactlist.findFilterContact();
-			mcdb.topgui.refresh();
+			//currentcontactlist.setTextfilter(filter);
+			selcontact = browsecontactlist.findFilterContact(filter);
+			System.out.println(" findoing "+filter);
+			 contactselectbox.setSelected(selcontact);
+			mcdb.topgui.refreshView();
 		}
 	}
 
@@ -336,10 +333,7 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		currentcontactlist.put(newcontact);
 	}
 
-	public void xrefreshContactList()
-	{
-		currentcontactlist.filterContacts(allcontactlist);
-	}
+	
 	
 	public void refreshAll()
 	{
@@ -357,28 +351,20 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		}*/
 	}
 	
-	public mcContacts getContactList(String[] strings )
-	{
-		mcContacts sellist = new mcContacts();
-		//sellist.setGroupFilter(strings);
-		sellist.clearError();
-		sellist.filterContacts(allcontactlist);
-		return sellist;		
-	}
 
-	public void refreshSelection()
+
+	public void xxrefreshSelection()
 	{
 		refreshAllContacts("refsel");
-		filterbox.setAlert(false);
-		browsecontactlist.setGroupFilter(contactselector);
+		//filterbox.setAlert(false);
 		browsecontactlist.clearError();
-		browsecontactlist.filterContacts(allcontactlist);
-		System.out.println(" browsecontacts refresh "
+		//browsecontactlist.filterContacts(allcontactlist);
+		System.out.println(" browsecontacts refresh vvv "
 				+ browsecontactlist.size());
 		if (browsecontactlist.textfiltererror)
 		{
 			System.out.println(" browse refresh textfiltererro ");
-			filterbox.setAlert(true);
+			//filterbox.setAlert(true);
 		}
 
 	}
@@ -405,7 +391,6 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 	{
 		mcContacts currentsearchlist = browsecontactlist;
 		mcContacts found = currentsearchlist.searchAttribute(searchterm2);
-		System.out.println(" contacts found="+found.size());
 		searchterm = searchterm2;
 		return found;
 	}
@@ -415,6 +400,7 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		mcContacts found = new mcContacts();
 		if(tag=="all") 
 		{
+			allcontactlist.refreshAllContacts();
 			found = allcontactlist.createCopy();
 			return found;
 		}
@@ -422,12 +408,25 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 		{
 			if(searchresultlist.size() >0)
 			{
-			found = searchresultlist.createCopy();
+			   found = searchresultlist.createCopy();
 			}
 			else 
 				found = allcontactlist.createCopy();
 			return found;
 		}
+		else if(tag.startsWith( "." ))
+		{
+			TreeSet<String> foundids =  mcContacts.searchAllTags(tag);
+			for (String id : foundids)
+			{	
+				mcContact fcontact = mcContact.getContact(id);
+			    found.put(fcontact.getIDstr(), fcontact);
+			}
+			return found;
+		}
+			else
+			{
+	
 		TreeSet<String> foundids =  allcontactlist.searchTags(tag);
 		for (String id : foundids)
 		{	
@@ -439,6 +438,7 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 				System.out.println(" problem with " + tag);
 		}
 		return found;
+			}
 	}
 
 	public void setAllcontactlist(mcContacts allcontactlist)
@@ -449,11 +449,8 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 	public void refreshAllContacts(String flag)
 	{
 		allcontactlist.refreshAllContacts();
-		System.out.println("refreshallcontacts "+flag);
-		//String[] filter = { "group" };
-		//allgrouplist = new mcContacts();
-		//allgrouplist.setGroupFilter(filter);
-		//allgrouplist.filterContacts(allcontactlist);
+		System.out.println("refreshallcontacts .."+flag);
+		update();
 	}
 
 	public void setBrowsecontactlist(mcContacts browsecontactlist)
@@ -463,6 +460,7 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 
 	
 
+	@Override
 	public void setEnabled(boolean b)
 	{
 		contactselectbox.setEnabled(b);
@@ -496,16 +494,35 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 
 	public void update()
 	{
-		
+		 
+		  // setBrowseFilter(browseselectbox);
+		   browsecontactlist=searchTag(browsefilter);
+		   contactselectbox.removeActionListener(this);
+		   contactselectbox.setContactList(browsecontactlist);
+		   contactselectbox.addActionListener(this, "contactselected");	 
+		  // if( browsecontactlist.size()>0) 
+		//	   contactselectbox.setSelected(0);
+		   
 		allcontacts.setText("All Contacts " + allcontactlist.size());
 		browsecontacts.setText("Browse Contacts " + browsecontactlist.size());
-		
-			contactselectbox.setContactList(browsecontactlist);;
-		
-		if (contactselectbox.countSize() < 1)
+		if (selcontact != null)
 		{
-			//contactselect.setList(currentcontactlist.makeOrderedContactsVector());
+			contactselectbox.setSelected(selcontact);
+		} else
+		{
+			if (contactselectbox.countSize() > 0)
+			{
+				contactselectbox.setSelected(0);
+			}
+			else
+				contactselectbox.setSelected(-1);
 		}
+		filterbox.clear();
+	}
+
+	public void update2()
+	{
+		contactselectbox.removeActionListener(this);
 		if (selcontact != null)
 		{
 			contactselectbox.setSelected(selcontact);
@@ -518,33 +535,31 @@ public class mcSelectorBox extends jswVerticalPanel implements ActionListener,
 			}
 		}
 		contactselectbox.addActionListener(this);
-		filterbox.clear();
-		// System.out.println(" selcontact3c " + selcontact);
+		//filterbox.clear();
 	}
-
 	
 
 	
 	public void setBrowseFilter(jswDropDownBox sb)
 	{
 		browsefilter = sb.getSelectedValue();
-		
 	}
 
 	public void setBrowseFilter(String string)
 	{
 		browsefilter = string;
-		
 	}
 
 	public void setTaglist()
 	{
 		mctagList taglist = new mctagList();
         taglist.reloadTags();
+        browseselectbox.removeActionListener(this);
         browseselectbox.addElement("all");
 		browseselectbox.addElement("selection");
 		browseselectbox.addElement("friend");
 		browseselectbox.addList(taglist.getTaglist());
+		browseselectbox.addActionListener(this);
 		
 	}
 

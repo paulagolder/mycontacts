@@ -51,7 +51,7 @@ public class jswImage
 			int height = image.getHeight();
 			int width = image.getWidth();
 			float scale = targetheight / (float) height;
-			int targetwidth = (int) ((float) width * scale);
+			int targetwidth = (int) (width * scale);
 			BufferedImage scaledimage = Scalr.resize(image,
 					Scalr.Method.BALANCED, targetwidth, getTargetheight());
 			image = scaledimage;

@@ -1,6 +1,6 @@
 package org.lerot.mycontact.gui.widgets;
 
-//import java.awt.Component;
+
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
@@ -24,6 +24,7 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 
 		private static final long serialVersionUID = 1L;
 
+		@Override
 		public JComponent getListCellRendererComponent(JList list,
 				Object value, int index, boolean isSelected,
 				boolean cellHasFocus)
@@ -34,7 +35,7 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 			if (value instanceof mcContact)
 			{
 				mcContact foo = (mcContact) value;
-				setText(foo.getTID());
+				setText(foo.getName());
 			}
 
 			return this;
@@ -67,7 +68,6 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		contactddbox = new JComboBox<mcContact>(listModel);
 		contactddbox.setPreferredSize(new Dimension(width, 24));
 		contactddbox.setRenderer(new ContactRenderer());
-		// datalist.setEditable(true);
 		setName(inLabel);
 		if (hasborder)
 		{
@@ -77,7 +77,6 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		} else
 			setBorder(setborder());
 		add("FILLW", contactddbox);
-		// datalist.addActionListener(new MyActionListener());
 	}
 
 	public void addActionListener(ActionListener c)
@@ -163,6 +162,7 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 	}
 
 	
+	@Override
 	public boolean isSelected()
 	{
 		mcContact selcon = getSelectedValue();
@@ -197,11 +197,6 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		contactddbox.removeAllItems();
 	}
 
-	
-
-	
-
-	
 	public void setList(Vector<mcContact> list)
 	{
 		DefaultComboBoxModel<mcContact> newModel = new  DefaultComboBoxModel<mcContact>();
@@ -211,7 +206,6 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 			{
 				newModel.addElement(list.get(i));
 			}
-			//datalist.setSelectedIndex(0);
 		}
 		contactddbox.setModel( newModel );
 		if(list.size() > 0)
@@ -245,7 +239,5 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 	{
 		contactddbox.setActionCommand(cmd);
 	}
-
-	
 
 }

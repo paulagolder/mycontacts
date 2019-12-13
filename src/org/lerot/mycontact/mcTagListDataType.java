@@ -61,18 +61,7 @@ public class mcTagListDataType extends mcTextListDataType
 		return makeTagString(oldtags);
 	}
 
-	private static String xxmakeSimpleString(Set<String> taglist)
-	{
-		String outtags = "";
-		for (String atag : taglist)
-		{
-			if (!atag.isEmpty() && !atag.equalsIgnoreCase("null") )
-			{
-				outtags = outtags + atag + ", ";
-			}
-		}
-		return outtags;
-	}
+	
 
 	public static String makeString(Set<String> taglist)
 	{
@@ -110,6 +99,7 @@ public class mcTagListDataType extends mcTextListDataType
 		super("taglist", "taglist");
 	}
 
+	@Override
 	public int compareTo(String aarray, String barray)
 	{
 		SortedSet<String> aset = getTags(aarray); 
@@ -145,6 +135,7 @@ public class mcTagListDataType extends mcTextListDataType
 		return null;
 	}
 
+	@Override
 	public String getFormattedValue(String value, String fmt)
 	{
 		Set<String> str = getTags(value);
@@ -158,6 +149,7 @@ public class mcTagListDataType extends mcTextListDataType
 		return null;
 	}
 
+	@Override
 	public Map<String, String> getTextListMap(String value)
 	{
 		Map<String, String> sortedmap = new LinkedHashMap<String, String>();
@@ -210,6 +202,7 @@ public class mcTagListDataType extends mcTextListDataType
 		return outxml;
 	}
 
+	@Override
 	public boolean valueContained(String testvalue, String attvalue)
 	{
 		// attvalue = attvalue;

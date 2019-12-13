@@ -34,22 +34,26 @@ public class attributetablemodel extends AbstractTableModel
 		return ((Vector<?>) data.get(row)).get(col);
 	}
 
+	@Override
 	public String getColumnName(int col)
 	{
 		return columnNames[col];
 	}
 
+	@Override
 	public Class<? extends Object> getColumnClass(int c)
 	{
 		return getValueAt(0, c).getClass();
 	}
 
+	@Override
 	public void setValueAt(Object value, int row, int col)
 	{
-		((Vector<Object>) data.get(row)).setElementAt(value, col);
+		data.get(row).setElementAt(value, col);
 		fireTableCellUpdated(row, col);
 	}
 
+	@Override
 	public boolean isCellEditable(int row, int col)
 	{
 		if (3 == col || 1 == col)
@@ -66,7 +70,7 @@ public class attributetablemodel extends AbstractTableModel
 		data.add(new Vector<Object>());
 		for (int i = 0; i < values.length; i++)
 		{
-			((Vector<Object>) data.get(data.size() - 1)).add(values[i]);
+			data.get(data.size() - 1).add(values[i]);
 		}
 		fireTableDataChanged();
 	}

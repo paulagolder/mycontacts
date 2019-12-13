@@ -7,6 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 import javax.swing.JLabel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -59,7 +60,7 @@ import javax.swing.text.JTextComponent;
 			setFont( component.getFont() );
 			setForeground( component.getForeground() );
 			setBorder( new EmptyBorder(component.getInsets()) );
-			setHorizontalAlignment(JLabel.LEADING);
+			setHorizontalAlignment(SwingConstants.LEADING);
 
 			component.addFocusListener( this );
 			document.addDocumentListener( this );
@@ -205,11 +206,13 @@ import javax.swing.text.JTextComponent;
 
 	//  Implement FocusListener
 
+		@Override
 		public void focusGained(FocusEvent e)
 		{
 			checkForPrompt();
 		}
 
+		@Override
 		public void focusLost(FocusEvent e)
 		{
 			focusLost++;
@@ -218,16 +221,19 @@ import javax.swing.text.JTextComponent;
 
 	//  Implement DocumentListener
 
+		@Override
 		public void insertUpdate(DocumentEvent e)
 		{
 			checkForPrompt();
 		}
 
+		@Override
 		public void removeUpdate(DocumentEvent e)
 		{
 			checkForPrompt();
 		}
 
+		@Override
 		public void changedUpdate(DocumentEvent e) {}
 	}
 

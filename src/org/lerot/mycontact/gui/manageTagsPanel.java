@@ -1,13 +1,14 @@
 package org.lerot.mycontact.gui;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
@@ -17,6 +18,8 @@ import org.lerot.mycontact.gui.widgets.jswCheckbox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswLabel;
 import org.lerot.mycontact.gui.widgets.jswScrollPane;
+import org.lerot.mycontact.gui.widgets.jswStyle;
+import org.lerot.mycontact.gui.widgets.jswStyles;
 import org.lerot.mycontact.gui.widgets.jswTable;
 import org.lerot.mycontact.gui.widgets.jswTextField;
 import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
@@ -32,6 +35,9 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 	private jswCheckbox[] acheck;
 	private mctagList tagList;
 	private jswTable atttable;
+	private jswStyles tagstablestyles;
+	
+	
 
 	@Override
 	public void actionPerformed(ActionEvent evt)
@@ -103,6 +109,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 						{
 							String todelete = checkbox.getTag();
 							(new mctagList()).delete("tags", todelete);
+							
 						}
 					}
 				}
@@ -156,6 +163,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	public manageTagsPanel()
 	{
+		tagstablestyles = makeTagsTableStyles();
 		tagList = new mctagList();
 		jswHorizontalPanel header = new jswHorizontalPanel();
 		jswLabel heading = new jswLabel("Manage Tags");
@@ -184,14 +192,14 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		printbar.add(" MIDDLE ", renamebutton);
 		jswButton normbutton = new jswButton(this, "NORM");
 		printbar.add(" MIDDLE ", normbutton);
-		atttable = new jswTable("tags", mcdb.topgui.tablestyles);
+		atttable = new jswTable("tags", tagstablestyles);
 		jswScrollPane scrollableTextArea = new jswScrollPane(atttable,
 				-4, -4);
 		scrollableTextArea.setName("resultscroll");
 		scrollableTextArea
-				.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollableTextArea
-				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		this.add(" SCROLLH ", scrollableTextArea);
 		
 
@@ -206,6 +214,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 	{
 		atttable.removeAll();
 		int row = 0;
+		int col=0;
 		acheck = new jswCheckbox[40];
 		for (Entry<String, Integer> anentry : tagList.entrySet())
 		{
@@ -213,19 +222,76 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			int attcount = anentry.getValue();
 			jswLabel alabel = new jswLabel(attkey);
 			jswLabel acount = new jswLabel(attcount);
-			atttable.addCell(alabel, row, 0);
-			atttable.addCell(acount, row, 1);
+			atttable.addCell(alabel, row, col);
+			atttable.addCell(acount, row, col+1);
 			acheck[row] = new jswCheckbox("");
 			acheck[row].setTag(attkey);
-			atttable.addCell(acheck[row], row, 2);
+			atttable.addCell(acheck[row], row, col+2);
 			row++;
+			if (row>10) 
+{
+	row=0;
+	col=col+3;
+}
 		}
-
+		//atttable.addCell("", 0, col+6);
+		//jswStyle colxstyle = mcdb.topgui.tablestyles.makeStyle("col_"+col+6);
+		//colxstyle.putAttribute("horizontalAlignment", "RIGHT");
+		//colxstyle.putAttribute("minwidth", "false");
 	}
 
 	public void refresh()
 	{
 		tagList.reloadTags();
 		buildTagPanel();
+	}
+	
+	private jswStyles makeTagsTableStyles()
+	{
+		jswStyles tablestyles = new jswStyles();
+
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("backgroundColor", "White");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+
+		jswStyle cellstyle = tablestyles.makeStyle("cell");
+		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
+		cellstyle.putAttribute("foregroundColor", "Blue");
+		cellstyle.putAttribute("borderWidth", "1");
+		cellstyle.putAttribute("borderColor", "white");
+		cellstyle.setHorizontalAlign("LEFT");
+		cellstyle.putAttribute("fontsize", "14");
+
+		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
+		cellcstyle.putAttribute("backgroundColor", "transparent");
+		cellcstyle.putAttribute("foregroundColor", "Red");
+		cellcstyle.setHorizontalAlign("LEFT");
+		cellcstyle.putAttribute("fontsize", "11");
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+		col0style.putAttribute("width", 10);
+		col0style.putAttribute("foregroundColor", "green");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.setHorizontalAlign("LEFT");
+		col1style.putAttribute("horizontalAlignment", "LEFT");
+
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		col2style.putAttribute("horizontalAlignment", "RIGHT");
+		col2style.putAttribute("minwidth", "true");		
+		 tablestyles.copyStyle("col_0","col_3");		
+		tablestyles.copyStyle("col_1","col_4");;
+		tablestyles.copyStyle("col_2","col_5");		
+		tablestyles.copyStyle("col_0","col_6");
+         tablestyles.copyStyle("col_1","col_7");
+	     tablestyles.copyStyle("col_2","col_8"); 
+	
+		return tablestyles;
 	}
 }

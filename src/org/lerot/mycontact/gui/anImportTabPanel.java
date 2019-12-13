@@ -3,7 +3,7 @@ package org.lerot.mycontact.gui;
 import org.lerot.mycontact.gui.widgets.jswTabbedPanel;
 import org.lerot.mycontact.gui.widgets.jswVerticalLayout;
 
-public class ImportTabPanel extends jswTabbedPanel
+public class anImportTabPanel extends jswTabbedPanel
 {
 
 	private static final long serialVersionUID = 1L;
@@ -11,7 +11,7 @@ public class ImportTabPanel extends jswTabbedPanel
 	private ImportEditPanel importeditpanel;
 	private importSetupPanel importsetuppanel;
 
-	public ImportTabPanel()
+	public anImportTabPanel()
 	{
 
 		setLayout(new jswVerticalLayout());

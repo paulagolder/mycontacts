@@ -229,10 +229,10 @@ public abstract class mcDataType extends mcDataObject
 			return ((mcTextDataType) this)
 			.asetToString(tokenlist);
 		case "textlist":
-			return ((mcTextListDataType) this)
+			return mcTextListDataType
 					.makeString(tokenlist);
 		case "taglist":
-			return ((mcTagListDataType) this)
+			return mcTagListDataType
 					.makeString(tokenlist);
 		case "image":
 		case "name":

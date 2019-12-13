@@ -82,6 +82,7 @@ public class mcTimeDataType extends mcDataType
 			}
 		}
 		
+		@Override
 		public int compareTo(String attvalue, String impvalue)
 		{
 			 Timestamp testts = Timestamp.valueOf(impvalue);
@@ -90,6 +91,7 @@ public class mcTimeDataType extends mcDataType
 		}
 
 	
+		@Override
 		public boolean matchesVcardValue(String avalue, String bvalue)
 		{ 
 			if(compareTo(avalue,bvalue)==0)return true;

@@ -19,6 +19,7 @@ public class jswTableLayout extends jswLayout
 		protected double position;
 		protected double size;
 
+		@Override
 		public String toString()
 		{
 			String out = "minwidth=" + minwidth + " position=" + position
@@ -260,6 +261,7 @@ public class jswTableLayout extends jswLayout
 			if (colstyle != null)
 			{
 				int width = colstyle.getIntegerStyle("width", 0);
+				//System.out.println(" tablestyle coll="+ncol+" width ="+width);
 				cset.minwidth = colstyle.getBooleanStyle("minwidth", false);
 				if (width > 0)
 				{

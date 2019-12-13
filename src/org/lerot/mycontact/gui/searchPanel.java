@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.Map.Entry;
 
 import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
 
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
@@ -41,7 +42,10 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
                 mcdb.selbox.setSearchterm("");
 			}
 			else 
-			   mcdb.selbox.searchAttribute(searchterm);
+			{
+				mcdb.selbox.searchresultlist = mcdb.selbox.searchAttribute(searchterm);
+			   // mcdb.selbox.browsecontactlist = mcdb.selbox.searchresultlist;
+			}
 			// if (!searcherror)
 			{
 				searchfield.clear();
@@ -81,18 +85,15 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 			System.out.println("search panel remove " + action);
 			String selcon = action.substring(7);
 			mcdb.selbox.removesearchcontact(selcon);
-			mcdb.topgui.refresh();
+			mcdb.topgui.refreshView();
 
 		} else if (action.startsWith("VIEW:"))
 		{
 			String selcon = action.substring(5);
 			mcdb.topgui.mode = "BROWSE";
-			//mcdb.selbox.setBrowseStatus("SELECTED");
 			mcdb.selbox.setSelcontact(selcon);
-			mcContact scon = mcdb.selbox.getSelcontact();
-			System.out.println(scon);
-		    System.out.println("search panel view " + selcon);
-			mcdb.topgui.refresh();
+			//mcContact scon = mcdb.selbox.getSelcontact();
+			mcdb.topgui.refreshView();
 		} else
 			System.out.println("search action " + action + " unrecognised ");
 		mcdb.topgui.asearchpanel.makesearchPanel(mcdb.selbox, parentlistener);
@@ -191,9 +192,9 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 					-10, -10);
 			scrollableTextArea.setName("resultscroll");
 			scrollableTextArea
-					.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollableTextArea
-					.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 			searchpanel.add(" SCROLLH ", scrollableTextArea);
 			//scrollableTextArea.setBorder(setLineBorder(Color.red, 4));
 		}

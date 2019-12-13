@@ -24,5 +24,6 @@
 	<classpathentry kind="lib" path="lib/commons-codec-1.10-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="lib/jaxen-1.1.6.jar"/>
+	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

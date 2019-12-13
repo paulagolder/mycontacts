@@ -22,15 +22,15 @@ public class jswOption extends jswPanel
 	public jswOption(String text, boolean vertical)
 	{
 		super(text);
-		setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		setAlignmentX(Component.LEFT_ALIGNMENT);
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		button = new JRadioButton(text);
 		button.setSelected(false);
 		add(button);
 		this.vertical = vertical;
-		button.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		button.setAlignmentX(Component.LEFT_ALIGNMENT);
 		box = new JPanel();
-		box.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		box.setAlignmentX(Component.LEFT_ALIGNMENT);
 		if (vertical) box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
 		else
 			box.setLayout(new BoxLayout(box, BoxLayout.X_AXIS));
@@ -40,7 +40,7 @@ public class jswOption extends jswPanel
 	public void addComponent(jswPanel c)
 	{
 		box.add(c);
-		c.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		c.setAlignmentX(Component.LEFT_ALIGNMENT);
 		if (vertical)
 		{
 			compheight += c.jswGetHeight();

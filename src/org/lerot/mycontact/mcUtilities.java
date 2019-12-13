@@ -1,5 +1,6 @@
 package org.lerot.mycontact;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
@@ -627,6 +628,7 @@ public class mcUtilities
 				map.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<String, Integer>>()
 		{
+			@Override
 			public int compare(Map.Entry<String, Integer> o1,
 					Map.Entry<String, Integer> o2)
 			{
@@ -651,6 +653,7 @@ public class mcUtilities
 				map.entrySet());
 		Collections.sort(list, new Comparator<Map.Entry<String, Integer>>()
 		{
+			@Override
 			public int compare(Map.Entry<String, Integer> o1,
 					Map.Entry<String, Integer> o2)
 			{
@@ -807,4 +810,11 @@ public class mcUtilities
 		return Float.parseFloat(astring);
 	}
 	
+	  public static String getFileExtension(File file) 
+	  {
+	        String fileName = file.getName();
+	        if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+	        return fileName.substring(fileName.lastIndexOf(".")+1);
+	        else return "";
+	  }  
 }

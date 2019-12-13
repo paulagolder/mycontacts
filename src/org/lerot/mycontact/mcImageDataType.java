@@ -130,6 +130,7 @@ public class mcImageDataType extends mcDataType
 		return 0;
 	}
 	
+	@Override
 	public boolean matchesVcardValue(String avalue, String bvalue)
 	{
 		if(avalue!=null && !avalue.isEmpty())

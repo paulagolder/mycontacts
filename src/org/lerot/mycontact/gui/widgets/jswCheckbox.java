@@ -6,6 +6,7 @@
  */
 package org.lerot.mycontact.gui.widgets;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
@@ -22,12 +23,12 @@ public class jswCheckbox extends jswPanel
 	public jswCheckbox(String label)
 	{
 		super(label);
-		setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		setAlignmentX(Component.LEFT_ALIGNMENT);
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		int width = label.length() * 12 + 30;
 		check = new JCheckBox(label);
 		check.setSelected(false);
-		check.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		check.setAlignmentX(Component.LEFT_ALIGNMENT);
 		add(check);
 		setMinimumSize(new Dimension(width, 40));
 	}
@@ -35,12 +36,12 @@ public class jswCheckbox extends jswPanel
 	public jswCheckbox(ActionListener c, String label)
 	{
 		super(label);
-		setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		setAlignmentX(Component.LEFT_ALIGNMENT);
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		int width = label.length() * 12 + 30;
 		check = new JCheckBox(label);
 		check.setSelected(false);
-		check.setAlignmentX(JComponent.LEFT_ALIGNMENT);
+		check.setAlignmentX(Component.LEFT_ALIGNMENT);
 		check.addActionListener(c);
 		check.setActionCommand(label);
 		add(check);

@@ -251,7 +251,7 @@ public class exportBackupPanel extends jswVerticalPanel
 
 	private void addTags(Map<String, Integer> taglist, mcContact acontact)
 	{
-		Set<String> tags = acontact.getTags();
+		Set<String> tags = acontact.getTagList();
 		if (tags != null)
 		{
 			for (String atag : tags)

@@ -285,6 +285,7 @@ public abstract class jswLayout implements LayoutManager
 		}
 	}
 
+	@Override
 	public void addLayoutComponent(String tag, Component comp)
 	{
 		addTag(tag, comp);

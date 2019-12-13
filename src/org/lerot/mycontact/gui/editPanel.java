@@ -41,7 +41,6 @@ import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
 import org.lerot.mycontact.gui.widgets.jswImage;
 import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswOptionset;
 import org.lerot.mycontact.gui.widgets.jswPanel;
 import org.lerot.mycontact.gui.widgets.jswStyle;
 import org.lerot.mycontact.gui.widgets.jswStyles;
@@ -67,7 +66,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 	private jswDropDownBox newlabel;
 	private jswDropDownContactBox parentselect;
 	private jswTextField tideditbox;
-	private jswOptionset typepanel;
+	private jswLabel tagspanel;
 	private jswTextField newtagpanel;
 	private String vcarddirectory;
 	private jswTextField atype;
@@ -110,7 +109,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		} else if (action.startsWith("NEWCONTACT"))
 		{
 			selcontact = mcContacts.createNewContact();
-			mcdb.topgui.refresh();
+			mcdb.topgui.refreshView();
 			mcdb.selbox.setSelcontact(selcontact);
 
 		} else if (action.startsWith("IMPORT"))
@@ -141,7 +140,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			selcontact = mcdb.selbox.FindbyID(vstr);
 			mcdb.selbox.setSelcontact(selcontact);
 			edit = "";
-			mcdb.topgui.refresh();
+			mcdb.topgui.refreshView();
 
 		} else if (action.startsWith("DISCONNECT:"))
 		{
@@ -164,6 +163,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			String newdata = action.substring(8).toLowerCase();
 			String[] data = newdata.split(":");
 			mcContact linkcontact = mcdb.selbox.FindbyIDstr(data[0]);
+			System.out.println(" link contact "+linkcontact+" "+ data);
 			String root = data[1];
 			String qualifier = "";
 			if (data.length > 2)
@@ -199,8 +199,8 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			edit = "editattribute";
 			editattributekey = action.substring(14).toLowerCase();
 			edattribute = selcontact.getAttributebyKey(editattributekey);
-			System.out.println("editing attribute " + edattribute.getKey()
-					+ " key=" + editattributekey);
+			//System.out.println("editing attribute " + edattribute.getKey()
+			//		+ " key=" + editattributekey);
 			if (edattribute == null) return;
 
 		} else if (action.startsWith("REPLACE"))
@@ -225,13 +225,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 		else if (action.equals("UPDATEID"))
 		{
-			System.out.println(" updating id " + selcontact);
 			String newcontacttid = tideditbox.getText();
-			String newcontacttype = typepanel.getSelected();
-			System.out.println("action " + action);
-			System.out.println("newtid " + tideditbox.getText());
-			System.out.println("newtype " + typepanel.getSelected());
-			selcontact.updateContactKIND(newcontacttype);
 			selcontact.updateContactTID(newcontacttid);
 			mcdb.selbox.refreshAll();
 			mcdb.topgui.getContentPane().validate();
@@ -247,11 +241,11 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			String newattributevalue = atteditbox.getText();
 			String newattributequalifier = atype.getText();
-			//edattribute.updateQualifier(newattributequalifier);
+			edattribute.setQualifier(newattributequalifier);
 			edattribute.setValue(newattributevalue);
 			edattribute.dbupdateAttribute();
 			edit = "";
-			System.out.println("    update to.. " + newattributevalue);
+			//System.out.println("  attribute "+edattribute.getRoot()+"  update to.. " + newattributevalue);
 		} else if (action.equals("UPDATEARRAYATTRIBUTE"))
 		{
 			Map<String, String> valuelist = new LinkedHashMap<String, String>();
@@ -264,6 +258,17 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			String newattributequalifier = atype.getText();
 			edattribute.updateQualifier(newattributequalifier);
 			edattribute.dbupdateAttribute();
+			if(edattribute.getRoot().equals("name"))
+			{
+				if(selcontact.getTID().equals("new contact"))
+				{
+					String newtid =  edattribute.getFormattedValue();
+					mcAttribute tidattribute = selcontact.updateAttribute("tid","", newtid);
+					tidattribute.dbupdateAttribute();
+					selcontact.setTID(newtid);		
+				}
+			}
+
 			edit = "";
 		} else if (action.equals("DELETECONTACT"))
 		{
@@ -343,7 +348,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		} else
 			System.out.println("ep action1 " + action + " unrecognised ");
 
-		mcdb.topgui.refresh();
+		mcdb.topgui.refreshView();
 
 		// mcdb.topgui.getContentPane().validate();
 	}
@@ -472,7 +477,11 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				int cid = anattribute.getCid();
 				String qualifier = anattribute.getQualifier();
 				mcContact linkcontact = mcdb.selbox.FindbyID(cid);
-				String value = linkcontact.getTID().trim();
+				String value = null;
+				if(linkcontact != null)
+				  value = linkcontact.getTID().trim();
+				else
+					System.out.println(" Bot found contact "+cid);
 
 				if (!selcontact.hasAttributeByValue(value))
 				{
@@ -777,15 +786,11 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			}
 			tideditbox.setText(tid);
 			tideditbox.setEnabled(true);
-			typepanel = new jswOptionset("", false, null);
-			tideditpanel.add(typepanel);
+			tagspanel = new jswLabel("tags");
+			tideditpanel.add(tagspanel);
 			idbox.add("FILLW", tideditpanel);
-			typepanel.addNewOption("person", false);
-			typepanel.addNewOption("group", false);
-			typepanel.addNewOption("whitelist", false);
-			typepanel.addNewOption("graylist", false);
-			typepanel.addNewOption("blacklist", false);
-			typepanel.setSelected(selcontact.getKind());
+			tagspanel.setText(selcontact.getTags());
+;
 			jswButton idupdate = new jswButton(this, "UPDATE", "UPDATEID");
 			idbox.add("RIGHT", idupdate);
 			jswButton iddelete = new jswButton(this, "DELETE", "DELETECONTACT");
@@ -799,7 +804,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
 			idpanel3 = new jswLabel(" ");
 			idbox.add(idpanel3);
-			idpanel3.setText(mcdb.selbox.getSelcontact().getKind());
+			idpanel3.setText(mcdb.selbox.getSelcontact().getTags());
 			jswButton idcancel = new jswButton(this, "CANCEL", "CANCEL");
 			idbox.add("RIGHT", idcancel);
 		} else
@@ -811,7 +816,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
 			idpanel3 = new jswLabel(" ");
 			idbox.add(idpanel3);
-			idpanel3.setText(mcdb.selbox.getSelcontact().getKind());
+			idpanel3.setText(mcdb.selbox.getSelcontact().getTags());
 			jswButton idedit = new jswButton(this, "EDIT ME", "EDITID");
 			idbox.add("RIGHT", idedit);
 			jswButton imvcard = new jswButton(this, "VCARD", "IMPORTVCARD");
@@ -996,9 +1001,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 						jswButton idedit = new jswButton(this, "EDIT ME",
 								"EDITATTRIBUTE:" + attributekey);
 						imagebox.add(idedit);
-						jswLabel imagesize = new jswLabel(
-								" size=" + anattribute.getValue().length());
-						imagebox.add(imagesize);
+						//jswLabel imagesize = new jswLabel(
+						//		" size=" + anattribute.getValue().length());
+						//imagebox.add(imagesize);
 						attributepanel.addCell(imagebox, row, 3);
 					}
 				} else
@@ -1023,9 +1028,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 					jswButton idedit = new jswButton(this, "EDIT ME",
 							"EDITATTRIBUTE:" + attributekey);
 					imagebox.add(idedit);
-					jswLabel imagesize = new jswLabel(
-							" size=" + anattribute.getValue().length());
-					imagebox.add(imagesize);
+				//	jswLabel imagesize = new jswLabel(
+				//			" size=" + anattribute.getValue().length());
+				//	imagebox.add(imagesize);
 					attributepanel.addCell(imagebox, row, 3);
 				}
 
@@ -1098,10 +1103,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			newmemberpanel.add(linkselect);
 			parentselect = new jswDropDownContactBox("Select Contact", true,
 					false, 500);
-			parentselect.addList(mcdb.selbox
-					.getContactList(new String[] { "group", "person" })
+			parentselect.addList(mcdb.selbox.getAllcontactlist()
 					.makeOrderedContactsVector());
-			newmemberpanel.add(parentselect);
+			newmemberpanel.add(parentselect);//paul to fix
 			atteditbox = new jswTextField();
 			atteditbox.setEnabled(true);
 			newmemberpanel.add(atteditbox);
