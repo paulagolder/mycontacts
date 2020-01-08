@@ -11,12 +11,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.lerot.gui.widgets.jswCheckbox;
+
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
-
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
 
 public class mcContacts extends mcDataObject
 {
@@ -111,7 +112,7 @@ public class mcContacts extends mcDataObject
 
 	private String textfilter = "";
 
-	boolean textfiltererror;
+	public boolean textfiltererror;
 
 	private String browsefilter;
 
@@ -145,7 +146,7 @@ public class mcContacts extends mcDataObject
 
 	
 
-	void clear()
+	public void clear()
 	{
 		contactlist.clear();
 	}
@@ -271,11 +272,38 @@ public class mcContacts extends mcDataObject
 			mcContact acontact = entry.getValue();
 			if (acontact.TID.toLowerCase().contains(filter))
 			{
-				mcContact ancontact = new mcContact(acontact.CID);
-				return ancontact;
+				//mcContact ancontact = new mcContact(acontact.CID);
+				//return ancontact;
+				return acontact;
 			}
 		}
 		return null;
+	}
+	
+	public mcContact findFilterContact(mcContact currentcontact,String filter)
+	{
+		boolean foundcurrent=false;
+		if(currentcontact==null) foundcurrent = true;
+		for (Entry<String, mcContact> entry : contactlist.entrySet())
+		{
+			mcContact acontact = entry.getValue();
+			if(foundcurrent)
+			{
+		
+			if (acontact.TID.toLowerCase().contains(filter))
+			{
+				//mcContact ancontact = new mcContact(acontact.CID);
+				//return ancontact;
+				return acontact;
+			}
+			}
+			else
+			{
+				if(acontact.getCID() == currentcontact.getCID())foundcurrent= true; 
+			}
+		}
+
+		return currentcontact;
 	}
 
 	public mcContact findFirst()
@@ -562,7 +590,7 @@ public class mcContacts extends mcDataObject
 	}
 
 
-	void put(String id, mcContact acontact)
+	public void put(String id, mcContact acontact)
 	{
 		contactlist.put(id, acontact);
 
@@ -643,11 +671,11 @@ public class mcContacts extends mcDataObject
 
 					for (String attkey : attkeys)
 					{
-
 						mcAttribute anattribute = attributes.get(attkey);
-
-						if (anattribute != null) printWriter.print(","
-								+ anattribute.getKey() + ": \""
+					//	if (anattribute != null) printWriter.print(","
+					//			+ anattribute.getKey() + ": \""
+					//			+ anattribute.getFormattedValue() + "\"");
+						if (anattribute != null) printWriter.print(",\""
 								+ anattribute.getFormattedValue() + "\"");
 					}
 					printWriter.println("");
@@ -1110,7 +1138,7 @@ public class mcContacts extends mcDataObject
 				String strid = row.get("cid");
 				acontact.setID(Integer.parseInt(strid));
 			
-				if (acontact.CID > 0)
+				if (acontact.getCID() > 0)
 				{
 					acontact.setTID(row.get("tid"));
 					acontact.fillContact();

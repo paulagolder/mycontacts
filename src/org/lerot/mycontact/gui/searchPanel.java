@@ -8,19 +8,20 @@ import java.util.Map.Entry;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswScrollPane;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
-import org.lerot.mycontact.mcSelectorBox;
+import org.lerot.mycontact.gui.selectorBox;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswScrollPane;
-import org.lerot.mycontact.gui.widgets.jswStyle;
-import org.lerot.mycontact.gui.widgets.jswTable;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class searchPanel extends jswVerticalPanel implements ActionListener
 {
@@ -100,9 +101,9 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 		mcdb.topgui.getContentPane().validate();
 	}
 
-	public void makesearchPanel(mcSelectorBox selbox, ActionListener alistener)
+	public void makesearchPanel(selectorBox selbox, ActionListener alistener)
 	{
-		jswStyle scrollstyle = mcdb.allstyles.getStyle("jswScrollPaneStyles");
+		jswStyle scrollstyle = jswStyles.getStyles("allstyles").getStyle("jswScrollPaneStyles");
 		Color bcolor = scrollstyle.getColor("backgroundColor", Color.BLUE);
 		setBackground(bcolor);
 		parentlistener = alistener;

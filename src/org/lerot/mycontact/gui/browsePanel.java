@@ -29,6 +29,21 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.gui.widgets.TextTransfer;
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswDropDownBox;
+import org.lerot.mccontact.gui.widgets.jswDropPane;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswImage;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswPanel;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswThumbwheel;
+import org.lerot.gui.widgets.jswVerticalLayout;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcAttributeType;
 import org.lerot.mycontact.mcAttributeTypes;
@@ -42,21 +57,6 @@ import org.lerot.mycontact.mcLetter;
 import org.lerot.mycontact.mcPDF;
 import org.lerot.mycontact.mcUtilities;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.TextTransfer;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
-import org.lerot.mycontact.gui.widgets.jswDropPane;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswImage;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswPanel;
-import org.lerot.mycontact.gui.widgets.jswStyle;
-import org.lerot.mycontact.gui.widgets.jswStyles;
-import org.lerot.mycontact.gui.widgets.jswTable;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswThumbwheel;
-import org.lerot.mycontact.gui.widgets.jswVerticalLayout;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class browsePanel extends jswVerticalPanel implements ActionListener
 {
@@ -81,7 +81,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	public browsePanel()
 	{
 		vcarddirectory = mcdb.topgui.desktop;
-		tablestyles = makeTableStyles();
+		tablestyles = makeAttributeTableStyles();
 		linktablestyles = makeLinkTableStyles();
 	}
 
@@ -99,7 +99,9 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			String selid = action.substring(5);
 			mcContact selcon = mcdb.selbox.getAllcontactlist()
 					.FindbystrID(selid);
-			mcdb.selbox.setSelcontact(selcon); // paul fiddling here
+			mcdb.selbox.contactselectbox.setSelected(selcon);
+			mcdb.selbox.contactselectbox.contactddbox.setSelectedItem(selcon);
+			//mcdb.selbox.setSelcontact(selcon); // paul fiddling here
 			mcdb.topgui.refreshView();
 		} else if (action.startsWith("USE:"))
 		{
@@ -122,7 +124,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					printlabel(address);
 				} else if (n == 0)
 				{
-					printletter(address);
+					printletter(selcontact,address);
 				} else if (n == 2)
 				{
 					textTransfer.setClipboardContents(address);
@@ -334,8 +336,11 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 								// was
 								// formatted
 								// value
-								attributepanel.addCell(new jswLabel(value), row,
-										1);
+								jswLabel slabel = new jswLabel(value);
+								slabel.setBorder(setLineBorder(Color.blue, 2));
+								//slabel.getLabel().setBorder(setLineBorder(Color.pink, 2));
+								slabel.getLabel().setBackground(Color.pink);
+								attributepanel.addCell(slabel," LEFT ",row,1);
 							}
 							if (anattribute.isType("address")
 									&& selector.contains("B"))
@@ -535,46 +540,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 	}
 
-	private jswStyles makeLinkTableStyles()
-	{
-		jswStyles tablestyles = new jswStyles();
-
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
-		jswStyle cellstyle = tablestyles.makeStyle("cell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
-		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
-
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
-
-		jswStyle col0style = tablestyles.makeStyle("col_0");
-		col0style.putAttribute("fontStyle", Font.BOLD);
-		col0style.setHorizontalAlign("RIGHT");
-		col0style.putAttribute("minwidth", "true");
-
-		jswStyle col1style = tablestyles.makeStyle("col_1");
-		col1style.putAttribute("fontStyle", Font.BOLD);
-		col1style.setHorizontalAlign("LEFT");
-		col1style.putAttribute("horizontalAlignment", "LEFT");
-
-		jswStyle col2style = tablestyles.makeStyle("col_2");
-		col2style.putAttribute("horizontalAlignment", "RIGHT");
-		col2style.putAttribute("minwidth", "true");
-
-		return tablestyles;
-	}
+	
 
 	private mcContacts makeLinkToList(mcContact selcontact, String selector)
 	{
@@ -745,13 +711,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	private jswVerticalPanel makeCorrespondancePanel(mcContact selcontact,
 			String title)
 	{
-
+        jswStyles cstyles = makeCorrespondenceStyles();
 		jswVerticalPanel frame = new jswVerticalPanel("correspondance panel",
 				false);
 		jswTable letterpanel = new jswTable("correspondance table",
-				linktablestyles);
+				cstyles);
 		frame.add("  ", letterpanel);
-		JPanel pane = new JPanel();
+		//JPanel pane = new JPanel();
 
 		if (selcontact != null)
 		{
@@ -783,13 +749,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					subjecteditbox = new jswTextField("subject");
 					subjecteditbox.setText(subject);
 					
-					letterpanel.addCell(dateeditbox, row, 1);
-					letterpanel.addCell(statuseditbox,  row, 2);
-					letterpanel.addCell(subjecteditbox, row, 3);
+					letterpanel.addCell(dateeditbox, row, 0);
+					letterpanel.addCell(statuseditbox,  row, 1);
+					letterpanel.addCell(subjecteditbox, row, 2);
+					letterpanel.addCell("  ", row, 3);
 					letterpanel.addCell("  ", row, 4);
-					letterpanel.addCell("  ", row, 5);
-					letterpanel.addCell(saveedit, row, 6);
-					letterpanel.addCell(cancel, row, 7);
+					letterpanel.addCell(saveedit, row, 5);
+					letterpanel.addCell(cancel, row, 6);
 
 					row++;
 
@@ -801,13 +767,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 							"DELETEREF:" + letterid);
 					jswButton viewletter = new jswButton(this, "VIEW",
 							"VIEWLETTER:" + letterid);
-					letterpanel.addCell(date, row, 1);
-					letterpanel.addCell(status, row, 2);
-					letterpanel.addCell(subject, row, 3);
-					letterpanel.addCell("  ", row, 4);
-					letterpanel.addCell(editletter, row, 5);
-					letterpanel.addCell(deleteref, row, 6);
-					letterpanel.addCell(viewletter, row, 7);
+					letterpanel.addCell(date, row, 0);
+					letterpanel.addCell(status, row, 1);
+					letterpanel.addCell(subject, row, 2);
+					letterpanel.addCell("  ", row, 3);
+					letterpanel.addCell(editletter," MINWIDTH ", row, 4);
+					letterpanel.addCell(deleteref, row, 5);
+					letterpanel.addCell(viewletter, row, 6);
 					row++;
 				}
 			}
@@ -816,45 +782,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		return frame;
 	}
 
-	private jswStyles makeTableStyles()
-	{
-		jswStyles tablestyles = new jswStyles();
-		jswStyle cellstyle = tablestyles.makeStyle("cell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
-		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
-
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
-
-		jswStyle col0style = tablestyles.makeStyle("col_0");
-		col0style.putAttribute("fontStyle", Font.BOLD);
-		col0style.setHorizontalAlign("RIGHT");
-		col0style.putAttribute("minwidth", "true");
-
-		jswStyle col1style = tablestyles.makeStyle("col_1");
-		col1style.putAttribute("fontStyle", Font.BOLD);
-		col1style.setHorizontalAlign("LEFT");
-
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
-		jswStyle col2style = tablestyles.makeStyle("col_2");
-		col2style.putAttribute("horizontalAlignment", "RIGHT");
-		col2style.putAttribute("minwidth", "true");
-		// col2style.putAttribute("minwidth", "true");
-
-		return tablestyles;
-	}
+	
 
 	private void printlabel(String address)
 	{
@@ -926,13 +854,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 	}
 
-	private void printletter(String address)
+	private void printletter(mcContact selcontact,String address)
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Specify a file to save Letter");
 		String lettername = mcLetter.makeFileName(selcontact);
 		fc.setSelectedFile(
-				new File(mcdb.letterfolder + "/" + lettername + ".odt"));
+				new File(mcdb.docsfolder +"/"+selcontact.getCID()+ "/" +selcontact.getID()+"/"+ lettername + ".odt"));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("ODT",
 				"odt");
 		fc.setFileFilter(filter);
@@ -945,12 +873,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			{
 				File fileToSave = fc.getSelectedFile();
 				String filepath = fileToSave.getPath();
-				mcdb.letterfolder = fileToSave.getParent();
+				//mcdb.docsfolder = fileToSave.getParent();
 				try
 				{
 					// String address = selcontact.makeBlockAddress("\n");
 					String salutation = mcLetter.getSalutation(selcontact);
 					String printdate = mcDateDataType.getNow("dd MMM yyyy");
+					String filedate = mcDateDataType.getNow("yyyy-MM-dd");
 					mcLetter letter = new mcLetter();
 					letter.setOutputFileName(filepath);
 					letter.setTemplateFileName(
@@ -959,6 +888,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					letter.setVariable("salutation", salutation);
 					letter.setVariable("printdate", printdate);
 					letter.printLetter();
+					selcontact.addCorrespondance(lettername, filedate,"draft", fileToSave);
 
 				} catch (Exception e)
 				{
@@ -1105,26 +1035,16 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					selcontact, "letters");
 			mainpanel.add("  ", correspondance);
 	
-			jswHorizontalPanel bottom = new jswHorizontalPanel("fred", true);
-			// jswLabel flabel = new jswLabel("Drop correspondance here");
-			jswDropPane correspondancedrop = new jswDropPane();
-			bottom.add(" FILLW ", correspondancedrop);
-			bottom.setName("fed");
-			bottom.setBorder(jswPanel.setLineBorder(Color.YELLOW, 5));
+			jswHorizontalPanel bottom = new jswHorizontalPanel("fred", false);
+			org.lerot.mccontact.gui.widgets.jswDropPane correspondancesent = new org.lerot.mccontact.gui.widgets.jswDropPane("sent");
+			bottom.add(" FILLW ", correspondancesent);
+			jswDropPane correspondancereceived= new jswDropPane("received");
+			bottom.add(" FILLW ", correspondancereceived);
+			correspondancereceived.setBorder(jswPanel.setLineBorder(Color.YELLOW, 5));
+			correspondancesent.setBorder(jswPanel.setLineBorder(Color.GREEN, 5));
 			mainpanel.add(" BOTTOM FILLH ", bottom);
 		}
-		// Dimension d = mainpanel.getMinimumSize();
-		// Rectangle fred = mainpanel.getBounds();
-		// fred.width = d.width;
-		// fred.height = d.height + 60;
-		// Rectangle actual = mcdb.topgui.getBounds();
-		// if (fred.width > actual.width) actual.width = fred.width;
-		// if (fred.height + 60 > actual.height) actual.height = fred.height +
-		// 60;
-		// mcdb.topgui.setBounds(actual);
-		// mcdb.topgui.setVisible(true);
-		// mainpanel.repaint();
-		// mcdb.topgui.getContentPane().validate();
+
 	}
 
 	String templateselector()
@@ -1149,5 +1069,146 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		else
 			return null;
 	}
+	
+	private jswStyles makeCorrespondenceStyles()
+	{
+		jswStyles tablestyles = new jswStyles("correspondence styles");
 
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("backgroundColor",  "#C0C0C0");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+
+		jswStyle cellstyle = tablestyles.makeStyle("cell");
+		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
+		cellstyle.putAttribute("foregroundColor", "Blue");
+		cellstyle.putAttribute("borderWidth", "1");
+		cellstyle.putAttribute("borderColor", "white");
+		cellstyle.setHorizontalAlign("LEFT");
+		cellstyle.putAttribute("fontsize", "14");
+
+		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
+		cellcstyle.putAttribute("backgroundColor", "transparent");
+		cellcstyle.putAttribute("foregroundColor", "Red");
+		cellcstyle.setHorizontalAlign("LEFT");
+		cellcstyle.putAttribute("fontsize", "11");
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.setHorizontalAlign("LEFT");
+		col1style.putAttribute("minwidth", "true");
+		col1style.putAttribute("width", "10");
+		col1style.putAttribute("horizontalAlignment", "LEFT");
+
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		//col2style.putAttribute("backgroundColor", "green");
+		col2style.putAttribute("horizontalAlignment", "LEFT");
+		col2style.putAttribute("minwidth", "true");
+		col2style.putAttribute("width", "10");
+		
+		jswStyle col4style = tablestyles.makeStyle("col_4");
+		//col4style.putAttribute("backgroundColor", "green");
+		col4style.putAttribute("horizontalAlignment", "LEFT");
+		col4style.putAttribute("minwidth", "true");
+		
+		jswStyle col5style = tablestyles.makeStyle("col_5");
+		//col5style.putAttribute("backgroundColor", "green");
+		col5style.putAttribute("horizontalAlignment", "LEFT");
+		col5style.putAttribute("minwidth", "true");
+		
+		jswStyle col6style = tablestyles.makeStyle("col_6");
+		//col6style.putAttribute("backgroundColor", "green");
+		col6style.putAttribute("horizontalAlignment", "LEFT");
+		col6style.putAttribute("minwidth", "true");
+
+		return tablestyles;
+	}
+	
+	private jswStyles makeLinkTableStyles()
+	{
+		jswStyles tablestyles = new jswStyles("linktable");
+
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("backgroundColor", "White");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+
+		jswStyle cellstyle = tablestyles.makeStyle("cell");
+		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
+		cellstyle.putAttribute("foregroundColor", "Blue");
+		cellstyle.putAttribute("borderWidth", "1");
+		cellstyle.putAttribute("borderColor", "white");
+		cellstyle.setHorizontalAlign("LEFT");
+		cellstyle.putAttribute("fontsize", "14");
+
+		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
+		cellcstyle.putAttribute("backgroundColor", "transparent");
+		cellcstyle.putAttribute("foregroundColor", "Red");
+		cellcstyle.setHorizontalAlign("LEFT");
+		cellcstyle.putAttribute("fontsize", "11");
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.setHorizontalAlign("LEFT");
+		col1style.putAttribute("horizontalAlignment", "LEFT");
+
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		col2style.putAttribute("horizontalAlignment", "RIGHT");
+		col2style.putAttribute("minwidth", "true");
+
+		return tablestyles;
+	}
+
+	private jswStyles makeAttributeTableStyles()
+	{
+		jswStyles tablestyles = new jswStyles("attributetablestyles");
+		
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("backgroundColor", "White");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+		
+		jswStyle cellstyle = tablestyles.makeStyle("cell");
+		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
+		cellstyle.putAttribute("foregroundColor", "Blue");
+		cellstyle.putAttribute("borderWidth", "1");
+		cellstyle.putAttribute("borderColor", "white");
+		cellstyle.setHorizontalAlign("LEFT");
+		cellstyle.putAttribute("fontsize", "14");
+
+		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
+		cellcstyle.putAttribute("backgroundColor", "transparent");
+		cellcstyle.putAttribute("foregroundColor", "Red");
+		cellcstyle.setHorizontalAlign("LEFT");
+		cellcstyle.putAttribute("fontsize", "11");
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.setHorizontalAlign("LEFT");
+		
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		col2style.putAttribute("horizontalAlignment", "LEFT");
+		col2style.putAttribute("minwidth", "true");
+	
+
+		return tablestyles;
+	}
 }

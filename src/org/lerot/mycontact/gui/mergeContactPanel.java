@@ -8,19 +8,19 @@ import java.util.Vector;
 import javax.swing.ButtonGroup;
 import javax.swing.JRadioButton;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswCheckbox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswImage;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcAttributes;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswImage;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswTable;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class mergeContactPanel extends jswVerticalPanel implements
 		ActionListener

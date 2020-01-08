@@ -239,7 +239,7 @@ public class mcNameDataType extends mcKeyValueDataType
 	@Override
 	public String makeArray(String value)
 	{
-		return makeArray(Namefields,"Title", value,",");
+		return makeArray(Namefields,"Title", value,";");
 	}
 
 }

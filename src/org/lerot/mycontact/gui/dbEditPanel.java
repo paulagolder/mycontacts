@@ -16,15 +16,15 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextBox;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcDataSource;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswTable;
-import org.lerot.mycontact.gui.widgets.jswTextBox;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class dbEditPanel extends jswVerticalPanel implements ActionListener
 {

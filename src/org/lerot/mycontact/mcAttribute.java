@@ -12,8 +12,8 @@ import java.util.Vector;
 
 import javax.swing.JComponent;
 
-import org.lerot.mycontact.gui.widgets.jswImage;
-import org.lerot.mycontact.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswImage;
+import org.lerot.gui.widgets.jswLabel;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

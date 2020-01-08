@@ -23,20 +23,21 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
+import org.lerot.gui.widgets.jswContainer;
+import org.lerot.mccontact.gui.widgets.jswDropDownContactBox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswPanel;
+import org.lerot.gui.widgets.jswPushButtonset;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswVerticalLayout;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.gui.ToolsPanel;
 import org.lerot.mycontact.gui.browsePanel;
 import org.lerot.mycontact.gui.editPanel;
+import org.lerot.mycontact.gui.selectorBox;
 import org.lerot.mycontact.gui.searchPanel;
-import org.lerot.mycontact.gui.widgets.jswContainer;
-import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswPanel;
-import org.lerot.mycontact.gui.widgets.jswPushButtonset;
-import org.lerot.mycontact.gui.widgets.jswStyle;
-import org.lerot.mycontact.gui.widgets.jswStyles;
-import org.lerot.mycontact.gui.widgets.jswVerticalLayout;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 //import org.lerot.mycontact.forms.certificateeditpanel;
 //import org.lerot.mycontact.forms.documentTemplate;
@@ -60,6 +61,11 @@ import java.util.List;
 public class mcdb extends JFrame implements ActionListener
 {
 
+	public class selbox
+	{
+
+	}
+
 	public mcDataSource currentcon;
 	public static jswStyles allstyles;
 	public static Component browserpanel;
@@ -70,8 +76,8 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 4.0";
-	public static mcSelectorBox selbox;
+	static String version = "V 5.0";
+	public static selectorBox selbox;
 	public static String letterfolder;
 	public static String docsfolder;
 	public static Map<String, Map<String, String>> labeltemplates = null;
@@ -217,7 +223,8 @@ public class mcdb extends JFrame implements ActionListener
 				System.exit(0);
 			}
 		});
-		promptfont = new Font("SansSerif", Font.ITALIC, 9);
+		//promptfont = new Font("SansSerif", Font.ITALIC, 9);
+		//jswStyles.initiateStyles();
 		initiateStyles();
 		bigpanel = new jswVerticalPanel("bigpanel",true);
 		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
@@ -243,7 +250,7 @@ public class mcdb extends JFrame implements ActionListener
 		sourceBar.add(source);
 		bigpanel.add(sourceBar);
 	
-		selbox = new mcSelectorBox(this, this);
+		selbox = new selectorBox(this, this);
 		bigpanel.add("FILLW", selbox);
 		mainpanel = new jswContainer("fred1");
 		mainpanel.setLayout(new jswVerticalLayout());
@@ -361,7 +368,7 @@ public class mcdb extends JFrame implements ActionListener
 
 	public void initiateStyles()
 	{
-		tablestyles = new jswStyles();
+		tablestyles = new jswStyles("initial");
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -384,7 +391,7 @@ public class mcdb extends JFrame implements ActionListener
 		jswStyle col1style = tablestyles.makeStyle("col_1");
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("RIGHT");
-		col1style.putAttribute("minwidth", "true");
+		//col1style.putAttribute("minwidth", "true");
 
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		tablestyle.putAttribute("backgroundColor", "White");
@@ -396,7 +403,7 @@ public class mcdb extends JFrame implements ActionListener
 		col2style.putAttribute("horizontalAlignment", "RIGHT");
 		col2style.putAttribute("minwidth", "true");
 
-		allstyles = new jswStyles();
+		allstyles = new jswStyles("allstyles");
 		jswStyle jswLabelStyles = allstyles.makeStyle("jswLabel");
 		jswLabelStyles.putAttribute("backgroundColor", "#C0C0C0");
 		jswLabelStyles.putAttribute("foregroundColor", "Black");
@@ -449,6 +456,10 @@ public class mcdb extends JFrame implements ActionListener
 		pbStyle.putAttribute("foregroundColor", "black");
 		jswStyle greenfont = allstyles.makeStyle("greenfont");
 		greenfont.putAttribute("foregroundColor", "green");
+		
+		jswStyles.importstyles("allstyles",allstyles);
+		jswStyles.importstyles("tablestyles",tablestyles);
+		
 	}
 
 	public java.util.Properties readProperties(String propsfile)
@@ -484,6 +495,7 @@ public class mcdb extends JFrame implements ActionListener
 				@Override
 	            public synchronized void drop(DropTargetDropEvent dtde) {
 	                try {
+	                    System.out.println("File dropped 487 ");
 	                	mcContact selcontact = mcdb.selbox.getSelcontact();
 	                	 File directory = new File(mcdb.docsfolder+File.separator+selcontact.getID());
                  	    if (! directory.exists())
@@ -504,9 +516,9 @@ public class mcdb extends JFrame implements ActionListener
 	                                Files.copy(Paths.get(source.getAbsolutePath()), Paths.get(dest.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
 	                                SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
 	                            	String date = sdf.format(source.lastModified());
-	                                selcontact.addCorrespondance(source.getName(),date, dest);
+	                                selcontact.addCorrespondance(source.getName(),date, "gunge",dest);
 	                                
-	                                System.out.println("File copied from 511 "+source.getAbsolutePath()+" to "+dest.getAbsolutePath());
+	                                System.out.println("File copied from 509 "+source.getAbsolutePath()+" to "+dest.getAbsolutePath());
 	                            }
 	                        }
 	                    } else if(transfer.isDataFlavorSupported(DataFlavor.stringFlavor)) {

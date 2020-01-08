@@ -2,7 +2,7 @@ package org.lerot.mycontact;
 
 import java.util.LinkedHashMap;
 
-import org.lerot.mycontact.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswLabel;
 
 public class mcImportVcard extends mcImports
 {

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,11 +20,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import ezvcard.VCard;
+import ezvcard.property.StructuredName;
+import ezvcard.property.VCardProperty;
+
 public class mcContact extends mcDataObject implements Comparable<mcContact>
 {
 
 	mcAttributes attributes = null;
-	int CID = 0;
+	private int CID = 0;
 	private String tags =null;
 	String TID = "new contact";
 	Timestamp update = null;
@@ -43,13 +48,13 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	public mcContact(int id)
 	{
 		super();
-		CID = id;
+		setCID(id);
 		attributes = new mcAttributes();
 	}
 
 	public mcContact(mcImportContact impcontact)
 	{
-		CID = (new mcContacts()).getNewID();
+		setCID((new mcContacts()).getNewID());
 		String fn = "";
 		attributes = new mcAttributes();
 		for (Entry<String, mcImportAttribute> arec : impcontact.getAttributes()
@@ -114,7 +119,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 			oldatt = getAttribute(root, qualifier);
 			k++;
 		}
-		mcAttribute newatt = new mcAttribute(CID, root, qualifier);
+		mcAttribute newatt = new mcAttribute(getCID(), root, qualifier);
 		attributes.put(newatt);
 		return newatt;
 	}
@@ -137,7 +142,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public void deleteAttributebyKey(String attkey)
 	{
-		int id = this.CID;
+		int id = this.getCID();
 		String part[] = mcUtilities.parseLabel(attkey.toLowerCase());
 		doDelete("attributeValues", " cid=" + id + " and  root  = '" + part[0]
 				+ "' and qualifier ='" + part[1] + "' ;");
@@ -148,7 +153,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public void deleteContact()
 	{
-		int id = this.CID;
+		int id = this.getCID();
 		mcdb.selbox.remove(this);
 		doDelete("attributeValues", " cid=" + id);
 		System.out.println(" deleting contact  " + this.TID);
@@ -166,7 +171,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public void fillContact()
 	{
-		int id = this.CID;
+		int id = this.getCID();
 		attributes = (new mcAttributes()).getAttributes(id);
 		if (attributes == null)
 		{
@@ -230,7 +235,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		if (attributes == null || attributes.size() == 0)
 		{
-			attributes = (new mcAttributes()).getAttributes(this.CID);
+			attributes = (new mcAttributes()).getAttributes(this.getCID());
 		}
 		return attributes;
 	}
@@ -305,7 +310,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		
 		mcContact acontact = new mcContact();
 		acontact.setID(id);
-		if (acontact.CID > 0)
+		if (acontact.getCID() > 0)
 		{
 			acontact.fillContact();
 		    return acontact;
@@ -317,7 +322,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		mcContact acontact = new mcContact();
 		acontact.setID(Integer.valueOf(idstr));
-		if (acontact.CID > 0)
+		if (acontact.getCID() > 0)
 		{
 			acontact.fillContact();
 		    return acontact;
@@ -327,12 +332,12 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public int getID()
 	{
-		return this.CID;
+		return this.getCID();
 	}
 
 	public String getIDstr()
 	{
-           String ids = ("000000" + this.CID);
+           String ids = ("000000" + this.getCID());
            int l = ids.length();
 		   return ids.substring(l-6);
 	}
@@ -347,7 +352,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	public String getSimpleIDstr()
 	{
 		
-		return ""+this.CID;
+		return ""+this.getCID();
 	}
 
 
@@ -383,7 +388,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		if(nameat!=null) 
 		 fname = nameat.getFormattedValue(fmt).trim();
 		if (fname != null && !fname.isEmpty()) name = fname;
-		else fname =  getAttributebyKey("email").getValue();
+		//else fname =  getAttributebyKey("email").getValue();
 		return name;
 	}
 
@@ -450,13 +455,13 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public void insertAttribute(String root)
 	{
-		mcAttribute newatt = new mcAttribute(CID, root);
+		mcAttribute newatt = new mcAttribute(getCID(), root);
 		newatt.dbinsertAttribute();
 	}
 
 	public void insertAttribute(String newroot, String newqual)
 	{
-		mcAttribute newatt = new mcAttribute(CID, newroot);
+		mcAttribute newatt = new mcAttribute(getCID(), newroot);
 		newatt.dbinsertAttribute();
 	}
 
@@ -520,7 +525,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	void load(Map<String, String> inmap)
 	{
-		if (inmap.containsKey("cid")) CID = Integer.valueOf(inmap.get("cid"));
+		if (inmap.containsKey("cid")) setCID(Integer.valueOf(inmap.get("cid")));
 		if (inmap.containsKey("tid")) TID = inmap.get("tid");
 		// if (inmap.containsKey("name")) name = inmap.get("name");
 		//if (inmap.containsKey("type")) kind = inmap.get("kind");
@@ -531,7 +536,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		try
 		{
-			CID = inmap.getInt("cid");
+			setCID(inmap.getInt("cid"));
 			TID = inmap.getString("tid");
 			user = inmap.getString("user");
 			update = inmap.getTimestamp("update");
@@ -547,7 +552,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		//kind = ct.getAttribute("kind");
 		//kind = ct.getAttribute("kind");
 		TID = ct.getAttribute("tid");
-		CID = contactnumber;
+		setCID(contactnumber);
 	
 		NodeList nl = ct.getChildNodes();
 		if (nl != null && nl.getLength() > 0)
@@ -680,7 +685,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public mcAttributes refreshAttributes()
 	{
-		attributes = (new mcAttributes()).getAttributes(this.CID);
+		attributes = (new mcAttributes()).getAttributes(this.getCID());
 		return attributes;
 	}
 
@@ -697,7 +702,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 
 	public void setID(int iD)
 	{
-		CID = iD;
+		setCID(iD);
 	}
 
 	public void setTID(String tID)
@@ -728,7 +733,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	@Override
 	public String toString()
 	{
-		String outstring = "contact :" + CID + " " + TID + "   ";
+		String outstring = "contact :" + getCID() + " " + TID + "   ";
 		return outstring;
 	}
 
@@ -950,13 +955,13 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		PreparedStatement st;
 		String query = "update attributeValues set 'value' = ? where cid= ? and root='kind'  and qualifier= '' ";
-		System.out.println(" updating " + newtype + " " + CID + query);
+		System.out.println(" updating " + newtype + " " + getCID() + query);
 		try
 		{
 			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, newtype);
-			st.setInt(2, CID);
+			st.setInt(2, getCID());
 			st.executeUpdate();
 			st.close();
             disconnect();
@@ -1043,7 +1048,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, newtid);
-			st.setInt(2, CID);
+			st.setInt(2, getCID());
 			st.executeUpdate();
 			st.close();
 			disconnect();
@@ -1062,7 +1067,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		Vector<mcCorrespondance> letterlist= new Vector<mcCorrespondance>();
 		ArrayList<Map<String, String>> rowlist = doQuery(
-				"select * from correspondance where cid ="+CID+" order by date");
+				"select * from correspondance where cid ="+getCID()+" order by date");
 		//System.out.println("letters found"+rowlist.size());
 		for (Map<String, String> row : rowlist)
 		{
@@ -1074,19 +1079,19 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		return letterlist;
 	}
 
-	public void addCorrespondance(String name, String date, File dest)
+	public void addCorrespondance(String name, String date,String status, File dest)
 	{
 			PreparedStatement st;
 			String query = "insert into correspondance(cid, date,path,status, subject )  values(?, ?,?,?,?)";
-System.out.println(" adding "+name+" "+dest.toString());
+//System.out.println(" adding "+name+" "+dest.toString());
 			try
 			{
 				getConnection();
 				st = con.prepareStatement(query);
-				st.setInt(1, CID);
+				st.setInt(1, getCID());
 				st.setString(2, date);
 				st.setString(3, dest.getPath());
-				st.setString(4, "tofrom");
+				st.setString(4, status);
 				st.setString(5, name);
 				st.execute();
 				st.close();
@@ -1108,11 +1113,11 @@ System.out.println(" adding "+name+" "+dest.toString());
 			PreparedStatement st;
 			try
 			{
-				System.out.println("query =" +query+" "+"#" + tag + "; "+CID);
+				System.out.println("query =" +query+" "+"#" + tag + "; "+getCID());
 				getConnection();
 				st = con.prepareStatement(query);
 				st.setString(1, "#" + tag + ";");
-				st.setInt(2, CID);
+				st.setInt(2, getCID());
 				st.setString(3, "tags");
 				st.executeUpdate();
 				st.close();
@@ -1122,6 +1127,52 @@ System.out.println(" adding "+name+" "+dest.toString());
 				e.printStackTrace();
 			}
 
+	}
+
+	public void importVcard(VCard vcard)
+	{
+		System.out.println(" loading vcard ");
+		if(vcard.getEmails().size()>0)
+		{
+			mcAttribute att =createAttribute("email", "vcard");
+			att.setValue(vcard.getEmails().get(0).toString());
+		}
+		if(vcard.getStructuredName() != null)
+		{
+			StructuredName st =vcard.getStructuredName();
+		
+			String value = "{";
+			if (st.getFamily()!=null) value += "Sn:"+st.getFamily()+";";
+			if (st.getGiven()!=null) value += "Fn:"+st.getGiven()+";";
+			value += "}";
+			mcAttribute att =createAttribute("name", "vcard");
+			att.setValue(value);
+		}
+		if(vcard.getAddresses() != null)
+		{
+			 ezvcard.property.Address ad = vcard.getAddresses().get(0);
+			String value = "{";
+			if (ad.getStreetAddress()!=null) value += "street:"+ad.getStreetAddress()+";";
+			if (ad.getLocality()!=null) value += "city:"+ad.getLocality()+";";
+			if (ad.getPostalCode()!=null) value += "postcode:"+ad.getPostalCode()+";";
+			if (ad.getRegion()!=null) value += "county:"+ad.getRegion()+";";
+			if (ad.getCountry()!=null) value += "country:"+ad.getCountry()+";";
+			value += "}";
+			mcAttribute att =createAttribute("address", "vcard");
+			att.setValue(value);
+			//selcontact.addAttribute()
+		}
+		updateContact();
+	}
+
+	public int getCID()
+	{
+		return CID;
+	}
+
+	public void setCID(int cID)
+	{
+		CID = cID;
 	}
 		
 	}

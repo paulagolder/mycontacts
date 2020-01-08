@@ -13,20 +13,20 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswDropDownBox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswOption;
+import org.lerot.gui.widgets.jswOptionset;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcDateDataType;
 import org.lerot.mycontact.mcUtilities;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswOption;
-import org.lerot.mycontact.gui.widgets.jswOptionset;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class exportBackupPanel extends jswVerticalPanel
 		implements ActionListener

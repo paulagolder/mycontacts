@@ -9,16 +9,16 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswEditPanel;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswOptionset;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswEditPanel;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswOptionset;
-import org.lerot.mycontact.gui.widgets.jswStyle;
-import org.lerot.mycontact.gui.widgets.jswStyles;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 {
@@ -126,7 +126,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 
 	public jswStyles makeAttributeEditTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("edittable");
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -167,7 +167,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 
 	public jswStyles makeFieldEditTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("fieldedit");
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");

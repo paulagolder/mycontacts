@@ -7,10 +7,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.lerot.gui.widgets.jswTabbedPanel;
+import org.lerot.gui.widgets.jswVerticalLayout;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswTabbedPanel;
-import org.lerot.mycontact.gui.widgets.jswVerticalLayout;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 		ChangeListener

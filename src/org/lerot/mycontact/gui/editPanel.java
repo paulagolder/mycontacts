@@ -1,6 +1,7 @@
 package org.lerot.mycontact.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,20 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswCheckbox;
+import org.lerot.gui.widgets.jswContainer;
+import org.lerot.gui.widgets.jswDropDownBox;
+import org.lerot.mccontact.gui.widgets.jswDropDownContactBox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswImage;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswPanel;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAddressDataType;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcAttributes;
@@ -33,20 +48,6 @@ import org.lerot.mycontact.mcUtilities;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.mcfield;
 import org.lerot.mycontact.vcardContactReader;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
-import org.lerot.mycontact.gui.widgets.jswContainer;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
-import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswImage;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswPanel;
-import org.lerot.mycontact.gui.widgets.jswStyle;
-import org.lerot.mycontact.gui.widgets.jswStyles;
-import org.lerot.mycontact.gui.widgets.jswTable;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class editPanel extends jswVerticalPanel implements ActionListener
 {
@@ -423,7 +424,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeArrayTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("arraytable");
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -540,7 +541,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeLinkTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("linktable");
 
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		tablestyle.putAttribute("backgroundColor", "White");
@@ -674,7 +675,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("EditTable");
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -716,7 +717,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	public jswStyles makeTagTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("tagtable");
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -1055,11 +1056,11 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			jswHorizontalPanel newattributepanel = new jswHorizontalPanel();
 			newlabel = new jswDropDownBox("Select:", true, false);
-			// newlabel.setPreferredSize(new Dimension(100, 24));
+		  // newlabel.setPreferredSize(new Dimension(100, 24));
 			Vector<String> varry = mcdb.topgui.attributetypes
 					.getallAttributes();
 			newlabel.addList(varry);
-			newattributepanel.add(newlabel);
+			newattributepanel.add(" WIDTH=200 ",newlabel);
 			jswPanel buttonbox = new jswHorizontalPanel();
 			jswButton idupdate = new jswButton(this, "CREATE NEW ATTRIBUTE");
 			buttonbox.add("RIGHT", idupdate);

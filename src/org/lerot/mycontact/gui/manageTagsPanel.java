@@ -10,19 +10,19 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswCheckbox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswScrollPane;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.mctagList;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswScrollPane;
-import org.lerot.mycontact.gui.widgets.jswStyle;
-import org.lerot.mycontact.gui.widgets.jswStyles;
-import org.lerot.mycontact.gui.widgets.jswTable;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 {
@@ -248,7 +248,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 	
 	private jswStyles makeTagsTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles();
+		jswStyles tablestyles = new jswStyles("tagstable");
 
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		tablestyle.putAttribute("backgroundColor", "White");

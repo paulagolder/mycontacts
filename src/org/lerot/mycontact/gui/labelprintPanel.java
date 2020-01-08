@@ -9,18 +9,18 @@ import java.util.Map.Entry;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswCheckbox;
+import org.lerot.gui.widgets.jswDropDownBox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswThumbwheel;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcLetter;
 import org.lerot.mycontact.mcPDF;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswThumbwheel;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class labelprintPanel extends jswVerticalPanel implements ActionListener
 {

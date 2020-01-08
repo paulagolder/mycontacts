@@ -18,18 +18,18 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lerot.mycontact.mcImportexception;
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswDropDownBox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcImportLdif;
 import org.lerot.mycontact.mcImportVcard;
 import org.lerot.mycontact.mcImportXML;
 import org.lerot.mycontact.mcImports;
 import org.lerot.mycontact.mcMappings;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class importSetupPanel extends jswVerticalPanel implements
 		ActionListener

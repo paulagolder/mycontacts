@@ -210,7 +210,7 @@ public class mcDataSource
 				+ "' order by sequence ";
 		ArrayList<Map<String, String>> rowlist = doQuery(sql);
 		LinkedHashMap<String, String> collection = new LinkedHashMap<String, String>();
-		// System.out.println(sql);
+		System.out.println(sql);
 		for (Map<String, String> row : rowlist)
 		{
 			String localLabel = null;
@@ -234,6 +234,7 @@ public class mcDataSource
 		ResultSet rs = null;
 		try
 		{
+			getConnection();
 			stmt = con.createStatement();
 			if (stmt == null)
 				System.out.println(" Processing error " + sqlstr);
@@ -254,6 +255,7 @@ public class mcDataSource
 			}
 			rs.close();
 			stmt.close();
+			disconnect();
 			return Rowlist;
 		} catch (SQLException e)
 		{

@@ -14,10 +14,11 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.lerot.gui.widgets.jswLabel;
+
 import java.util.Set;
 import java.util.Vector;
-
-import org.lerot.mycontact.gui.widgets.jswLabel;
 
 public class mcImports extends mcDataObject
 {

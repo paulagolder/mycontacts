@@ -9,18 +9,18 @@ import java.util.Vector;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.gui.widgets.jswButton;
+import org.lerot.gui.widgets.jswCheckbox;
+import org.lerot.gui.widgets.jswDropDownBox;
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswOption;
+import org.lerot.gui.widgets.jswOptionset;
+import org.lerot.gui.widgets.jswTextField;
+import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcMappings;
 import org.lerot.mycontact.mcdb;
-import org.lerot.mycontact.gui.widgets.jswButton;
-import org.lerot.mycontact.gui.widgets.jswCheckbox;
-import org.lerot.mycontact.gui.widgets.jswDropDownBox;
-import org.lerot.mycontact.gui.widgets.jswHorizontalPanel;
-import org.lerot.mycontact.gui.widgets.jswLabel;
-import org.lerot.mycontact.gui.widgets.jswOption;
-import org.lerot.mycontact.gui.widgets.jswOptionset;
-import org.lerot.mycontact.gui.widgets.jswTextField;
-import org.lerot.mycontact.gui.widgets.jswVerticalPanel;
 
 public class exportPanel extends jswVerticalPanel implements ActionListener
 {
@@ -47,12 +47,10 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 	private int crows,orows;
 	private jswLabel countlabel;
 	jswHorizontalPanel exportresult;
-	private jswOptionset optionset;
 	private mcContacts exportsource;
-	private jswOption allcontacts;
-	private jswOption browsecontacts;
-	private jswOption selectedcontacts;
+
 	private jswButton testbutton;
+	private jswLabel browselabel;
 
 	public exportPanel()
 	{
@@ -62,20 +60,9 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		header.add(" FILLW ", heading);
 		this.add(header);
 		jswHorizontalPanel filterbar = new jswHorizontalPanel();
-		optionset = new jswOptionset("source", false, this);
-		allcontacts = optionset.addNewOption(
-				"All Contacts " + mcdb.selbox.countAll(), false);
-		allcontacts.setTag("all");
-		browsecontacts = optionset.addNewOption("Browse Contacts "
-				+ mcdb.selbox.getBrowsecontactlist().size(), false);
-		browsecontacts.setTag("browse");
-		selectedcontacts = optionset.addNewOption("Selected Contacts "
-				+ mcdb.selbox.getSearchResultList().size(), false);
-		selectedcontacts.setTag("selected");
-		filterbar.add(" LEFT ", allcontacts);
-		filterbar.add(" MIDDLE ", browsecontacts);
-		browsecontacts.setSelected(true);
-		filterbar.add(" RIGHT ", selectedcontacts);
+       browselabel = new jswLabel();
+        browselabel.setText("Browse Contacts "+ mcdb.selbox.getBrowsecontactlist().size());
+		filterbar.add(" MIDDLE ", browselabel);
 		this.add(filterbar);
 		jswHorizontalPanel filebar = new jswHorizontalPanel();
 		selbutton = new jswButton(this, "Select");
@@ -291,15 +278,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 			}
 			selectors.setVisible(true);
 			selectors.repaint();
-			String selection = optionset.getSelectedTag();
-			System.out.println(selection);
-			if (selection.equals("all"))
-				exportsource = mcdb.selbox.getAllcontactlist();
-			else if (selection.equals("selected"))
-			{
-				exportsource = mcdb.selbox.getSearchResultList();
-			} else
-				exportsource = mcdb.selbox.getBrowsecontactlist();
+			exportsource = mcdb.selbox.getBrowsecontactlist();
 			try
 			{
 				new File(exportfilename);
@@ -326,11 +305,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 
 	public void refresh()
 	{
-		int ncontacts = mcdb.selbox.countAll();
-		int nsearchcontacts = mcdb.selbox.getSearchResultList().size();
 		int nbrowsecontacts = mcdb.selbox.getBrowsecontactlist().size();
-		allcontacts.setText("All Contacts (" + ncontacts + ")");
-		browsecontacts.setText("Browse Contacts (" + nbrowsecontacts + ")");
-		selectedcontacts.setText("Selected Contacts (" + nsearchcontacts + ")");
+		browselabel.setText("Browse Contacts (" + nbrowsecontacts + ")");
 	}
 }
