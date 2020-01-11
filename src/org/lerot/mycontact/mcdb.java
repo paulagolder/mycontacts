@@ -24,7 +24,6 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 
 import org.lerot.gui.widgets.jswContainer;
-import org.lerot.mccontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswLabel;
 import org.lerot.gui.widgets.jswPanel;
@@ -37,6 +36,7 @@ import org.lerot.mycontact.gui.ToolsPanel;
 import org.lerot.mycontact.gui.browsePanel;
 import org.lerot.mycontact.gui.editPanel;
 import org.lerot.mycontact.gui.selectorBox;
+import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.mycontact.gui.searchPanel;
 
 //import org.lerot.mycontact.forms.certificateeditpanel;

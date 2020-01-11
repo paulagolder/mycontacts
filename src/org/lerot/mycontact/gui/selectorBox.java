@@ -15,7 +15,6 @@ import javax.swing.JButton;
 
 import org.lerot.gui.widgets.jswButton;
 import org.lerot.gui.widgets.jswDropDownBox;
-import org.lerot.mccontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswLabel;
 import org.lerot.gui.widgets.jswPanel;
@@ -26,6 +25,7 @@ import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcImports;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.mctagList;
+import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
 
 public class selectorBox extends jswVerticalPanel implements ActionListener,
 		FocusListener, KeyListener

@@ -32,7 +32,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.lerot.gui.widgets.TextTransfer;
 import org.lerot.gui.widgets.jswButton;
 import org.lerot.gui.widgets.jswDropDownBox;
-import org.lerot.mccontact.gui.widgets.jswDropPane;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswImage;
 import org.lerot.gui.widgets.jswLabel;
@@ -57,6 +56,7 @@ import org.lerot.mycontact.mcLetter;
 import org.lerot.mycontact.mcPDF;
 import org.lerot.mycontact.mcUtilities;
 import org.lerot.mycontact.mcdb;
+import org.lerot.mycontact.gui.widgets.jswDropPane;
 
 public class browsePanel extends jswVerticalPanel implements ActionListener
 {
@@ -1036,7 +1036,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			mainpanel.add("  ", correspondance);
 	
 			jswHorizontalPanel bottom = new jswHorizontalPanel("fred", false);
-			org.lerot.mccontact.gui.widgets.jswDropPane correspondancesent = new org.lerot.mccontact.gui.widgets.jswDropPane("sent");
+			org.lerot.mycontact.gui.widgets.jswDropPane correspondancesent = new org.lerot.mycontact.gui.widgets.jswDropPane("sent");
 			bottom.add(" FILLW ", correspondancesent);
 			jswDropPane correspondancereceived= new jswDropPane("received");
 			bottom.add(" FILLW ", correspondancereceived);

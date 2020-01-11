@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window - Preferences - Java - Code Generation - Code and Comments
  */
-package org.lerot.gui.widgets;
+package org.lerot.mycontact.gui.widgets;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -28,9 +28,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.lerot.mycontact.mcContact;
 
-
-public class jswTree extends JPanel implements ComponentListener
+public class jswContactTree extends JPanel implements ComponentListener
 {
 
 	private class MyRenderer extends JLabel implements TreeCellRenderer
@@ -46,9 +46,21 @@ public class jswTree extends JPanel implements ComponentListener
 				boolean sel, boolean expanded, boolean leaf, int row,
 				boolean hasFocus)
 		{
-			
+			if (value instanceof mcContact)
+			{
+				mcContact so = (mcContact) value;
+
+				setText(so.getName() );
+				setFont(new Font("SansSerif", Font.PLAIN, treefont));
+				if (sel) setForeground(Color.red);
+				else
+					setForeground(Color.black);
+				return this;
+			} else
+			{
 				setText(value.toString());
 				return this;
+			}
 
 		}
 
@@ -75,7 +87,7 @@ public class jswTree extends JPanel implements ComponentListener
 	public JScrollPane reptreeView;
 	public int treefont;
 
-	public jswTree(String inname, DefaultMutableTreeNode aNode, int intreefont)
+	public jswContactTree(String inname, DefaultMutableTreeNode aNode, int intreefont)
 	{
 		name = inname;
 		treefont = intreefont;

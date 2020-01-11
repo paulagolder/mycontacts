@@ -25,7 +25,6 @@ import org.lerot.gui.widgets.jswButton;
 import org.lerot.gui.widgets.jswCheckbox;
 import org.lerot.gui.widgets.jswContainer;
 import org.lerot.gui.widgets.jswDropDownBox;
-import org.lerot.mccontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswImage;
 import org.lerot.gui.widgets.jswLabel;
@@ -48,6 +47,7 @@ import org.lerot.mycontact.mcUtilities;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.mcfield;
 import org.lerot.mycontact.vcardContactReader;
+import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
 
 public class editPanel extends jswVerticalPanel implements ActionListener
 {

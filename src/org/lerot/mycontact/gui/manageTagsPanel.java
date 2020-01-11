@@ -32,12 +32,10 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 	int nsearchcontacts;
 	mcContacts found;
 	JRadioButton[] options;
-	private jswCheckbox[] acheck;
+	private jswCheckbox[] checkboxes;
 	private mctagList tagList;
 	private jswTable atttable;
 	private jswStyles tagstablestyles;
-	
-	
 
 	@Override
 	public void actionPerformed(ActionEvent evt)
@@ -48,7 +46,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		if (action.equals("MERGE"))
 		{
 			String mergeto = null;
-			for (jswCheckbox checkbox : acheck)
+			for (jswCheckbox checkbox : checkboxes)
 			{
 				if (checkbox != null && checkbox.isSelected())
 				{
@@ -63,19 +61,20 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 					}
 				}
 			}
-			if (row < 1) System.out.println("nothing to merge");
+			if (row < 1)
+				System.out.println("nothing to merge");
 			else
 			{
-			
+
 				mergeto.replace(";", "");
-				mergeto = mergeto+";";
-				for (jswCheckbox checkbox : acheck)
+				mergeto = mergeto + ";";
+				for (jswCheckbox checkbox : checkboxes)
 				{
 					if (checkbox != null && checkbox.isSelected())
 					{
 						String mergefrom = checkbox.getTag();
 						mergefrom.replace(";", "");
-						mergefrom = mergefrom+";";
+						mergefrom = mergefrom + ";";
 						if (!mergeto.equals(mergefrom))
 						{
 							tagList.replaceall("tags", mergefrom, mergeto);
@@ -87,7 +86,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		} else if (action.equals("DELETE"))
 		{
 
-			for (jswCheckbox checkbox : acheck)
+			for (jswCheckbox checkbox : checkboxes)
 			{
 				if (checkbox != null && checkbox.isSelected())
 				{
@@ -95,7 +94,8 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 					row++;
 				}
 			}
-			if (row < 1) System.out.println("nothing to delete");
+			if (row < 1)
+				System.out.println("nothing to delete");
 			else
 			{
 				int n = JOptionPane.showConfirmDialog(this,
@@ -103,13 +103,13 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 						"DELETE TAGS?", JOptionPane.YES_NO_OPTION);
 				if (n == YES)
 				{
-					for (jswCheckbox checkbox : acheck)
+					for (jswCheckbox checkbox : checkboxes)
 					{
 						if (checkbox != null && checkbox.isSelected())
 						{
 							String todelete = checkbox.getTag();
 							(new mctagList()).delete("tags", todelete);
-							
+
 						}
 					}
 				}
@@ -121,7 +121,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			System.out.println("norminging");
 		} else if (action.equals("RENAME"))
 		{
-			for (jswCheckbox checkbox : acheck)
+			for (jswCheckbox checkbox : checkboxes)
 			{
 				if (checkbox != null && checkbox.isSelected())
 				{
@@ -131,31 +131,65 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			}
 			if (row < 1) System.out.println("nothing to rename");
 			String newtag = JOptionPane.showInputDialog("Enter New tag name");
-			if(newtag!=null) 
+			if (newtag != null)
 			{
-			newtag.replace("#", "");
-			newtag.replace(";", "");
-			newtag = "#"+newtag+";";
-			if (newtag.length() > 4)
-			{
-
-				for (jswCheckbox checkbox : acheck)
+				newtag.replace("#", "");
+				newtag.replace(";", "");
+				newtag = "#" + newtag + ";";
+				if (newtag.length() > 4)
 				{
-					if (checkbox != null && checkbox.isSelected())
+
+					for (jswCheckbox checkbox : checkboxes)
 					{
-						String changefrom = checkbox.getTag();
-						tagList.replaceall("tags", changefrom, newtag);
-						row++;
+						if (checkbox != null && checkbox.isSelected())
+						{
+							String changefrom = checkbox.getTag();
+							tagList.replaceall("tags", changefrom, newtag);
+							row++;
+						}
 					}
 				}
 			}
+
+		} else if (action.equals("DUPLICATE"))
+		{
+			row = 0;
+			for (jswCheckbox checkbox : checkboxes)
+			{
+				//System.out.println("new name  " + checkbox.getTag());
+				if (checkbox != null && checkbox.isSelected())
+				{
+					System.out.println("new name  " + checkbox.getTag());
+					row++;
+				}
 			}
-			
+			if (row < 1) System.out.println("nothing to copy");
+			String newtag = JOptionPane.showInputDialog("Enter New tag name");
+			if (newtag != null)
+			{
+				newtag.replace("#", "");
+				newtag.replace(";", "");
+				newtag = "#" + newtag + ";";
+				if (newtag.length() > 4)
+				{
+
+					for (jswCheckbox checkbox : checkboxes)
+					{
+						if (checkbox != null && checkbox.isSelected())
+						{
+							String changefrom = checkbox.getTag();
+							tagList.duplicateall("tags", changefrom, newtag);
+							row++;
+						}
+					}
+				}
+			}
+
 		} else
-			System.out.println("label print action " + action
-					+ " unrecognised ");
+			System.out
+					.println("label print action " + action + " unrecognised ");
 		tagList.reloadTags();
-	
+
 		buildTagPanel();
 		atttable.repaint();
 		mcdb.topgui.getContentPane().validate();
@@ -173,13 +207,13 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		this.add(scorebar);
 		jswLabel score;
 		tagList.reloadTags();
-		//tagList.getAllTags();
+		// tagList.getAllTags();
 		if (tagList == null || tagList.isEmpty())
 		{
 			score = new jswLabel("No tags found ");
 		} else
-			score = new jswLabel(" " + tagList.size()
-					+ " different tags found ");
+			score = new jswLabel(
+					" " + tagList.size() + " different tags found ");
 		scorebar.add(score);
 		jswHorizontalPanel printbar = new jswHorizontalPanel();
 		this.add(printbar);
@@ -190,19 +224,18 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		printbar.add(" MIDDLE ", deletebutton);
 		jswButton renamebutton = new jswButton(this, "RENAME");
 		printbar.add(" MIDDLE ", renamebutton);
+		jswButton duplicatebutton = new jswButton(this, "DUPLICATE");
+		printbar.add(" MIDDLE ", duplicatebutton);
 		jswButton normbutton = new jswButton(this, "NORM");
 		printbar.add(" MIDDLE ", normbutton);
 		atttable = new jswTable("tags", tagstablestyles);
-		jswScrollPane scrollableTextArea = new jswScrollPane(atttable,
-				-4, -4);
+		jswScrollPane scrollableTextArea = new jswScrollPane(atttable, -4, -4);
 		scrollableTextArea.setName("resultscroll");
-		scrollableTextArea
-				.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollableTextArea
-				.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scrollableTextArea.setHorizontalScrollBarPolicy(
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollableTextArea.setVerticalScrollBarPolicy(
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		this.add(" SCROLLH ", scrollableTextArea);
-		
-
 
 		this.repaint();
 		mcdb.topgui.mainpanel.repaint();
@@ -214,8 +247,9 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 	{
 		atttable.removeAll();
 		int row = 0;
-		int col=0;
-		acheck = new jswCheckbox[40];
+		int col = 0;
+		int cb=0;
+		checkboxes = new jswCheckbox[40];
 		for (Entry<String, Integer> anentry : tagList.entrySet())
 		{
 			String attkey = anentry.getKey();
@@ -223,21 +257,19 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			jswLabel alabel = new jswLabel(attkey);
 			jswLabel acount = new jswLabel(attcount);
 			atttable.addCell(alabel, row, col);
-			atttable.addCell(acount, row, col+1);
-			acheck[row] = new jswCheckbox("");
-			acheck[row].setTag(attkey);
-			atttable.addCell(acheck[row], row, col+2);
+			atttable.addCell(acount, row, col + 1);
+			checkboxes[cb] = new jswCheckbox("");
+			checkboxes[cb].setTag(attkey);
+			atttable.addCell(checkboxes[cb], row, col + 2);
 			row++;
-			if (row>10) 
-{
-	row=0;
-	col=col+3;
-}
+			cb++;
+			if (row > 10)
+			{
+				row = 0;
+				col = col + 3;
+			}
 		}
-		//atttable.addCell("", 0, col+6);
-		//jswStyle colxstyle = mcdb.topgui.tablestyles.makeStyle("col_"+col+6);
-		//colxstyle.putAttribute("horizontalAlignment", "RIGHT");
-		//colxstyle.putAttribute("minwidth", "false");
+	
 	}
 
 	public void refresh()
@@ -245,7 +277,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		tagList.reloadTags();
 		buildTagPanel();
 	}
-	
+
 	private jswStyles makeTagsTableStyles()
 	{
 		jswStyles tablestyles = new jswStyles("tagstable");
@@ -284,14 +316,15 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		col2style.putAttribute("horizontalAlignment", "RIGHT");
-		col2style.putAttribute("minwidth", "true");		
-		 tablestyles.copyStyle("col_0","col_3");		
-		tablestyles.copyStyle("col_1","col_4");;
-		tablestyles.copyStyle("col_2","col_5");		
-		tablestyles.copyStyle("col_0","col_6");
-         tablestyles.copyStyle("col_1","col_7");
-	     tablestyles.copyStyle("col_2","col_8"); 
-	
+		col2style.putAttribute("minwidth", "true");
+		tablestyles.copyStyle("col_0", "col_3");
+		tablestyles.copyStyle("col_1", "col_4");
+		;
+		tablestyles.copyStyle("col_2", "col_5");
+		tablestyles.copyStyle("col_0", "col_6");
+		tablestyles.copyStyle("col_1", "col_7");
+		tablestyles.copyStyle("col_2", "col_8");
+
 		return tablestyles;
 	}
 }

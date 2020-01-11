@@ -12,12 +12,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.lerot.gui.widgets.jswCheckbox;
 
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
+
+import org.lerot.gui.widgets.jswCheckbox;
 
 public class mcContacts extends mcDataObject
 {

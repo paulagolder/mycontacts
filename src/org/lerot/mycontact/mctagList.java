@@ -137,6 +137,29 @@ public class mctagList extends mcDataObject
 		}
 
 	}
+	
+	public void duplicateall(String attkey, String oldtag, String newtag)
+	{
+		String query = " update attributeValues set value =( value || ? )  where root LIKE ? and value LIKE ? ";
+	//	System.out.println("query : " + query+" "+oldtag+" "+newtag);
+		PreparedStatement st;
+		try
+		{
+			con =  datasource.getConnection();
+			st = con.prepareStatement(query);
+			st.setString(1, newtag );
+			st.setString(2, attkey + "%");
+			st.setString(3, "%#"+oldtag + ";%");
+			//System.out.println("After : " + st.toString());
+			st.executeUpdate();
+			st.close();
+			datasource.disconnect();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
 
 	public void delete(String attkey, String todelete)
 	{
@@ -183,4 +206,6 @@ public class mctagList extends mcDataObject
 	{
 		return taglist.entrySet();
 	}
+
+	
 }

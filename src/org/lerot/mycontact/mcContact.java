@@ -1109,16 +1109,15 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	public void deleteTag(String tag)
 	{
 		
-			String query = "update attributeValues set value = replace(value, ?, '')  where CID = ? and root = ? ";
+			String query = "update attributeValues set value = replace(value, ?, '')  where CID = ? and root LIKE 'tags%' ";
 			PreparedStatement st;
 			try
 			{
-				System.out.println("query =" +query+" "+"#" + tag + "; "+getCID());
+				System.out.println("query =" +query+" "+ tag + " "+getCID());
 				getConnection();
 				st = con.prepareStatement(query);
 				st.setString(1, "#" + tag + ";");
 				st.setInt(2, getCID());
-				st.setString(3, "tags");
 				st.executeUpdate();
 				st.close();
 				disconnect();

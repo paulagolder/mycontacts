@@ -1,4 +1,4 @@
-package org.lerot.mccontact.gui.widgets;
+package org.lerot.mycontact.gui.widgets;
 
 
 import java.awt.Dimension;
