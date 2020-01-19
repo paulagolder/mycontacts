@@ -52,6 +52,8 @@ public class selectorBox extends jswVerticalPanel implements ActionListener,
 	private jswHorizontalPanel filterbar;
 	private jswHorizontalPanel selectbox;
 
+	private mctagList taglist;
+
 	public selectorBox(mcdb aparent, ActionListener al)
 	{
       
@@ -553,7 +555,7 @@ public class selectorBox extends jswVerticalPanel implements ActionListener,
 
 	public void setTaglist()
 	{
-		mctagList taglist = new mctagList();
+		taglist = new mctagList();
         taglist.reloadTags();
         browseselectbox.removeActionListener(this);
         browseselectbox.addElement("all");
@@ -562,6 +564,11 @@ public class selectorBox extends jswVerticalPanel implements ActionListener,
 		browseselectbox.addList(taglist.getTaglist());
 		browseselectbox.addActionListener(this);
 		
+	}
+
+	public Vector<String> getTaglist()
+	{
+		return taglist.toVector();
 	}
 
 	

@@ -1057,14 +1057,14 @@ public class mcContacts extends mcDataObject
 	public TreeSet<String> searchTags(String searchterm)
 	{
 		TreeSet<String> searchresults = new TreeSet<String>();
-		String query = " select cid from attributeValues where value LIKE ? AND ( root LIKE ? ) ";
+		String query = " select cid from attributeValues where value LIKE ? AND ( root = ? ) ";
 		PreparedStatement st;
 		try
 		{
 			getConnection();
 			st = con.prepareStatement(query);
-			st.setString(1, "%" + searchterm + "%");
-			st.setString(2, "%tag%");
+			st.setString(1, "%#" + searchterm + ";%");
+			st.setString(2, "tags");
 			ResultSet resset = st.executeQuery();
 			while (resset.next())
 			{

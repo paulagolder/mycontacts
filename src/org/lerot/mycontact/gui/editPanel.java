@@ -76,6 +76,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 	private String edattributename;
 
 	private jswDropDownBox linkselect;
+	private jswDropDownBox groupselect;
 
 	public editPanel()
 	{
@@ -183,7 +184,12 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			mcAttribute newatt = selcontact.createAttribute(root, qualifier,
 					linkcontact.getTID());
 			newatt.dbupsertAttribute();
-		} else if (action.startsWith("ADDTOGROUP"))
+		} else if (action.startsWith("ADDGROUP"))
+		{
+			//mcContact parent = parentselect.getSelectedValue();
+			System.out.println("adding " + groupselect.getSelected() + " to " + selcontact);
+			selcontact.addGroup(groupselect.getSelected());
+		}else if (action.startsWith("ADDTOGROUP"))
 		{
 			mcContact parent = parentselect.getSelectedValue();
 			System.out.println("adding " + selcontact + " to " + parent);
@@ -482,7 +488,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				if(linkcontact != null)
 				  value = linkcontact.getTID().trim();
 				else
-					System.out.println(" Bot found contact "+cid);
+					System.out.println(" Not found contact "+cid);
 
 				if (!selcontact.hasAttributeByValue(value))
 				{
@@ -634,6 +640,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							jswLabel aqlabel = new jswLabel(qualifier);
 							memberpanel.addCell(aqlabel, row, 1);
 							jswHorizontalPanel buttonpanel = new jswHorizontalPanel();
+							
 							jswButton viewcontact2 = new jswButton(this, "VIEW",
 									"VIEW:" + linkedcontact.getIDstr());
 							buttonpanel.add(viewcontact2);
@@ -751,7 +758,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		return tablestyles;
 	}
 
-	public void showEditPanel()
+	public void makeEditPanel()
 	{
 
 		this.removeAll();
@@ -1115,6 +1122,24 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			buttonbox.add("RIGHT", addmember);
 			newmemberpanel.add("RIGHT", buttonbox);
 			add(" FILLW ", newmemberpanel);
+			
+			jswHorizontalPanel groupmemberpanel = new jswHorizontalPanel();
+			groupmemberpanel.applyStyles("borderstyle");
+
+		
+
+			groupselect = new jswDropDownBox("Select Group", true,
+					false);
+			groupselect.addList(mcdb.selbox.getTaglist());
+			 groupmemberpanel.add(" WIDTH=300 ",groupselect);//paul to fix
+		//	atteditbox = new jswTextField();
+		//	atteditbox.setEnabled(true);
+		//	 groupmemberpanel.add(atteditbox);
+			jswPanel bbuttonbox = new jswHorizontalPanel();
+			jswButton addgroup = new jswButton(this, "ADD GROUP AS MEMBERS", "ADDGROUP");
+			bbuttonbox.add("RIGHT", addgroup);
+			 groupmemberpanel.add("RIGHT",bbuttonbox);
+			add(" FILLW ",  groupmemberpanel);
 		}
 		mcdb.topgui.getContentPane().validate();
 	}

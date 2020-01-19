@@ -31,8 +31,8 @@
 	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/sqlite-jdbc-3.7.15-M1.jar"/>
 	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="/lib/myWidgets.jar"/>
-	<classpathentry kind="lib" path="/lib/javax.mail.jar"/>
-	<classpathentry kind="lib" path="/lib/ez-vcard-0.10.5.jar"/>
+	<classpathentry kind="lib" path="lib/ez-vcard-0.10.5.jar"/>
+	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
+	<classpathentry kind="lib" path="lib/myWidgets.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

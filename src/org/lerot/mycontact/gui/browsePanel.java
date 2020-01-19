@@ -131,7 +131,26 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 				}
 			}
 
-		} else if (action.startsWith("MAIL:"))
+		}
+		else if (action.startsWith("MAKEGROUPEMAIL"))
+		{
+			String sendermail = "paul.a.golder@lerot.org";
+			if(sendermail!= null)
+			{
+			mcContacts memberlist =  selcontact.getMembers("member");
+			String emailaddresses="";
+			for(Entry<String, mcContact> anentry : memberlist.entrySet())
+			{
+				mcContact acontact = anentry.getValue();
+				String email = acontact.getEmail();
+				if(email!=null)
+				    emailaddresses += email+"%2C%20";
+			}
+			System.out.println(emailaddresses);
+			email(sendermail, emailaddresses);
+			}
+				
+		}else if (action.startsWith("MAIL:"))
 		{
 			String atkey = action.substring(5);
 			mcAttribute selatt = selcontact.getAttributebyKey(atkey);
@@ -151,7 +170,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			{
 				if (n == 0)
 				{
-					email(atkey);
+					
+					email(emailaddress, null);
 				} else if (n == 1)
 				{
 					textTransfer.setClipboardContents(emailaddress);
@@ -240,13 +260,17 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			editid = 0;
 			mcdb.topgui.refreshView();
 		}
+		else
+		{
+			System.out.println(" unknown action "+action+ " in browsepanel ");
+		}
 
 	}
 
-	void email(String atkey)
+	void email(String emailaddress, String bcc)
 	{
-		mcAttribute selatt = selcontact.getAttributebyKey(atkey);
-		String emailaddress = selatt.getValue();
+		//mcAttribute selatt = selcontact.getAttributebyKey(atkey);
+		//String emailaddress = selatt.getValue();
 
 		Desktop desktop;
 		if (Desktop.isDesktopSupported() && (desktop = Desktop.getDesktop())
@@ -262,6 +286,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			{
 				String target = "mailto:" + emailaddress + "?subject=" + subject
 						+ "&body=" + body;
+				if(bcc!=null)
+					target += "&bcc="+bcc;
 				// String converted = URLDecoder.encode(target, "UTF-8");
 				mailto = new URI(target);
 				desktop.mail(mailto);
@@ -581,7 +607,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	}
 
-	private jswVerticalPanel makeLinkToPanel(mcContact selcontact,
+	private jswVerticalPanel xmakeLinkToPanel(mcContact selcontact,
 			mcContacts list, String title)
 	{
 
@@ -675,7 +701,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					jswTable memberattributes = makeAttributePanel(
 							linkedcontact, "S");
 
-					memberpanel.addCell(memberattributes, " FILLW ", row, 1);
+				//	memberpanel.addCell(memberattributes, " FILLW ", row, 1);
 					memberpanel.addCell(viewcontact, row, 2);
 				} else
 				{
@@ -946,7 +972,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 	}
 
-	public void showBrowsePanel()
+	public void makeBrowsePanel()
 	{
 		jswVerticalPanel mainpanel = this;
 		mainpanel.setName("Browsepanel");
@@ -992,6 +1018,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			if (arelationslist != null) mainpanel.add(arelationslist);
 			jswVerticalPanel amemberstlist = makeLinkToPanel(selcontact,
 					"member", "Has Members");
+			jswButton groupemail = new jswButton(this,"MAKE GROUP EMAIL","MAKEGROUPEMAIL");
+			if (amemberstlist != null) mainpanel.add(groupemail);
 			if (amemberstlist != null) mainpanel.add(amemberstlist);
 			jswVerticalPanel aorglist = makeLinkToPanel(selcontact, "org",
 					"Member Of");

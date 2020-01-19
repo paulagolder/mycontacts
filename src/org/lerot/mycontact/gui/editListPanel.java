@@ -123,7 +123,7 @@ else if (action.startsWith("DELETE"))
 		if (n == YES)
 		{
 			selcon.deleteTag(tag);
-			System.out.println("reply =" + n);
+			//System.out.println("reply =" + n);
 		}
 	 displaylist(tag);
 } else

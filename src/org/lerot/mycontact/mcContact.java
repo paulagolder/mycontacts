@@ -380,6 +380,14 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		return name;
 	}
 
+	public String getEmail()
+	{
+		mcAttribute emailat = attributes.find("email");
+		if(emailat != null)
+	   	return emailat.getFormattedValue();
+		else 
+			return null;
+	}
 	public String getName(String fmt)
 	{
 		String name = TID;
@@ -1173,6 +1181,49 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		CID = cID;
 	}
+
+	public void addGroup(String selected)
+	{
+		mcContacts selcons = mcdb.selbox.searchTag(selected);
+		for (Entry<String, mcContact> anentry : selcons.entrySet())
+		{
+			mcContact acontact = anentry .getValue();
+			mcAttribute newatt = this.createAttribute("member", acontact.getIDstr(),
+					acontact.getTID());
+			newatt.dbupsertAttribute();
+		}
+		
+	}
+
+	public mcContacts getMembers(String selector)
+	{
+        mcContacts list = new mcContacts();
+	
+			Map<String, mcAttribute> attributes = this
+					.getAttributesbyRoot(selector);
+			if (attributes.size() < 1)
+			{ return null; }
+
+
+			for (Entry<String, mcAttribute> anentry : attributes.entrySet())
+			{
+
+
+				mcAttribute anattribute = anentry.getValue();
+				String value = anattribute.getValue();
+				
+				mcContact linkedcontact = mcdb.selbox.FindbyTID(value);
+
+				if (linkedcontact != null)
+				{
+                   list.put(linkedcontact);
+                   
+				}
+			}		
+		return list;
+	}
+
+	
 		
 	}
 

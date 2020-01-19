@@ -332,7 +332,7 @@ public class mcdb extends JFrame implements ActionListener
 			selbox.navVisible(true);
 			selbox.filterboxVisible(false);
 			mainpanel.removeAll();
-			aneditpanel.showEditPanel();
+			aneditpanel.makeEditPanel();
 			mainpanel.add(aneditpanel);
 		} else if (mode.equals("SEARCH"))
 		{
@@ -349,7 +349,7 @@ public class mcdb extends JFrame implements ActionListener
 			selbox.filterboxVisible(true);
 			//selbox.update();
 			mainpanel.removeAll();
-			abrowsepanel.showBrowsePanel();
+			abrowsepanel.makeBrowsePanel();
 			mainpanel.add("FILLW", abrowsepanel);
 		} else if (mode.equals("TOOLS"))
 		{
