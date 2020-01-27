@@ -56,9 +56,9 @@ public class mcCorrespondance extends mcDataObject
 		{
 			ArrayList<Map<String, String>> rowlist = doQuery(
 					"select * from correspondance where correspondanceid = "+lettkey);
-			System.out.println("letters found:"+ rowlist.size()+" "+lettkey);	
+			//System.out.println("letters found:"+ rowlist.size()+" "+lettkey);	
 			//mcCorrespondance aletter = new mcCorrespondance(0);
-			System.out.println(rowlist.toString());
+			//System.out.println(rowlist.toString());
 			this.fill(rowlist.get(0));
 			//return aletter;
 		}

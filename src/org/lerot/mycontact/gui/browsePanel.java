@@ -26,7 +26,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lerot.gui.widgets.TextTransfer;
@@ -36,6 +38,7 @@ import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswImage;
 import org.lerot.gui.widgets.jswLabel;
 import org.lerot.gui.widgets.jswPanel;
+import org.lerot.gui.widgets.jswScrollPane;
 import org.lerot.gui.widgets.jswStyle;
 import org.lerot.gui.widgets.jswStyles;
 import org.lerot.gui.widgets.jswTable;
@@ -101,15 +104,19 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					.FindbystrID(selid);
 			mcdb.selbox.contactselectbox.setSelected(selcon);
 			mcdb.selbox.contactselectbox.contactddbox.setSelectedItem(selcon);
-			//mcdb.selbox.setSelcontact(selcon); // paul fiddling here
+			// mcdb.selbox.setSelcontact(selcon); // paul fiddling here
 			mcdb.topgui.refreshView();
-		} else if (action.startsWith("USE:"))
+		} else if (action.startsWith("MAKENOTE"))
+			
+		{
+			printNote(selcontact);
+		}else if (action.startsWith("USE:"))
 		{
 			System.out.println(" use address " + selcontact.getTID());
 			String address = selcontact.makeBlockAddress("\n", true);
 
 			String[] options = new String[] { "Letter", "Label", "Copy",
-			"Cancel" };
+					"Cancel" };
 			TextTransfer textTransfer = new TextTransfer();
 			textTransfer.setClipboardContents(address);
 			int n = JOptionPane.showOptionDialog(this,
@@ -124,33 +131,31 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					printlabel(address);
 				} else if (n == 0)
 				{
-					printletter(selcontact,address);
+					printletter(selcontact, address);
 				} else if (n == 2)
 				{
 					textTransfer.setClipboardContents(address);
 				}
 			}
 
-		}
-		else if (action.startsWith("MAKEGROUPEMAIL"))
+		} else if (action.startsWith("MAKEGROUPEMAIL"))
 		{
 			String sendermail = "paul.a.golder@lerot.org";
-			if(sendermail!= null)
+			if (sendermail != null)
 			{
-			mcContacts memberlist =  selcontact.getMembers("member");
-			String emailaddresses="";
-			for(Entry<String, mcContact> anentry : memberlist.entrySet())
-			{
-				mcContact acontact = anentry.getValue();
-				String email = acontact.getEmail();
-				if(email!=null)
-				    emailaddresses += email+"%2C%20";
+				mcContacts memberlist = selcontact.getMembers("member");
+				String emailaddresses = "";
+				for (Entry<String, mcContact> anentry : memberlist.entrySet())
+				{
+					mcContact acontact = anentry.getValue();
+					String email = acontact.getEmail();
+					if (email != null) emailaddresses += email + "%2C%20";
+				}
+				System.out.println(emailaddresses);
+				email(sendermail, emailaddresses);
 			}
-			System.out.println(emailaddresses);
-			email(sendermail, emailaddresses);
-			}
-				
-		}else if (action.startsWith("MAIL:"))
+
+		} else if (action.startsWith("MAIL:"))
 		{
 			String atkey = action.substring(5);
 			mcAttribute selatt = selcontact.getAttributebyKey(atkey);
@@ -170,7 +175,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			{
 				if (n == 0)
 				{
-					
+
 					email(emailaddress, null);
 				} else if (n == 1)
 				{
@@ -259,18 +264,18 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			aletter.saveLetter();
 			editid = 0;
 			mcdb.topgui.refreshView();
-		}
-		else
+		} else
 		{
-			System.out.println(" unknown action "+action+ " in browsepanel ");
+			System.out
+					.println(" unknown action " + action + " in browsepanel ");
 		}
 
 	}
 
 	void email(String emailaddress, String bcc)
 	{
-		//mcAttribute selatt = selcontact.getAttributebyKey(atkey);
-		//String emailaddress = selatt.getValue();
+		// mcAttribute selatt = selcontact.getAttributebyKey(atkey);
+		// String emailaddress = selatt.getValue();
 
 		Desktop desktop;
 		if (Desktop.isDesktopSupported() && (desktop = Desktop.getDesktop())
@@ -286,8 +291,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			{
 				String target = "mailto:" + emailaddress + "?subject=" + subject
 						+ "&body=" + body;
-				if(bcc!=null)
-					target += "&bcc="+bcc;
+				if (bcc != null) target += "&bcc=" + bcc;
 				// String converted = URLDecoder.encode(target, "UTF-8");
 				mailto = new URI(target);
 				desktop.mail(mailto);
@@ -364,9 +368,11 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 								// value
 								jswLabel slabel = new jswLabel(value);
 								slabel.setBorder(setLineBorder(Color.blue, 2));
-								//slabel.getLabel().setBorder(setLineBorder(Color.pink, 2));
+								// slabel.getLabel().setBorder(setLineBorder(Color.pink,
+								// 2));
 								slabel.getLabel().setBackground(Color.pink);
-								attributepanel.addCell(slabel," LEFT ",row,1);
+								attributepanel.addCell(slabel, " LEFT ", row,
+										1);
 							}
 							if (anattribute.isType("address")
 									&& selector.contains("B"))
@@ -452,7 +458,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	{
 
 		jswVerticalPanel frame = new jswVerticalPanel();
-		jswLabel memberheading = new jswLabel(title);
+		jswLabel memberheading = new jswLabel("+" + title);
 		frame.add(memberheading);
 
 		jswTable memberpanel = new jswTable(title, linktablestyles);
@@ -469,15 +475,17 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 				{
 					String value = acontact.getTID();
 					jswLabel alabel = new jswLabel(value);
-					memberpanel.addCell(alabel, row, 0);
+					// memberpanel.addCell(alabel, row, 0);
+					memberpanel.addCell(acontact.getTID(), row, 0);
 					memberpanel.addCell(acontact.getIDstr(), row, 1);
+					memberpanel.addCell("", row, 2);
 					jswButton viewcontact = new jswButton(this, "VIEW",
 							"VIEW:" + acontact.getIDstr());
-					memberpanel.addCell(viewcontact, row, 2);
+					memberpanel.addCell(viewcontact, row, 3);
 					if (selcontact.hasAttributeByValue(acontact.getTID()))
 					{
-						jswLabel arefll = new jswLabel("found");
-						memberpanel.addCell(arefll, row, 3);
+						// jswLabel arefll = new jswLabel("found");
+						// memberpanel.addCell(arefll, row, 3);
 					}
 					row++;
 				}
@@ -497,12 +505,12 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 	}
 
-	private jswVerticalPanel makeLinkedFromPanel(mcContact selcontact,
+	private jswVerticalPanel xmakeLinkedFromPanel(mcContact selcontact,
 			String selector, String title)
 	{
 
 		jswVerticalPanel frame = new jswVerticalPanel();
-		jswLabel memberheading = new jswLabel(title);
+		jswLabel memberheading = new jswLabel("+" + title);
 		frame.add(memberheading);
 
 		jswTable memberpanel = new jswTable(selector, linktablestyles);
@@ -565,8 +573,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			return null;
 		}
 	}
-
-	
 
 	private mcContacts makeLinkToList(mcContact selcontact, String selector)
 	{
@@ -658,92 +664,87 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	}
 
-	private jswVerticalPanel makeLinkToPanel(mcContact selcontact,
+	private jswVerticalPanel makeLinkToPanel(mcContacts contacts,
 			String selector, String title)
 	{
 
-		jswVerticalPanel frame = new jswVerticalPanel();
-		jswLabel memberheading = new jswLabel(title);
-		frame.add(memberheading);
+		jswVerticalPanel vpanel = new jswVerticalPanel();
+		if (title != null)
+		{
+			jswLabel memberheading = new jswLabel(title);
+			vpanel.add(memberheading);
+		}
 		jswTable memberpanel = new jswTable(selector, linktablestyles);
 
-		if (selcontact != null)
+		int row = 0;
+		for (Entry<String, mcContact> anentry : contacts.entrySet())
 		{
-			Map<String, mcAttribute> attributes = selcontact
-					.getAttributesbyRoot(selector);
-			if (attributes.size() < 1)
-			{ return null; }
+			mcContact linkedcontact = anentry.getValue();
+			memberpanel.addCell(linkedcontact.getName(), row, 0);
+			jswButton viewcontact = new jswButton(this, "VIEW",
+					"VIEW:" + linkedcontact.getIDstr());
+			memberpanel.addCell("", row, 1);
+			memberpanel.addCell("", row, 2);
+			memberpanel.addCell(viewcontact, row, 3);
+			row++;
+		}
 
-			int row = 0;
-
-			for (Entry<String, mcAttribute> anentry : attributes.entrySet())
-			{
-
-				String attkey = anentry.getKey();
-
-				mcAttribute anattribute = anentry.getValue();
-				String qual = anattribute.getQualifier();
-				String value = anattribute.getValue();
-				String qvalue = value;
-				if (!qual.isEmpty() && !mcUtilities.isNumeric(qual))
-				{
-					qvalue = value + "(" + qual + ")";
-				}
-				mcContact linkedcontact = mcdb.selbox.FindbyTID(value);
-
-				if (linkedcontact != null)
-				{
-					jswLabel alabel = new jswLabel(qvalue);
-					memberpanel.addCell(alabel, row, 0);
-
-					jswButton viewcontact = new jswButton(this, "VIEW",
-							"VIEW:" + linkedcontact.getIDstr());
-					jswTable memberattributes = makeAttributePanel(
-							linkedcontact, "S");
-
-				//	memberpanel.addCell(memberattributes, " FILLW ", row, 1);
-					memberpanel.addCell(viewcontact, row, 2);
-				} else
-				{
-					if (value == null || value.equalsIgnoreCase("null"))
-					{
-						value = "No Linked Contact";
-					}
-					jswLabel alabel = new jswLabel(value);
-					memberpanel.addCell(alabel, row, 0);
-					jswLabel aqual = new jswLabel(anattribute.getQualifier());
-					memberpanel.addCell("", row, 1);
-					jswLabel avalue = new jswLabel(" No Link ");
-					memberpanel.addCell(avalue, row, 2);
-				}
-				row++;
-			}
-
-			if (row == 0)
-			{
-				return null;
-			} else
-			{
-				frame.add(memberpanel);
-				return frame;
-			}
-		} else
+		if (row == 0)
 		{
 			return null;
+		} else if (row < 6)
+		{
+			vpanel.add(memberpanel);
+			return vpanel;
+		} else
+		{
+		   jswScrollPane scrollableTextArea = new jswScrollPane(memberpanel,
+					-10, -10);
+		//	JScrollPane scrollableTextArea = new JScrollPane(memberpanel);
+			scrollableTextArea.setName("resultscroll");
+			scrollableTextArea.setHorizontalScrollBarPolicy(
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+			scrollableTextArea.setVerticalScrollBarPolicy(
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+			vpanel.add(" FILLH ",scrollableTextArea);
+			scrollableTextArea.setVisible(true);
+			return vpanel;
 		}
+
+	}
+
+	private jswTable makeLinkToTable(mcContacts contacts,
+			String selector)
+	{
+
+	
+		jswTable memberpanel = new jswTable(selector, linktablestyles);
+
+		int row = 0;
+		for (Entry<String, mcContact> anentry : contacts.entrySet())
+		{
+			mcContact linkedcontact = anentry.getValue();
+			memberpanel.addCell(linkedcontact.getName(), row, 0);
+			jswButton viewcontact = new jswButton(this, "VIEW",
+					"VIEW:" + linkedcontact.getIDstr());
+			memberpanel.addCell("", row, 1);
+			memberpanel.addCell(viewcontact, row, 2);
+			row++;
+		}
+		
+		return memberpanel;
 
 	}
 
 	private jswVerticalPanel makeCorrespondancePanel(mcContact selcontact,
 			String title)
 	{
-        jswStyles cstyles = makeCorrespondenceStyles();
+		jswStyles cstyles = makeCorrespondenceStyles();
 		jswVerticalPanel frame = new jswVerticalPanel("correspondance panel",
 				false);
-		jswTable letterpanel = new jswTable("correspondance table",
-				cstyles);
+		jswTable letterpanel = new jswTable("correspondance table", cstyles);
 		frame.add("  ", letterpanel);
-		//JPanel pane = new JPanel();
+		// JPanel pane = new JPanel();
 
 		if (selcontact != null)
 		{
@@ -774,9 +775,9 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					statuseditbox.setEnabled(true);
 					subjecteditbox = new jswTextField("subject");
 					subjecteditbox.setText(subject);
-					
+
 					letterpanel.addCell(dateeditbox, row, 0);
-					letterpanel.addCell(statuseditbox,  row, 1);
+					letterpanel.addCell(statuseditbox, row, 1);
 					letterpanel.addCell(subjecteditbox, row, 2);
 					letterpanel.addCell("  ", row, 3);
 					letterpanel.addCell("  ", row, 4);
@@ -797,7 +798,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					letterpanel.addCell(status, row, 1);
 					letterpanel.addCell(subject, row, 2);
 					letterpanel.addCell("  ", row, 3);
-					letterpanel.addCell(editletter," MINWIDTH ", row, 4);
+					letterpanel.addCell(editletter, " MINWIDTH ", row, 4);
 					letterpanel.addCell(deleteref, row, 5);
 					letterpanel.addCell(viewletter, row, 6);
 					row++;
@@ -807,8 +808,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		frame.setVisible(true);
 		return frame;
 	}
-
-	
 
 	private void printlabel(String address)
 	{
@@ -880,13 +879,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 	}
 
-	private void printletter(mcContact selcontact,String address)
+	private void printletter(mcContact selcontact, String address)
 	{
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Specify a file to save Letter");
 		String lettername = mcLetter.makeFileName(selcontact);
-		fc.setSelectedFile(
-				new File(mcdb.docsfolder +"/"+selcontact.getCID()+ "/" +selcontact.getID()+"/"+ lettername + ".odt"));
+		fc.setSelectedFile(new File(mcdb.docsfolder + "/" + selcontact.getCID()
+				+ "/"  + lettername + ".odt"));
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("ODT",
 				"odt");
 		fc.setFileFilter(filter);
@@ -899,7 +898,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			{
 				File fileToSave = fc.getSelectedFile();
 				String filepath = fileToSave.getPath();
-				//mcdb.docsfolder = fileToSave.getParent();
+				lettername= fileToSave.getName();
+				// mcdb.docsfolder = fileToSave.getParent();
 				try
 				{
 					// String address = selcontact.makeBlockAddress("\n");
@@ -914,7 +914,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 					letter.setVariable("salutation", salutation);
 					letter.setVariable("printdate", printdate);
 					letter.printLetter();
-					selcontact.addCorrespondance(lettername, filedate,"draft", fileToSave);
+					selcontact.addCorrespondance(lettername, filedate, "draft",
+							fileToSave);
 
 				} catch (Exception e)
 				{
@@ -926,6 +927,51 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			System.out.println("Open command cancelled by user.");
 		}
 	}
+	
+	private void printNote(mcContact selcontact)
+	{
+		JFileChooser fc = new JFileChooser();
+		fc.setDialogTitle("Specify a file to save Note");
+		String lettername = mcLetter.makeFileName(selcontact);
+		String nfilepath = mcdb.docsfolder + "/" + selcontact.getCID()+ "/" + lettername + ".odt";
+		File newfile = new File(nfilepath);
+		System.out.println(nfilepath +"="+newfile.getPath());
+		fc.setSelectedFile(newfile);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("ODT",
+				"odt");
+		fc.setFileFilter(filter);
+		fc.setCurrentDirectory(newfile);
+		int returnVal = fc.showSaveDialog(this);
+
+		if (returnVal == JFileChooser.APPROVE_OPTION)
+		{
+				File fileToSave = fc.getSelectedFile();
+				String filepath = fileToSave.getPath();
+				try
+				{
+					// String address = selcontact.makeBlockAddress("\n");
+					String salutation = selcontact.getName();
+					String printdate = mcDateDataType.getNow("dd MMM yyyy");
+					String filedate = mcDateDataType.getNow("yyyy-MM-dd");
+					mcLetter letter = new mcLetter();
+					letter.setOutputFileName(filepath);
+					letter.setTemplateFileName(
+							mcdb.topgui.dotcontacts + "/note_template.ott");
+				
+					letter.setVariable("salutation", salutation);
+					letter.setVariable("printdate", printdate);
+					letter.printLetter();
+					selcontact.addCorrespondance(lettername, filedate, "note",
+							fileToSave);
+
+				} catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		} 
+	
+
 
 	private void printVcard()
 	{
@@ -1000,39 +1046,66 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			jswLabel idpanel1 = new jswLabel(" ");
 			idbox.add(idpanel1);
 			idpanel1.setText(selcontact.getIDstr());
-			jswLabel idpanel2;
-			jswLabel idpanel3;
-			idpanel2 = new jswLabel(" ");
+			jswLabel idpanel2 = new jswLabel(" ");
 			idbox.add(idpanel2);
 			idpanel2.setText(selcontact.getName());
-	
+
 			jswButton vcardexport = new jswButton(this, "VCard");
 			idbox.add("RIGHT", vcardexport);
 			selcontact.fillContact();
 			jswTable contactattributes = makeAttributePanel(selcontact, "B");
 			if (contactattributes != null) mainpanel.add(contactattributes);
-			int row = 0;
-
-			jswVerticalPanel arelationslist = makeLinkToPanel(selcontact,
-					"related", "Related to");
-			if (arelationslist != null) mainpanel.add(arelationslist);
-			jswVerticalPanel amemberstlist = makeLinkToPanel(selcontact,
-					"member", "Has Members");
-			jswButton groupemail = new jswButton(this,"MAKE GROUP EMAIL","MAKEGROUPEMAIL");
-			if (amemberstlist != null) mainpanel.add(groupemail);
-			if (amemberstlist != null) mainpanel.add(amemberstlist);
-			jswVerticalPanel aorglist = makeLinkToPanel(selcontact, "org",
-					"Member Of");
-			if (aorglist != null) mainpanel.add(aorglist);
 
 			mcContacts relationlist = makeLinkToList(selcontact, "related");
-			mcContacts memberoflist = makeLinkToList(selcontact, "member");
-			mcContacts hasmemberslist = makeLinkToList(selcontact, "org");
+			mcContacts memberoflist = makeLinkToList(selcontact, "org");
+			mcContacts hasmemberslist = makeLinkToList(selcontact, "member");
+			if (relationlist != null)
+			{
+				jswVerticalPanel arelationslist = makeLinkToPanel(relationlist,
+						"related", "Related to");
+				mainpanel.add(arelationslist);
+			}
+
+			if (hasmemberslist != null)
+			{
+				jswHorizontalPanel memberheading = new jswHorizontalPanel();
+				jswLabel label = new jswLabel("Has Members");
+				memberheading.add(" MIDDLE ", label);
+				jswButton groupemail = new jswButton(this, "MAKE GROUP EMAIL",
+						"MAKEGROUPEMAIL");
+				memberheading.add(groupemail);
+				mainpanel.add(memberheading);
+				jswTable memberstable = makeLinkToTable(hasmemberslist, "members");
+				if(hasmemberslist.size() < 6)
+				{	
+					mainpanel.add( memberstable);
+				}
+				else
+				{
+					   jswScrollPane scrollableTextArea = new jswScrollPane(memberstable,
+								-10, -10);
+						scrollableTextArea.setName("resultscroll");
+						scrollableTextArea.setHorizontalScrollBarPolicy(
+								ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+						scrollableTextArea.setVerticalScrollBarPolicy(
+								ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+						mainpanel.add(" FILLH ",scrollableTextArea);
+						scrollableTextArea.setVisible(true);
+			        	memberstable.setTag("trace");
+			   }
+			}
+
+			if (memberoflist != null)
+			{
+				jswVerticalPanel aorglist = makeLinkToPanel(memberoflist, "org",
+						"Member Of");
+				mainpanel.add(aorglist);
+			}
 			mcContacts exrelnlist = makeLinkedFromList(selcontact, "related");
 			mcContacts exmemberoflist = makeLinkedFromList(selcontact, "org");
 			mcContacts exhasmemberslist = makeLinkedFromList(selcontact,
 					"member");
-			exhasmemberslist.remove(hasmemberslist);
+			//exhasmemberslist.remove(hasmemberslist);
 			exmemberoflist.remove(memberoflist);
 			exrelnlist.remove(relationlist);
 
@@ -1058,21 +1131,36 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			}
 
 			jswLabel correspondancelabel = new jswLabel("Correspondance");
-			mainpanel.add(correspondancelabel);
+			mainpanel.add(" BOTTOM ", correspondancelabel);
 			jswVerticalPanel correspondance = makeCorrespondancePanel(
 					selcontact, "letters");
 			mainpanel.add("  ", correspondance);
-	
+
 			jswHorizontalPanel bottom = new jswHorizontalPanel("fred", false);
-			org.lerot.mycontact.gui.widgets.jswDropPane correspondancesent = new org.lerot.mycontact.gui.widgets.jswDropPane("sent");
+			bottom.setName("bottom");
+			//bottom.setTag("trace");
+			jswDropPane correspondancesent = new jswDropPane("sent");
 			bottom.add(" FILLW ", correspondancesent);
-			jswDropPane correspondancereceived= new jswDropPane("received");
+			jswButton makenote = new jswButton(this, "note", "MAKENOTE");
+
+			bottom.add(" WIDTH=100 ", makenote);
+
+			jswDropPane correspondancereceived = new jswDropPane("received");
 			bottom.add(" FILLW ", correspondancereceived);
-			correspondancereceived.setBorder(jswPanel.setLineBorder(Color.YELLOW, 5));
-			correspondancesent.setBorder(jswPanel.setLineBorder(Color.GREEN, 5));
-			mainpanel.add(" BOTTOM FILLH ", bottom);
+			correspondancereceived
+					.setBorder(jswPanel.setLineBorder(Color.YELLOW, 5));
+			makenote.setBorder(jswPanel.setLineBorder(Color.RED, 5));
+			correspondancesent
+					.setBorder(jswPanel.setLineBorder(Color.GREEN, 5));
+			mainpanel.add(" MAXHEIGHT=100 ", bottom);
 		}
 
+	}
+
+	private jswTable makeLinktotable(mcContacts hasmemberslist)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	String templateselector()
@@ -1097,13 +1185,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		else
 			return null;
 	}
-	
+
 	private jswStyles makeCorrespondenceStyles()
 	{
 		jswStyles tablestyles = new jswStyles("correspondence styles");
 
 		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor",  "#C0C0C0");
+		tablestyle.putAttribute("backgroundColor", "#C0C0C0");
 		tablestyle.putAttribute("foregroundColor", "Green");
 		tablestyle.putAttribute("borderWidth", "2");
 		tablestyle.putAttribute("borderColor", "blue");
@@ -1135,29 +1223,29 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		col1style.putAttribute("horizontalAlignment", "LEFT");
 
 		jswStyle col2style = tablestyles.makeStyle("col_2");
-		//col2style.putAttribute("backgroundColor", "green");
+		// col2style.putAttribute("backgroundColor", "green");
 		col2style.putAttribute("horizontalAlignment", "LEFT");
 		col2style.putAttribute("minwidth", "true");
 		col2style.putAttribute("width", "10");
-		
+
 		jswStyle col4style = tablestyles.makeStyle("col_4");
-		//col4style.putAttribute("backgroundColor", "green");
+		// col4style.putAttribute("backgroundColor", "green");
 		col4style.putAttribute("horizontalAlignment", "LEFT");
 		col4style.putAttribute("minwidth", "true");
-		
+
 		jswStyle col5style = tablestyles.makeStyle("col_5");
-		//col5style.putAttribute("backgroundColor", "green");
+		// col5style.putAttribute("backgroundColor", "green");
 		col5style.putAttribute("horizontalAlignment", "LEFT");
 		col5style.putAttribute("minwidth", "true");
-		
+
 		jswStyle col6style = tablestyles.makeStyle("col_6");
-		//col6style.putAttribute("backgroundColor", "green");
+		// col6style.putAttribute("backgroundColor", "green");
 		col6style.putAttribute("horizontalAlignment", "LEFT");
 		col6style.putAttribute("minwidth", "true");
 
 		return tablestyles;
 	}
-	
+
 	private jswStyles makeLinkTableStyles()
 	{
 		jswStyles tablestyles = new jswStyles("linktable");
@@ -1191,10 +1279,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("LEFT");
 		col1style.putAttribute("horizontalAlignment", "LEFT");
-
 		jswStyle col2style = tablestyles.makeStyle("col_2");
-		col2style.putAttribute("horizontalAlignment", "RIGHT");
-		col2style.putAttribute("minwidth", "true");
+		// col2style.putAttribute("horizontalAlignment", "RIGHT");
+		// col2style.putAttribute("minwidth", "true")
+
+		jswStyle col3style = tablestyles.makeStyle("col_3");
+		col3style.putAttribute("horizontalAlignment", "RIGHT");
+		col3style.putAttribute("minwidth", "true");
 
 		return tablestyles;
 	}
@@ -1202,13 +1293,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	private jswStyles makeAttributeTableStyles()
 	{
 		jswStyles tablestyles = new jswStyles("attributetablestyles");
-		
+
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		tablestyle.putAttribute("backgroundColor", "White");
 		tablestyle.putAttribute("foregroundColor", "Green");
 		tablestyle.putAttribute("borderWidth", "2");
 		tablestyle.putAttribute("borderColor", "blue");
-		
+
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -1231,11 +1322,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		jswStyle col1style = tablestyles.makeStyle("col_1");
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("LEFT");
-		
+
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		col2style.putAttribute("horizontalAlignment", "LEFT");
 		col2style.putAttribute("minwidth", "true");
-	
 
 		return tablestyles;
 	}

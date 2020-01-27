@@ -164,7 +164,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			String newdata = action.substring(8).toLowerCase();
 			String[] data = newdata.split(":");
-			mcContact linkcontact = mcdb.selbox.FindbyIDstr(data[0]);
+			mcContact linkcontact = mcdb.selbox.FindbyIDstr(data[2]);
 			System.out.println(" link contact "+linkcontact+" "+ data);
 			String root = data[1];
 			String qualifier = "";

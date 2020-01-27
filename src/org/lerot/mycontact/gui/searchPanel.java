@@ -139,15 +139,15 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 		searchpanel.add(summary);
 		jswTable resulttable = new jswTable("contactsfound",
 				mcdb.topgui.tablestyles);
-		//resulttable.setTag("trace");
+	
 		if (sellist.size() == 0)
 		{
 			searchpanel.add(" FILLW ", resulttable);
 			resulttable.addCell(new jswLabel(" no contact selected "), 0, 0);
-		} else if (sellist.size()>10006)
+		} else 
 		{
-			searchpanel.add(" FILLW ", resulttable);
-			int row = 0;
+			int row=0;
+		
 			for (mcContact acontact : selbox.getSearchResultList()
 					.makeOrderedContactsVector())
 			{
@@ -163,31 +163,15 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 				resulttable.addCell(removecontact, row, 3);
 				row++;
 			}
-
+			
+			
+			
+			if (sellist.size() <10)
+		{
+			searchpanel.add(" FILLW ", resulttable);
+		
 		} else
 		{
-			
-			int row = 0;
-			for (mcContact acontact : selbox.getSearchResultList()
-					.makeOrderedContactsVector())
-			{
-				if (acontact != null)
-				{
-					jswLabel atid = new jswLabel(acontact.getIDstr());
-					jswLabel atTID = new jswLabel(acontact.getTID());
-					resulttable.addCell(atid, row, 0);
-					resulttable.addCell(atTID, " FILLW ", row, 1);
-					jswButton viewcontact = new jswButton(this,
-							"VIEW", "VIEW:" + acontact.getIDstr());
-					resulttable.addCell(viewcontact, row, 2);
-					jswButton removecontact = new jswButton(this, "REMOVE",
-							"REMOVE:" + acontact.getIDstr());
-					resulttable.addCell(removecontact, row, 3);
-					row++;
-				}
-			}
-
-			//resulttable = new jswTable("members",mcdb.topgui.tablestyles);
 			resulttable.setBackground(Color.lightGray);
 			jswScrollPane scrollableTextArea = new jswScrollPane(resulttable,
 					-10, -10);
@@ -196,9 +180,9 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 					.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 			scrollableTextArea
 					.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-			searchpanel.add(" SCROLLH ", scrollableTextArea);
+			searchpanel.add(" FILLH ", scrollableTextArea);
 			//scrollableTextArea.setBorder(setLineBorder(Color.red, 4));
-		}
+		}}
 		resulttable.repaint();
 		searchpanel.repaint();
 		mcdb.topgui.mainpanel.repaint();

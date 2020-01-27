@@ -76,7 +76,7 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 5.0";
+	static String version = "V 6.0";
 	public static selectorBox selbox;
 	public static String letterfolder;
 	public static String docsfolder;
@@ -361,7 +361,7 @@ public class mcdb extends JFrame implements ActionListener
 		//getContentPane().repaint();
 		//getContentPane().validate();
 		
-		setVisible(true);
+	//	setVisible(true);
 		mainpanel.repaint();
 		getContentPane().validate();
 	}

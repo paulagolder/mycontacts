@@ -39,6 +39,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.lerot.gui.widgets.jswPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcUtilities;
@@ -48,7 +49,7 @@ import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import ezvcard.property.StructuredName;
 
-public class jswDropPane extends JPanel
+public class jswDropPane extends jswPanel
 {
 
 	/**
@@ -67,6 +68,7 @@ public class jswDropPane extends JPanel
 
 	public jswDropPane(String adirection)
 	{
+		super(adirection);
 		try
 		{
 			target = ImageIO
@@ -84,9 +86,9 @@ public class jswDropPane extends JPanel
 	}
 
 	@Override
-	public Dimension getPreferredSize()
+	public Dimension getMinimumSize()
 	{
-		return new Dimension(400, 400);
+		return new Dimension(100, 100);
 	}
 
 	protected DropTarget getMyDropTarget()
