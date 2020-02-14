@@ -52,9 +52,6 @@ import ezvcard.property.StructuredName;
 public class jswDropPane extends jswPanel
 {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private DropTarget dropTarget;
 	private DropTargetHandler dropTargetHandler;

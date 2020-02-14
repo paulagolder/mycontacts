@@ -7,12 +7,15 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswPanel;
+import org.lerot.gui.widgets.jswRectLayout;
 import org.lerot.gui.widgets.jswTabbedPanel;
 import org.lerot.gui.widgets.jswVerticalLayout;
 import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcdb;
 
-public class ToolsPanel extends jswVerticalPanel implements ActionListener,
+public class ToolsPanel extends jswPanel implements ActionListener,
 		ChangeListener
 {
 
@@ -34,6 +37,8 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 
 	public ToolsPanel(ActionListener parentlistener)
 	{
+		super("toolspanel");
+		setLayout(new jswVerticalLayout());
 		plistener = parentlistener;
 
 		makeToolsPanel();
@@ -48,29 +53,22 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 
 	void makeToolsPanel()
 	{
-		toolstabbedPane = new jswTabbedPanel();
-		toolstabbedPane.setLayout(new jswVerticalLayout());
+		
+		toolstabbedPane = new jswTabbedPanel("toolstabpanel");
+	
 		backuppanel = new backupTabPanel();
 		toolstabbedPane.addTab("Backup", backuppanel);
 		importpanel = new importTabPanel();
 		toolstabbedPane.addTab("Import", importpanel);
 		exportpanel = new ExportTabPanel();
-		toolstabbedPane.addTab("Export", exportpanel);
+	 	toolstabbedPane.addTab("Export", exportpanel);
 		otherpanel = new OtherTabPanel();
 		toolstabbedPane.addTab("Other", otherpanel);
 		toolstabbedPane.setSelectedIndex(0);
 		add(" FILLW ", toolstabbedPane);
 	}
 
-	public void showToolsPanel()
-	{
-		otherpanel.showOtherPanel();
-		importpanel.showImportPanel();
-		exportpanel.showExportPanel();
-        backuppanel.showBackupPanel();
-		repaint();
-		mcdb.topgui.getContentPane().validate();
-	}
+	
 
 	@Override
 	public void stateChanged(ChangeEvent changeEvent)
@@ -88,10 +86,6 @@ public class ToolsPanel extends jswVerticalPanel implements ActionListener,
 		validate();
 	}
 
-	public void refresh()
-	{
-		showToolsPanel();
-
-	}
+	
 
 }

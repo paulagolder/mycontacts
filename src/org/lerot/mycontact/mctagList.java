@@ -27,7 +27,7 @@ public class mctagList extends mcDataObject
 
 	public  void selectAllTags()
 	{
-		System.out.println("reloading tags ");
+		//System.out.println("reloading tags ");
 		Map<String, Integer> ustaglist = new HashMap<String, Integer>();
 		taglistcomparator comparator = new taglistcomparator(ustaglist);
 
@@ -215,6 +215,11 @@ public class mctagList extends mcDataObject
 			tags.add(entrytag.getKey());
 		}
 		return tags;
+	}
+
+	public String get(int i)
+	{
+		return toVector().get(0);
 	}
 
 	

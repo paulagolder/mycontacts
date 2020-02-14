@@ -1,6 +1,7 @@
 package org.lerot.mycontact.gui;
 
 import java.awt.Color;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map.Entry;
@@ -11,6 +12,7 @@ import javax.swing.ScrollPaneConstants;
 import org.lerot.gui.widgets.jswButton;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswLabel;
+import org.lerot.gui.widgets.jswPanel;
 import org.lerot.gui.widgets.jswScrollPane;
 import org.lerot.gui.widgets.jswStyle;
 import org.lerot.gui.widgets.jswStyles;
@@ -76,7 +78,7 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
                 mcdb.selbox.setSearchterm("");
 			}
 			else 
-			mcdb.selbox.searchTag(searchterm);
+				mcdb.selbox.searchresultlist = mcdb.selbox.searchTag(searchterm);
 			// if (!searcherror)
 			{
 				searchfield.clear();
@@ -112,16 +114,21 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 		//this.setBorder(setLineBorder(Color.red, 4));
 		searchpanel.removeAll();
 		jswHorizontalPanel idbox = new jswHorizontalPanel("idbox", false);
+	
+		//idbox.setTag("trace");
 		searchpanel.add(idbox);
 		jswLabel idpanel1 = new jswLabel("Enter Search Term:");
 		idbox.add(idpanel1);
+		
 		searchfield = new jswTextField("Search for");
+	//	searchfield.setBorder(jswPanel.setLineBorder(Color.red, 5));
 		if(selbox.getSearchterm()!= null && !selbox.getSearchterm().isEmpty())
 		{
 		searchfield.setText(selbox.getSearchterm());
 		}
-		idbox.add(" FILLW ", searchfield);
+		idbox.add(" FILLW WIDTH=30 ", searchfield);
 		searchfield.setEnabled(true);
+		searchfield.setVisible(true);
 		jswButton searchbutton = new jswButton(this, "Search","SEARCHATTRIBUTES");
 		idbox.add(" RIGHT ", searchbutton);
 		jswButton searchtagbutton = new jswButton(this, "Search Tags","SEARCHTAGS");
@@ -185,9 +192,10 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 		}}
 		resulttable.repaint();
 		searchpanel.repaint();
+		mcdb.topgui.pack();
+		mcdb.topgui.setVisible(true);
 		mcdb.topgui.mainpanel.repaint();
 		this.repaint();
-		mcdb.topgui.mainpanel.repaint();
 		mcdb.topgui.getContentPane().validate();
 	}
 

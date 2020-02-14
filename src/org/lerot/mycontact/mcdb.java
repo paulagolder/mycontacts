@@ -76,7 +76,7 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 6.0";
+	static String version = "V 7.0";
 	public static selectorBox selbox;
 	public static String letterfolder;
 	public static String docsfolder;
@@ -204,17 +204,9 @@ public class mcdb extends JFrame implements ActionListener
 		budir = props.getProperty("backupdirectory", dotcontacts+"/backup");
 		docs = props.getProperty("docs", "Documents/correspondance/");
 		currentcon = new mcDataSource(dotcontacts + dbsource);
-		//(new mcDataObject()).setConnection(currentcon);
+
 	
 		topgui = this;
-	
-	
-
-		//Dimension actual = new Dimension();
-		//actual.width = 9;
-	   // actual.height = 7;
-	   // topgui .setSize(actual);
-		//this.getParent().setVisible(false);
 		addWindowListener(new WindowAdapter()
 		{
 			@Override
@@ -223,13 +215,11 @@ public class mcdb extends JFrame implements ActionListener
 				System.exit(0);
 			}
 		});
-		//promptfont = new Font("SansSerif", Font.ITALIC, 9);
-		//jswStyles.initiateStyles();
+
 		initiateStyles();
 		bigpanel = new jswVerticalPanel("bigpanel",true);
 		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
 		bigpanel.setName("bigpanel");;
-		bigpanel.setTag("trace");
 		bigpanel.setPreferredSize(new Dimension(800,500));
 		bigpanel.setSize(new Dimension(800,500));
 		bigpanel.setMinimumSize(new Dimension(800,500));
@@ -249,21 +239,16 @@ public class mcdb extends JFrame implements ActionListener
 		source= new jswLabel(dbsource);
 		sourceBar.add(source);
 		bigpanel.add(sourceBar);
-	
 		selbox = new selectorBox(this, this);
 		bigpanel.add("FILLW", selbox);
-		mainpanel = new jswContainer("fred1");
-		mainpanel.setLayout(new jswVerticalLayout());
+		mainpanel = new jswVerticalPanel("mainpanel",false);
 		bigpanel.add(" FILLH ", mainpanel);
 		bigpanel.setBorder(jswPanel.setLineBorder(Color.GRAY ,3));
-
 		abrowsepanel = new browsePanel();
 		mainpanel.add(" FILLH ", abrowsepanel);
 		asearchpanel = new searchPanel();
 		asearchpanel.makesearchPanel(selbox, this);
-		//abrowsepanel = new browsePanel();
 		aneditpanel = new editPanel();
-		// aneditpanel.showEditPanel();
 		selbox.setEnabled(true);
 		startup();
 		toolspanel = new ToolsPanel(this);
@@ -355,13 +340,13 @@ public class mcdb extends JFrame implements ActionListener
 		{
 			selbox.setVisible(false);
 			mainpanel.removeAll();
-			toolspanel.refresh();
+			//mainpanel.setPreferredSize(new Dimension(800,500));
+			//mainpanel.setSize(new Dimension(800,500));
+		//	mainpanel.setMinimumSize(new Dimension(800,500));
+			//toolspanel.refresh();
 			mainpanel.add(" FILLW ", toolspanel);
 		}
-		//getContentPane().repaint();
-		//getContentPane().validate();
-		
-	//	setVisible(true);
+	
 		mainpanel.repaint();
 		getContentPane().validate();
 	}

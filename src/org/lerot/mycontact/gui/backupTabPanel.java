@@ -12,7 +12,8 @@ public class backupTabPanel extends jswTabbedPanel
 
 	public backupTabPanel()
 	{
-		setLayout(new jswVerticalLayout());
+		super("backuptabpanel");
+		//setLayout(new jswVerticalLayout());
 		makebackuppanel = new exportBackupPanel();
 		addTab("Make Backup", makebackuppanel);
 		makebackuppanel.setVisible(true);

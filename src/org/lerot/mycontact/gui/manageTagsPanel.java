@@ -197,6 +197,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	public manageTagsPanel()
 	{
+		super("managetagspanel");
 		tagstablestyles = makeTagsTableStyles();
 		tagList = new mctagList();
 		jswHorizontalPanel header = new jswHorizontalPanel();
@@ -229,14 +230,19 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		jswButton normbutton = new jswButton(this, "NORM");
 		printbar.add(" MIDDLE ", normbutton);
 		atttable = new jswTable("tags", tagstablestyles);
-		jswScrollPane scrollableTextArea = new jswScrollPane(atttable, -4, -4);
+		//jswScrollPane scrollableTextArea = new jswScrollPane(atttable, -4, -4);
+		jswScrollPane scrollableTextArea = new jswScrollPane(atttable, 10, 10);
 		scrollableTextArea.setName("resultscroll");
+		scrollableTextArea.setVisible(true);
 		scrollableTextArea.setHorizontalScrollBarPolicy(
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollableTextArea.setVerticalScrollBarPolicy(
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		this.add(" SCROLLH ", scrollableTextArea);
-
+		this.add(" FILLH ", scrollableTextArea);
+		atttable.setVisible(true);
+		buildTagPanel();
+        atttable.repaint();
+        scrollableTextArea.repaint();
 		this.repaint();
 		mcdb.topgui.mainpanel.repaint();
 		mcdb.topgui.getContentPane().validate();
@@ -261,6 +267,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			checkboxes[cb] = new jswCheckbox("");
 			checkboxes[cb].setTag(attkey);
 			atttable.addCell(checkboxes[cb], row, col + 2);
+			//System.out.println("adding tag:"+attkey);
 			row++;
 			cb++;
 			if (row > 10)
@@ -269,6 +276,8 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 				col = col + 3;
 			}
 		}
+		atttable.setVisible(true);
+        atttable.repaint();
 	
 	}
 

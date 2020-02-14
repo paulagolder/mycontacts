@@ -10,7 +10,7 @@ import java.util.Vector;
 import javax.swing.JOptionPane;
 
 import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswEditPanel;
+
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswOptionset;
 import org.lerot.gui.widgets.jswStyle;
@@ -19,6 +19,7 @@ import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcdb;
+import org.lerot.mycontact.gui.widgets.jswEditPanel;
 
 public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 {

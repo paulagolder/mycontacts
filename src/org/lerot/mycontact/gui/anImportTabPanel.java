@@ -13,10 +13,10 @@ public class anImportTabPanel extends jswTabbedPanel
 
 	public anImportTabPanel()
 	{
-
-		setLayout(new jswVerticalLayout());
-		importpanel = new importPanel();
-		addTab("Import", importpanel);
+		super("animporttabpanel");
+		//setLayout(new jswVerticalLayout());
+		//importpanel = new importPanel();
+		//addTab("Import", importpanel);
 		importsetuppanel = new importSetupPanel();
 		addTab("Import Setup", importsetuppanel);
 		importeditpanel = new ImportEditPanel();

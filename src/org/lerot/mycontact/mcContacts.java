@@ -1118,7 +1118,7 @@ public class mcContacts extends mcDataObject
 	
 	public void refreshAllContacts()
 	{
-		System.out.println("reloading all contacts ");
+		//System.out.println("reloading all contacts ");
 		contactlist = new TreeMap<String, mcContact>(new MyContactComparator());
 		String query = "drop  table if exists allcontacts";
 		doExecute(query);

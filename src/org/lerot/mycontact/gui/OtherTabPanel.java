@@ -1,5 +1,9 @@
 package org.lerot.mycontact.gui;
 
+import java.awt.Dimension;
+
+import org.lerot.gui.widgets.jswRectLayout;
+import org.lerot.gui.widgets.jswTabLayout;
 import org.lerot.gui.widgets.jswTabbedPanel;
 import org.lerot.gui.widgets.jswVerticalLayout;
 
@@ -15,11 +19,14 @@ public class OtherTabPanel extends jswTabbedPanel
 
 	public OtherTabPanel()
 	{
-
-		setLayout(new jswVerticalLayout());
+		super("othertabpanel");
+		//setLayout(new jswTabLayout());
+		//setLayout(new jswVerticalLayout());
+		//setPreferredSize(new Dimension (800, 600));
 		dbpanel = new dbEditPanel();
 		addTab("Edit Databases", dbpanel);
 		manageTagspanel2 = new manageTagsPanel();
+		//manageTagspanel2.setPreferredSize(new Dimension (800, 600));
 		addTab("Manage Tags & Lists", manageTagspanel2);
 		mergeContactPanel3 = new mergeContactPanel();
 		addTab("Merge Contacts", mergeContactPanel3);

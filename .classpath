@@ -17,20 +17,6 @@
 	<classpathentry kind="lib" path="lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="lib/jaxen-1.1.6.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/commons-codec-1.10.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/commons-lang3-3.3.2.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/commons-net-ftp-2.0.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/dom4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/imgscalr-lib-4.2.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/itextpdf-5.5.3.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/javabase64-1.3.1.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/jaxen-1.1.6.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/looks-2.1-pre2.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/odfdom-java-0.8.7.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/simple-odf-0.6.6.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/sqlite-jdbc-3.7.15-M1.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/xercesImpl.jar"/>
-	<classpathentry kind="lib" path="/home/paul/workspace/MyContactsv12/lib/xml-apis.jar"/>
 	<classpathentry kind="lib" path="lib/ez-vcard-0.10.5.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/myWidgets"/>
