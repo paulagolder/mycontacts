@@ -151,7 +151,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 		jswStyle col1style = tablestyles.makeStyle("col_1");
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("RIGHT");
-		col1style.putAttribute("backgroundColor", "Pink");
+		col1style.putAttribute("backgroundColor", "Green");
 		col1style.putAttribute("minwidth", "true");
 
 		jswStyle tabletyle = tablestyles.makeStyle("table");
@@ -192,7 +192,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 		jswStyle col1style = tablestyles.makeStyle("col_1");
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("RIGHT");
-		col1style.putAttribute("backgroundColor", "Pink");
+		col1style.putAttribute("backgroundColor", "Green");
 		// col1style.putAttribute("minwidth", "true");
 
 		jswStyle tabletyle = tablestyles.makeStyle("table");
@@ -216,7 +216,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 		thispanel.setBackground(new Color(0, 0, 0, 0));
 		jswHorizontalPanel idbox = new jswHorizontalPanel("idbox", false);
 		thispanel.add(idbox);
-		optset = new jswOptionset("source", false, this);
+		optset = new jswOptionset(this,"source",true);
 
 		jswHorizontalPanel actions = new jswHorizontalPanel("actions", false);
 		thispanel.add(actions);

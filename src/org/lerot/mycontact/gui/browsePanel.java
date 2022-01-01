@@ -63,27 +63,23 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 {
 
 	private static final long serialVersionUID = 1L;
-
 	private static jswStyles tablestyles;
-
 	private static jswStyles linktablestyles;
-
 	mcContact selcontact;
 	private String vcarddirectory = "";
-
 	private int editid = 0;
-
 	private jswDropDownBox statuseditbox;
-
 	private jswTextField dateeditbox;
-
 	private jswTextField subjecteditbox;
 
 	public browsePanel()
 	{
 		vcarddirectory = mcdb.topgui.desktop;
+		jswStyles defaultstyles = jswStyles.getDefaultStyles();
 		tablestyles = makeAttributeTableStyles();
+		//tablestyles = defaultstyles;
 		linktablestyles = makeLinkTableStyles();
+		jswStyles mystyles = containerstyles;
 	}
 
 	@Override
@@ -311,7 +307,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	{
 
 		jswTable attributepanel = new jswTable("attributes", tablestyles);
-
 		if (selcontact != null)
 		{
 			mcAttributes attributes = selcontact.getAttributes();
@@ -320,7 +315,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 				selcontact.fillContact();
 				attributes = selcontact.getAttributes();
 			}
-
 			int row = 0;
 			mcAttributeTypes attributetypes = mcdb.topgui.attributetypes;
 			if (attributetypes == null)
@@ -332,7 +326,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			for (Entry<String, mcAttributeType> anentry : attributetypes
 					.entrySet())
 			{
-
 				String attkey = anentry.getKey();
 				mcAttributeType attype = anentry.getValue();
 				if (attype.getDisplaygroup().contains(selector))
@@ -365,10 +358,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 								// formatted
 								// value
 								jswLabel slabel = new jswLabel(value);
-								slabel.setBorder(setLineBorder(Color.blue, 2));
+								slabel.setBorder(jswStyles.makeLineBorder(Color.blue, 2));
 								// slabel.getLabel().setBorder(setLineBorder(Color.pink,
 								// 2));
-								slabel.getLabel().setBackground(Color.pink);
+								slabel.getLabel().setBackground(Color.green);
 								attributepanel.addCell(slabel, " LEFT ", row,
 										1);
 							}
@@ -431,28 +424,13 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	}
 
 	private jswStyles makeAttributeTableStyles()
-	{
-		jswStyles tablestyles = new jswStyles("attributetablestyles");
-
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
-		jswStyle cellstyle = tablestyles.makeStyle("cell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
-		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
-
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
+	{	
+		jswStyles tablestyles = jswStyles.getTableStyles();
+		
+		jswStyle rowstyle = tablestyles.makeStyle("row");
+		//col0style.putAttribute("fontStyle", Font.BOLD);
+		//col0style.setHorizontalAlign("RIGHT");
+		rowstyle.putAttribute("height", "20");
 
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
@@ -460,13 +438,17 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		col0style.putAttribute("minwidth", "true");
 
 		jswStyle col1style = tablestyles.makeStyle("col_1");
-		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.putAttribute("fontStyle", Font.PLAIN);
 		col1style.setHorizontalAlign("LEFT");
 
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		col2style.putAttribute("horizontalAlignment", "LEFT");
-		col2style.putAttribute("minwidth", "true");
+		col2style.putAttribute("maxwidth", "true");
+		col2style.putAttribute("backgroundColor", "yellow");
 
+		jswStyle col3style = tablestyles.makeStyle("col_3");
+		col3style.setHorizontalAlign("RIGHT");
+		
 		return tablestyles;
 	}
 
@@ -498,10 +480,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			jswLabel idpanel1 = new jswLabel(" ");
 			idbox.add(idpanel1);
 			idpanel1.setText(selcontact.getIDstr());
-			jswLabel idpanel2 = new jswLabel(" ");
+			jswLabel idpanel2 = new jswLabel(" ");		
 			idbox.add(idpanel2);
 			idpanel2.setText(selcontact.getName());
-
+			idpanel2.doStyling();
 			jswButton vcardexport = new jswButton(this, "VCard");
 			idbox.add("RIGHT", vcardexport);
 			selcontact.fillContact();
@@ -600,10 +582,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			jswDropPane correspondancereceived = new jswDropPane("received");
 			bottom.add("  WIDTH=100 FILLW ", correspondancereceived);
 			correspondancereceived
-					.setBorder(jswPanel.setLineBorder(Color.YELLOW, 5));
-			makenote.setBorder(jswPanel.setLineBorder(Color.RED, 5));
+					.setBorder(jswStyles.makeLineBorder(Color.YELLOW, 3));
+			makenote.setBorder(jswStyles.makeLineBorder(Color.RED, 3));
 			correspondancesent
-					.setBorder(jswPanel.setLineBorder(Color.GREEN, 5));
+					.setBorder(jswStyles.makeLineBorder(Color.GREEN, 3));
 			mainpanel.add(" MAXHEIGHT=100 ", bottom);
 		}
 
@@ -641,7 +623,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 					dateeditbox = new jswTextField("date");
 					dateeditbox.setText(date);
-					statuseditbox = new jswDropDownBox("status", false, false);
+					statuseditbox = new jswDropDownBox(this,"status");
 					statuseditbox.setList(new String[] { "unknown", "draft",
 							"sent", "recieved" });
 					statuseditbox.setSelected(status);
@@ -684,15 +666,15 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeCorrespondenceStyles()
 	{
-		jswStyles tablestyles = new jswStyles("correspondence styles");
+		jswStyles tablestyles = jswStyles.getTableStyles();
 
-		jswStyle tablestyle = tablestyles.makeStyle("table");
+		jswStyle tablestyle = tablestyles.makeStyle("xtable");
 		tablestyle.putAttribute("backgroundColor", "#C0C0C0");
 		tablestyle.putAttribute("foregroundColor", "Green");
 		tablestyle.putAttribute("borderWidth", "2");
 		tablestyle.putAttribute("borderColor", "blue");
 
-		jswStyle cellstyle = tablestyles.makeStyle("cell");
+		jswStyle cellstyle = tablestyles.makeStyle("xcell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
 		cellstyle.putAttribute("borderWidth", "1");
@@ -700,11 +682,16 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		cellstyle.setHorizontalAlign("LEFT");
 		cellstyle.putAttribute("fontsize", "14");
 
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
+		jswStyle cellcstyle = tablestyles.makeStyle("xcellcontent");
 		cellcstyle.putAttribute("backgroundColor", "transparent");
 		cellcstyle.putAttribute("foregroundColor", "Red");
 		cellcstyle.setHorizontalAlign("LEFT");
 		cellcstyle.putAttribute("fontsize", "11");
+		
+		jswStyle rowstyle = tablestyles.makeStyle("row");
+		//col0style.putAttribute("fontStyle", Font.BOLD);
+		//col0style.setHorizontalAlign("RIGHT");
+		rowstyle.putAttribute("height", "50");
 
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
@@ -817,27 +804,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeLinkTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles("linktable");
+		jswStyles tablestyles = mcdb.tablestyles;
 
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
-		jswStyle cellstyle = tablestyles.makeStyle("cell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
-		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
-
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
 
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
@@ -848,6 +816,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("LEFT");
 		col1style.putAttribute("horizontalAlignment", "LEFT");
+		
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		// col2style.putAttribute("horizontalAlignment", "RIGHT");
 		// col2style.putAttribute("minwidth", "true")
@@ -1003,8 +972,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			options.add(new JButton("Cancel"));
 			JTextArea addressarea = new JTextArea(6, 30);
 			addressarea.setText(address);
-			jswDropDownBox pagelayout = new jswDropDownBox("Layout", true,
-					false);
+			jswDropDownBox pagelayout = new jswDropDownBox(this,"Layout");
 			for (Entry<String, Map<String, String>> entry : mcdb.labeltemplates
 					.entrySet())
 			{
@@ -1184,8 +1152,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	String templateselector()
 	{
-		jswDropDownBox templatelist = new jswDropDownBox("template", true,
-				false);
+		jswDropDownBox templatelist = new jswDropDownBox(this,"template");
 		for (String text : mcLetter.getTemplateList())
 		{
 			templatelist.addElement(text);
@@ -1205,7 +1172,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			return null;
 	}
 
-	private jswVerticalPanel xmakeLinkedFromPanel(mcContact selcontact,
+/*	private jswVerticalPanel xmakeLinkedFromPanel(mcContact selcontact,
 			String selector, String title)
 	{
 
@@ -1323,5 +1290,5 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			return null;
 		}
 
-	}
+	}*/
 }

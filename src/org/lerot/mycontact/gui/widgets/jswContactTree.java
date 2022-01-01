@@ -28,7 +28,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
 import org.lerot.mycontact.mcContact;
+import org.lerot.mycontact.mcdb;
 
 public class jswContactTree extends JPanel implements ComponentListener
 {
@@ -109,7 +112,7 @@ public class jswContactTree extends JPanel implements ComponentListener
 		commandPanel = new JPanel();
 		// commandPanel.setMaximumSize(new Dimension(panelwidth, 150));
 		commandPanel.setMinimumSize(new Dimension(panelwidth, 150));
-		commandPanel.setBorder(setcborder("Report Command Panel"));
+		commandPanel.setBorder(mcdb.panelstyles.makecborder("Report Command Panel"));
 
 		this.add(reptreeView);
 		this.add(commandPanel);
@@ -163,7 +166,7 @@ public class jswContactTree extends JPanel implements ComponentListener
 	{
 	}
 
-	public Border setcborder(String label)
+	public Border xmakecborder(String label)
 	{
 		return BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(label),

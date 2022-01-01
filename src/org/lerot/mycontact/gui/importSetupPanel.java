@@ -126,7 +126,7 @@ public class importSetupPanel extends jswVerticalPanel implements
 		selectedfile.setEnabled(true);
 
 		filebar.add(" LEFT WIDTH=200  ", selectedfile);
-		importsource = new jswDropDownBox("", false, false);
+		importsource = new jswDropDownBox(this,"source");
 		Vector<String> varry = new Vector<String>();
 		varry.add("csv");
 		varry.add("gOutlookExport");

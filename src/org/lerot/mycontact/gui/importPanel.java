@@ -601,7 +601,7 @@ public class importPanel extends jswVerticalPanel implements ActionListener
 						// if (!anattribute.ignore())
 						{
 							jswLabel alabel3 = new jswLabel(quallabel);
-							alabel3.applyStyles("greenfont");
+							alabel3.applyStyle(mcdb.panelstyles,"greenfont");
 							attributepanel.addCell(alabel3, row, 0);
 							String value = anattribute.getValue();
 							if (value == null) continue;

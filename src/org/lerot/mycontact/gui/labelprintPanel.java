@@ -118,10 +118,10 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 		this.add(filebar);
 		filebar.add(" LEFT WIDTH=200  ", selectedfile);
 		jswHorizontalPanel optionbar = new jswHorizontalPanel();
-		layoutpanel = new jswDropDownBox("Select layout", true, true);
+		layoutpanel = new jswDropDownBox(this,"Select layout");
 		for (Entry<String, Map<String, String>> entry: mcdb.labeltemplates.entrySet())
 		{
-		    layoutpanel.addElement(entry.getKey() );
+		   // layoutpanel.addElement(entry.getKey() ); // paul fixing
 		}
 		optionbar.add(layoutpanel);
 		startpos = new jswThumbwheel("Start Position", 1, 10);

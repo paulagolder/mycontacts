@@ -71,7 +71,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		selectedfile.setText("Select Export File >");
 		selectedfile.setEnabled(true);
 		filebar.add(" LEFT WIDTH=200 ", selectedfile);
-		exporttypebox = new jswDropDownBox("", false, false);
+		exporttypebox = new jswDropDownBox(this,"type");
 		Vector<String> varry = new Vector<String>();
 		varry.add("CSV");
 		varry.add("gOutlookExport");

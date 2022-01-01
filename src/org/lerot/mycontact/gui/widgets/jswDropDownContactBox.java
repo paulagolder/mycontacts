@@ -14,6 +14,7 @@ import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
 import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.gui.widgets.jswStyles;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 
@@ -72,12 +73,13 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		setName(inLabel);
 		if (hasborder)
 		{
-			if (haslabel) setBorder(setLineBorder());
+			if (haslabel) setBorder(jswStyles.makeLineBorder());
 			else
-				setBorder(setcborder(inLabel));
+				setBorder(jswStyles.makecborder(inLabel));
 		} else
-			setBorder(makeborder());
+			setBorder(jswStyles.makeborder());
 		add("FILLW", contactddbox);
+		doStyling();
 	}
 
 	public void addActionListener(ActionListener c)

@@ -32,10 +32,12 @@ import org.lerot.gui.widgets.jswPanel;
 import org.lerot.gui.widgets.jswStyle;
 import org.lerot.gui.widgets.jswStyles;
 import org.lerot.gui.widgets.jswTable;
+import org.lerot.gui.widgets.jswTextBox;
 import org.lerot.gui.widgets.jswTextField;
 import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAddressDataType;
 import org.lerot.mycontact.mcAttribute;
+import org.lerot.mycontact.mcAttributeType;
 import org.lerot.mycontact.mcAttributes;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
@@ -58,7 +60,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 	private static jswStyles arraytablestyles;
 	private static jswStyles tablestyles;
 	private static jswStyles linktablestyles;
-	private jswTextField atteditbox;
+	private jswTextBox atteditbox;
 	private jswTextField[] attfieldeditbox = new jswTextField[10];
 	private jswCheckbox[] tagcheckbox = new jswCheckbox[10];
 	private mcAttribute edattribute;
@@ -66,11 +68,11 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 	private String editattributekey;
 	private jswDropDownBox newlabel;
 	private jswDropDownContactBox parentselect;
-	private jswTextField tideditbox;
+	private jswTextBox tideditbox;
 	private jswLabel tagspanel;
 	private jswTextField newtagpanel;
 	private String vcarddirectory;
-	private jswTextField atype;
+	private jswTextBox atype;
 	boolean addselector = false;
 
 	private String edattributename;
@@ -186,14 +188,12 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			newatt.dbupsertAttribute();
 		} else if (action.startsWith("ADDGROUP"))
 		{
-			//mcContact parent = parentselect.getSelectedValue();
 			System.out.println("adding " + groupselect.getSelected() + " to " + selcontact);
 			selcontact.addGroup(groupselect.getSelected());
 		}else if (action.startsWith("ADDTOGROUP"))
 		{
 			mcContact parent = parentselect.getSelectedValue();
 			System.out.println("adding " + selcontact + " to " + parent);
-			// parent.addMember(selcontact);
 		} else if (action.equals("CANCEL"))
 		{
 			edit = "";
@@ -206,10 +206,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			edit = "editattribute";
 			editattributekey = action.substring(14).toLowerCase();
 			edattribute = selcontact.getAttributebyKey(editattributekey);
-			//System.out.println("editing attribute " + edattribute.getKey()
-			//		+ " key=" + editattributekey);
 			if (edattribute == null) return;
-
 		} else if (action.startsWith("REPLACE"))
 		{
 			JFileChooser chooser = new JFileChooser();
@@ -430,17 +427,17 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeArrayTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles("arraytable");
+		jswStyles tablestyles =  jswStyles.getTableStyles();
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
+		cellstyle.putAttribute("foregroundColor", "GREEN");
 		cellstyle.putAttribute("borderWidth", "1");
 		cellstyle.putAttribute("borderColor", "white");
 		cellstyle.setHorizontalAlign("LEFT");
 		cellstyle.putAttribute("fontsize", "14");
 
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
+		jswStyle cellcstyle = tablestyles.makeStyle("xcellcontent");
+		//cellcstyle.putAttribute("backgroundColor", "transparent");
 		cellcstyle.putAttribute("foregroundColor", "Red");
 		cellcstyle.setHorizontalAlign("LEFT");
 		cellcstyle.putAttribute("fontsize", "11");
@@ -547,14 +544,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeLinkTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles("linktable");
+		jswStyles tablestyles =  mcdb.tablestyles;
 
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
+		
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -563,11 +555,20 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		cellstyle.setHorizontalAlign("LEFT");
 		cellstyle.putAttribute("fontsize", "14");
 
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
+		jswStyle hpstyle = tablestyles.makeStyle("xjswHorizontalPanel");
+		hpstyle.putAttribute("backgroundColor", "#C0C0C0");
+		hpstyle.putAttribute("cellbackgroundColor", "#C0C0C0");
+		hpstyle.putAttribute("foregroundColor", "Green");
+		hpstyle.putAttribute("borderWidth", "2");
+		hpstyle.putAttribute("borderColor", "gray");
+		hpstyle.putAttribute("cellBorderColor", "RED");
+		hpstyle.putAttribute("cellBorderWidth", "10");
+		
+		jswStyle bpstyle = tablestyles.makeStyle("buttonpanel");
+		bpstyle.putAttribute("backgroundColor", "RED");
+		bpstyle.putAttribute("foregroundColor", "Green");
+		bpstyle.putAttribute("borderWidth", "2");
+		bpstyle.putAttribute("borderColor", "blue");
 
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
@@ -606,6 +607,8 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			for (Entry<String, mcAttribute> anentry : attributes.entrySet())
 			{
 				mcAttribute anattribute = anentry.getValue();
+				//mcAttributeType attype = anentry.getValue();
+				//if (anattribute.getDisplaygroup().contains("E"))
 				if (anattribute.getRoot().equalsIgnoreCase(selector))
 				{
 					String value = anattribute.getValue();
@@ -621,7 +624,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							memberpanel.addCell(alabel, row, 0);
 							jswLabel aqlabel = new jswLabel(qualifier);
 							memberpanel.addCell(aqlabel, row, 1);
-							atteditbox = new jswTextField();
+							atteditbox = new jswTextBox("qualifier");
 							atteditbox.setText(qualifier);
 							atteditbox.setEnabled(true);
 							memberpanel.addCell(atteditbox, " FILLW ", row, 1);
@@ -658,11 +661,12 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 						alabel = new jswLabel(
 								qualifier + " (not found linked contact )");
 						memberpanel.addCell(alabel, row, 1);
-						jswHorizontalPanel buttonpanel = new jswHorizontalPanel();
+						jswHorizontalPanel buttonpanel = new jswHorizontalPanel();					
 						jswButton disconnect = new jswButton(this, "DISCONNECT",
 								"DISCONNECT:" + anattribute.getKey());
 						buttonpanel.add(disconnect);
 						memberpanel.addCell(buttonpanel, row, 2);
+						buttonpanel.doStyling(linktablestyles.getStyle("buttonpanel"));
 					}
 					row++;
 				}
@@ -682,17 +686,38 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles("EditTable");
+		jswStyles tablestyles = mcdb.tablestyles;
+		
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		//tablestyle.putAttribute("backgroundColor", "White");
+		//tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+		
+		jswStyle jtablestyle = tablestyles.makeStyle("jswtable");
+		//jtablestyle.putAttribute("backgroundColor", "White");
+		//jtablestyle.putAttribute("foregroundColor", "Green");
+		jtablestyle.putAttribute("borderWidth", "2");
+		jtablestyle.putAttribute("borderColor", "blue");
+		
+		
+		jswStyle bpstyle = tablestyles.makeStyle("buttonpanel");
+		//jtablestyle.putAttribute("backgroundColor", "White");
+		//jtablestyle.putAttribute("foregroundColor", "Green");
+		bpstyle.putAttribute("borderWidth", "2");
+		bpstyle.putAttribute("borderColor", "blue");
+		
+		
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
+	//	cellstyle.putAttribute("backgroundColor", "#C0C0C0");
+	//	cellstyle.putAttribute("foregroundColor", "GREEN");
+	//	cellstyle.putAttribute("borderWidth", "1");
+	//	cellstyle.putAttribute("borderColor", "white");
 		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
+	//	cellstyle.putAttribute("fontsize", "14");
 
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
+		jswStyle cellcstyle = tablestyles.makeStyle("xcellcontent");
+		//cellcstyle.putAttribute("backgroundColor", "transparent");
 		cellcstyle.putAttribute("foregroundColor", "Red");
 		cellcstyle.setHorizontalAlign("LEFT");
 		cellcstyle.putAttribute("fontsize", "11");
@@ -707,24 +732,24 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		col1style.setHorizontalAlign("LEFT");
 		// col1style.putAttribute("backgroundColor", "White");
 		col1style.putAttribute("width", 70);
-
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
+	
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		col2style.putAttribute("horizontalAlignment", "RIGHT");
+		//col2style.putAttribute("maxwidth", "true");
+		col2style.putAttribute("FILLW", "true");
+		col2style.putAttribute("foregroundColor", "Red");
+		
 		jswStyle col3style = tablestyles.makeStyle("col_3");
 		col3style.putAttribute("horizontalAlignment", "RIGHT");
 		col3style.putAttribute("minwidth", "true");
+	
 
 		return tablestyles;
 	}
 
 	public jswStyles makeTagTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles("tagtable");
+		jswStyles tablestyles =  jswStyles.getTableStyles();
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -734,7 +759,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		cellstyle.putAttribute("fontsize", "14");
 
 		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
+		//cellcstyle.putAttribute("backgroundColor", "xtransparent");
 		cellcstyle.putAttribute("foregroundColor", "Blue");
 		cellcstyle.setHorizontalAlign("LEFT");
 		cellcstyle.putAttribute("fontsize", "11");
@@ -785,7 +810,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			editattributekey = "";
 			jswVerticalPanel tideditpanel = new jswVerticalPanel();
-			tideditbox = new jswTextField();
+			tideditbox = new jswTextBox("");
 			tideditpanel.add("FILLW", tideditbox);
 			String tid = selcontact.getTID();
 			if (tid.equalsIgnoreCase("new contact") || tid.isEmpty())
@@ -798,7 +823,6 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			tideditpanel.add(tagspanel);
 			idbox.add("FILLW", tideditpanel);
 			tagspanel.setText(selcontact.getTags());
-;
 			jswButton idupdate = new jswButton(this, "UPDATE", "UPDATEID");
 			idbox.add("RIGHT", idupdate);
 			jswButton iddelete = new jswButton(this, "DELETE", "DELETECONTACT");
@@ -808,8 +832,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		} else if (edit == "editattribute")
 		{
 			idpanel2 = new jswLabel(" ");
-			idbox.add(idpanel2);
+			idbox.add("  ",idpanel2);
 			idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
+			idpanel2.doStyling();
 			idpanel3 = new jswLabel(" ");
 			idbox.add(idpanel3);
 			idpanel3.setText(mcdb.selbox.getSelcontact().getTags());
@@ -819,9 +844,10 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			edit = "";
 			editattributekey = "";
-			idpanel2 = new jswLabel(" ");
+			idpanel2 = new jswLabel(mcdb.selbox.getSelcontact().getTID());
 			idbox.add(idpanel2);
-			idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
+			//idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
+			
 			idpanel3 = new jswLabel(" ");
 			idbox.add(idpanel3);
 			idpanel3.setText(mcdb.selbox.getSelcontact().getTags());
@@ -835,9 +861,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		attributepanel.setMarker("edittable");
 		add(attributepanel);
 		attributepanel.removeAll();
-
 		mcdb.selbox.getSelcontact().fillContact();
-
 		int row = 0;
 		for (Entry<String, mcAttribute> anentry : mcdb.selbox.getSelcontact()
 				.getAttributes().entrySet())
@@ -856,7 +880,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				{
 					if (editattributekey.equalsIgnoreCase(attributekey))
 					{
-						atype = new jswTextField("Qualifier?");
+						atype = new jswTextBox("Qualifier?");
 						atype.setText(attributequalifier);
 						atype.setEnabled(true);
 						attributepanel.addCell(atype, " FILLW ", row, 1);
@@ -974,7 +998,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 						} else
 						{
 							String value = anattribute.getFormattedValue();
-							atteditbox = new jswTextField();
+							atteditbox = new jswTextBox("Box_"+value);
 							atteditbox.setText(value);
 							atteditbox.setEnabled(true);
 							attributepanel.addCell(atteditbox, " FILLW ", row,
@@ -992,7 +1016,6 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 					{
 						jswLabel atype = new jswLabel();
 						atype.setText(attributequalifier);
-
 						attributepanel.addCell(atype, " FILLW ", row, 1);
 						if (anattribute.isImage())
 						{
@@ -1005,14 +1028,14 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							String value = anattribute.getFormattedValue();
 							attributepanel.addCell(new jswLabel(value), row, 2);
 						}
-						jswPanel imagebox = new jswVerticalPanel();
+						jswPanel buttonbox = new jswVerticalPanel();
 						jswButton idedit = new jswButton(this, "EDIT ME",
 								"EDITATTRIBUTE:" + attributekey);
-						imagebox.add(idedit);
+						buttonbox.add(idedit);
 						//jswLabel imagesize = new jswLabel(
 						//		" size=" + anattribute.getValue().length());
-						//imagebox.add(imagesize);
-						attributepanel.addCell(imagebox, row, 3);
+						//buttonbox.setBackground(Color.pink);
+						attributepanel.addCell(buttonbox, row, 3);
 					}
 				} else
 				{
@@ -1030,39 +1053,35 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 					{
 						String value = anattribute.getFormattedValue();
 						jswLabel alabel2 = new jswLabel(value);
-						attributepanel.addCell(alabel2, row, 2);
+						attributepanel.addCell(alabel2," FILLW ", row, 2);
 					}
-					jswPanel imagebox = new jswVerticalPanel();
-					jswButton idedit = new jswButton(this, "EDIT ME",
+					jswPanel buttonbox = new jswVerticalPanel();
+					jswButton idedit = new jswButton(this, "EDIT ME.",
 							"EDITATTRIBUTE:" + attributekey);
-					imagebox.add(idedit);
-				//	jswLabel imagesize = new jswLabel(
-				//			" size=" + anattribute.getValue().length());
-				//	imagebox.add(imagesize);
-					attributepanel.addCell(imagebox, row, 3);
+					buttonbox.add(idedit);
+					attributepanel.addCell(buttonbox, row, 3);
 				}
 
 				if (edit == "")
 				{
 					jswLabel alab = new jswLabel();
 					alab.setText(attributequalifier);
-
 					attributepanel.addCell(alab, row, 1);
-					jswButton idedit = new jswButton(this, "EDIT ME",
+					jswButton idedit = new jswButton(this, "EDIT ME..",
 							"EDITATTRIBUTE:" + attributekey);
 					attributepanel.addCell(idedit, row, 3);
 				} else if (edit == "editattribute")
 				{
 
 				}
-
+				row++;
 			}
-			row++;
+			
 		}
 		if (edit == "")
 		{
 			jswHorizontalPanel newattributepanel = new jswHorizontalPanel();
-			newlabel = new jswDropDownBox("Select:", true, false);
+			newlabel = new jswDropDownBox(this,"Select:");
 		  // newlabel.setPreferredSize(new Dimension(100, 24));
 			Vector<String> varry = mcdb.topgui.attributetypes
 					.getallAttributes();
@@ -1099,10 +1118,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 
 			jswHorizontalPanel newmemberpanel = new jswHorizontalPanel();
-			newmemberpanel.applyStyles("borderstyle");
+			newmemberpanel.applyStyle(mcdb.panelstyles,"borderstyle");
 
-			linkselect = new jswDropDownBox(edattributename, addselector,
-					addselector);
+			linkselect = new jswDropDownBox(this,edattributename);
 			Vector<String> llist = new Vector<String>();
 			llist.add("org");
 			llist.add("member");
@@ -1114,7 +1132,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			parentselect.addList(mcdb.selbox.getAllcontactlist()
 					.makeOrderedContactsVector());
 			newmemberpanel.add(parentselect);//paul to fix
-			atteditbox = new jswTextField();
+			atteditbox = new jswTextBox("attedit");
 			atteditbox.setEnabled(true);
 			newmemberpanel.add(atteditbox);
 			jswPanel buttonbox = new jswHorizontalPanel();
@@ -1124,12 +1142,11 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			add(" FILLW ", newmemberpanel);
 			
 			jswHorizontalPanel groupmemberpanel = new jswHorizontalPanel();
-			groupmemberpanel.applyStyles("borderstyle");
+			groupmemberpanel.applyStyle(mcdb.panelstyles,"borderstyle");
 
 		
 
-			groupselect = new jswDropDownBox("Select Group", true,
-					false);
+			groupselect = new jswDropDownBox(this,"Select Group");
 			groupselect.addList(mcdb.selbox.getTaglist());
 			 groupmemberpanel.add(" WIDTH=300 ",groupselect);//paul to fix
 		//	atteditbox = new jswTextField();

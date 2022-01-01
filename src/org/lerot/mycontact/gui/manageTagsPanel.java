@@ -289,7 +289,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeTagsTableStyles()
 	{
-		jswStyles tablestyles = new jswStyles("tagstable");
+		jswStyles tablestyles = jswStyles.getTableStyles();
 
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		tablestyle.putAttribute("backgroundColor", "White");

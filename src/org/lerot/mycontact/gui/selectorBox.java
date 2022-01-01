@@ -2,6 +2,7 @@ package org.lerot.mycontact.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -18,6 +19,9 @@ import org.lerot.gui.widgets.jswDropDownBox;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswLabel;
 import org.lerot.gui.widgets.jswPanel;
+import org.lerot.gui.widgets.jswStyle;
+import org.lerot.gui.widgets.jswStyles;
+import org.lerot.gui.widgets.jswTextBox;
 import org.lerot.gui.widgets.jswTextField;
 import org.lerot.gui.widgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContact;
@@ -35,7 +39,7 @@ public class selectorBox extends jswVerticalPanel
 
 	mcImports imported;
 
-	private jswTextField filterbox;
+	private jswTextBox filterbox;
 	private jswDropDownBox browseselectbox;
 	jswDropDownContactBox contactselectbox;
 	private jswLabel allcontacts;
@@ -55,7 +59,8 @@ public class selectorBox extends jswVerticalPanel
 
 	public selectorBox(mcdb aparent, ActionListener al)
 	{
-
+        this.doStyling(createStyle());
+      
 		currentcontactlist = new mcContacts();
 		browsecontactlist = new mcContacts();
 		allcontactlist = new mcContacts();
@@ -65,7 +70,7 @@ public class selectorBox extends jswVerticalPanel
 		filterbar = new jswHorizontalPanel();
 		allcontacts = new jswLabel("All Contacts");
 		filterbar.add(" LEFT ", allcontacts);
-		browseselectbox = new jswDropDownBox("Select Group", true, true);
+		browseselectbox = new jswDropDownBox(this,"Select Group");
 		browseselectbox.addActionListener(this, "BROWSESELECT");
 		filterbar.add(" MIDDLE WIDTH=200 ", browseselectbox);
 		browsecontacts = new jswLabel("Browsing:");
@@ -78,18 +83,17 @@ public class selectorBox extends jswVerticalPanel
 		jswButton previous = new jswButton(this, "Previous");
 		selectbox.add(" LEFT ", previous);
 
-		filterbox = new jswTextField();
+		filterbox = new jswTextBox("stuff");
 		filterbox.setEnabled(true);
-		//filterbox.setPreferredSize(new Dimension(100, 15));
-		filterbox.setMinimumSize(new Dimension(40, 15));
-		filterbox.setMaximumSize(new Dimension(40, 15));
+		filterbox.textbox.setMinimumSize(new Dimension(40, 15));
 		filterbox.addFocusListener(this);
 		filterbox.addKeyListener(this);
+		filterbox.setBorder(jswStyles.makeLineBorder(Color.gray, 1));
 		selectbox.add(" FILLW=30 ", filterbox);
 		jswButton filterbutton = new jswButton(this, ">", "NEXTFILTER");
 		//filterbutton.setPreferredSize(new Dimension(100, 15));
-		filterbutton.setMinimumSize(new Dimension(40, 15));
-		filterbutton.setMaximumSize(new Dimension(40, 15));
+		filterbutton.setMinimumSize(new Dimension(40, 30));
+		filterbutton.setMaximumSize(new Dimension(40, 30));
 		selectbox.add("  ", filterbutton);
 
 		contactselectbox = new jswDropDownContactBox("Select Contact", true,
@@ -102,7 +106,7 @@ public class selectorBox extends jswVerticalPanel
 
 		this.add(selectbox);
 
-		this.setBorder(jswPanel.setLineBorder(Color.gray, 2));
+		this.setBorder(jswStyles.makeLineBorder(Color.red, 2));
 
 	}
 
@@ -544,6 +548,28 @@ public class selectorBox extends jswVerticalPanel
 	public Vector<String> getTaglist()
 	{
 		return taglist.toVector();
+	}
+	
+	public jswStyle createStyle()
+	{
+		jswStyles panelstyles = new jswStyles("selectorbox");		
+		jswStyle jswBorderStyle = panelstyles.makeStyle("borderstyle");
+		jswBorderStyle.putAttribute("borderWidth", "1");
+		// jswBorderStyle.putAttribute("borderColor", "#C0C0C0");
+		jswBorderStyle.putAttribute("borderColor", "black");
+
+		jswStyle hpanelStyle = panelstyles.makeStyle("hpanelstyle");
+		hpanelStyle.putAttribute("padding", "5");
+		hpanelStyle.putAttribute("borderWidth", "2");
+		hpanelStyle.putAttribute("borderColor", "red");
+		hpanelStyle.putAttribute("height", "100");
+		jswStyle pbStyle = panelstyles.makeStyle("jswPushButton");
+		pbStyle.putAttribute("backgroundColor", "#C0C0C0");
+		pbStyle.putAttribute("fontsize", "10");
+		pbStyle.putAttribute("foregroundColor", "black");
+		jswStyle greenfont = panelstyles.makeStyle("greenfont");
+		greenfont.putAttribute("foregroundColor", "green");
+		return hpanelStyle;
 	}
 
 }

@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
+import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lerot.gui.widgets.jswButton;
@@ -52,9 +53,9 @@ public class exportBackupPanel extends jswVerticalPanel
 	jswHorizontalPanel exportresult;
 	private jswOptionset optionset;
 	private mcContacts exportsource;
-	private jswOption allcontacts;
-	private jswOption browsecontacts;
-	private jswOption selectedcontacts;
+	private JRadioButton allcontacts;
+	private  JRadioButton browsecontacts;
+	private  JRadioButton selectedcontacts;
 	private jswButton testbutton;
 	private File fileToSave;
 
@@ -66,17 +67,17 @@ public class exportBackupPanel extends jswVerticalPanel
 		header.add(" FILLW ", heading);
 		this.add(header);
 		jswHorizontalPanel filterbar = new jswHorizontalPanel();
-		optionset = new jswOptionset("source", false, this);
+		optionset = new jswOptionset(this,"source", false);
 		allcontacts = optionset
 				.addNewOption("All Contacts " + mcdb.selbox.countAll(), false);
-		allcontacts.setTag("all");
+		//allcontacts.setTag("all");
 		browsecontacts = optionset.addNewOption(
 				"Browse Contacts " + mcdb.selbox.getBrowsecontactlist().size(),
 				false);
-		browsecontacts.setTag("browse");
+		//browsecontacts.setTag("browse");
 		selectedcontacts = optionset.addNewOption("Selected Contacts "
 				+ mcdb.selbox.getSearchResultList().size(), false);
-		selectedcontacts.setTag("selected");
+		//selectedcontacts.setTag("selected");
 		filterbar.add(" LEFT ", allcontacts);
 		filterbar.add(" MIDDLE ", browsecontacts);
 		browsecontacts.setSelected(true);
@@ -94,7 +95,7 @@ public class exportBackupPanel extends jswVerticalPanel
 		selectedfile.setEnabled(true);
 		System.out.println(bufilename);
 		filebar.add(" LEFT WIDTH=200 ", selectedfile);
-		exporttypebox = new jswDropDownBox("", false, false);
+		exporttypebox = new jswDropDownBox(this,"type");
 		Vector<String> varry = new Vector<String>();
 		varry.add("XML");
 		exporttypebox.addList(varry);
@@ -168,7 +169,7 @@ public class exportBackupPanel extends jswVerticalPanel
 		{
 
 			Vector<String> attkeys = new Vector<String>();
-			String selection = optionset.getSelectedTag();
+			String selection = optionset.getSelected();
 			System.out.println(selection);
 			if (selection.equals("all"))
 				exportsource = mcdb.selbox.getAllcontactlist();

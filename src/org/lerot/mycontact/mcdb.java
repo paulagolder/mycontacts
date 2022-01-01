@@ -66,8 +66,10 @@ public class mcdb extends JFrame implements ActionListener
 
 	}
 
+	public static JFrame mframe;
 	public mcDataSource currentcon;
-	public static jswStyles allstyles;
+	public static jswStyles panelstyles;
+	public static jswStyles tablestyles;
 	public static Component browserpanel;
 	public static String certificatepath;
 	
@@ -76,7 +78,7 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 7.0";
+	static String version = "V 15.0";
 	public static selectorBox selbox;
 	public static String letterfolder;
 	public static String docsfolder;
@@ -93,7 +95,7 @@ public class mcdb extends JFrame implements ActionListener
 		}
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 	
-		JFrame mframe = new mcdb(900, 700);
+		 mframe = new mcdb(900, 700);
 		 mframe.setVisible(true);
 	
 		mframe.addWindowListener(new WindowAdapter()
@@ -140,7 +142,7 @@ public class mcdb extends JFrame implements ActionListener
 	public String mode = "main";
 	private String os;
 	private String osversion;
-	public jswStyles tablestyles;
+
 	private ToolsPanel toolspanel;
 	public String user;
 	String userdir;
@@ -217,6 +219,7 @@ public class mcdb extends JFrame implements ActionListener
 		});
 
 		initiateStyles();
+		jswPanel.setPanelStyles(panelstyles);
 		bigpanel = new jswVerticalPanel("bigpanel",true);
 		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
 		bigpanel.setName("bigpanel");;
@@ -232,19 +235,23 @@ public class mcdb extends JFrame implements ActionListener
 		buttonset.addNewOption("Tools");
 		buttonset.setSelected("Browse");
 		optionBar.add(buttonset);
+		optionBar.setBorder(jswStyles.makeLineBorder(Color.GRAY, 1));
 		bigpanel.add(optionBar);
 		jswHorizontalPanel sourceBar = new jswHorizontalPanel();
 		title= new jswLabel(dbtitle);
 		sourceBar.add(title);
 		source= new jswLabel(dbsource);
 		sourceBar.add(source);
-		bigpanel.add(sourceBar);
+		sourceBar.setBorder(jswStyles.makeLineBorder(Color.GREEN, 1));
+		bigpanel.add(" height=40 ",sourceBar);
 		selbox = new selectorBox(this, this);
 		bigpanel.add("FILLW", selbox);
 		mainpanel = new jswVerticalPanel("mainpanel",false);
 		bigpanel.add(" FILLH ", mainpanel);
-		bigpanel.setBorder(jswPanel.setLineBorder(Color.GRAY ,3));
+		bigpanel.setBorder(jswStyles.makeLineBorder(Color.GRAY ,3));
 		abrowsepanel = new browsePanel();
+		//abrowsepanel.setBorder(jswStyles.makeLineBorder(Color.RED ,5));
+		//abrowsepanel.setBackground(Color.yellow);
 		mainpanel.add(" FILLH ", abrowsepanel);
 		asearchpanel = new searchPanel();
 		asearchpanel.makesearchPanel(selbox, this);
@@ -263,7 +270,7 @@ public class mcdb extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent evt)
 	{
 		String action = evt.getActionCommand().toUpperCase();
-		// System.out.println(" mcdb action :" + action);
+		System.out.println(" mcdb action :" + action);
 		if (action.startsWith("MODE:"))
 		{
 			String vstr = action.substring(5);
@@ -284,10 +291,8 @@ public class mcdb extends JFrame implements ActionListener
 	public void startup()
 	{
 		System.out.println(os + " " + userhome);
-	    //currentcon = new 
 		System.out.println("opening :"+ dbsource);
 		Map<String, String> mychecks = currentcon.checkmcdb();
-	
 		mychecks.get("Valid").equalsIgnoreCase("yes");
 		mychecks.get("No of Contacts");
 		dbtitle = mychecks.get("Title");
@@ -298,14 +303,10 @@ public class mcdb extends JFrame implements ActionListener
 		alldatatypes.loadTypes();
 		attributetypes = new mcAttributeTypes();
 		attributetypes.loadAttributeTypes();
-
 		selbox.setBrowseFilter("all");
-		//selbox.refreshAllContacts("startup");
 		mode = "BROWSE";
-
 		mcLetter.getTemplates(dotcontacts);
 		labeltemplates =  mcPDF.readTemplates();
-		//refresh();
 	}
 
 	public void refreshView()
@@ -319,6 +320,7 @@ public class mcdb extends JFrame implements ActionListener
 			mainpanel.removeAll();
 			aneditpanel.makeEditPanel();
 			mainpanel.add(aneditpanel);
+			aneditpanel.repaint();
 		} else if (mode.equals("SEARCH"))
 		{
 			selbox.setVisible(true);
@@ -326,124 +328,107 @@ public class mcdb extends JFrame implements ActionListener
 			mainpanel.removeAll();
 			asearchpanel.makesearchPanel(selbox, this);
 			mainpanel.add(" FILLH ", asearchpanel);
+			asearchpanel.repaint();
 		} else if (mode.equals("BROWSE"))
 		{
 			selbox.setVisible(true);
-			//selbox.refreshAll();
 			selbox.navVisible(true);
 			selbox.filterboxVisible(true);
-			//selbox.update();
 			mainpanel.removeAll();
+			abrowsepanel.removeAll();
 			abrowsepanel.makeBrowsePanel();
 			mainpanel.add("FILLW", abrowsepanel);
+			abrowsepanel.repaint();
 		} else if (mode.equals("TOOLS"))
 		{
 			selbox.setVisible(false);
 			mainpanel.removeAll();
-			//mainpanel.setPreferredSize(new Dimension(800,500));
-			//mainpanel.setSize(new Dimension(800,500));
-		//	mainpanel.setMinimumSize(new Dimension(800,500));
-			//toolspanel.refresh();
 			mainpanel.add(" FILLW ", toolspanel);
+			toolspanel.repaint();
 		}
 	
 		mainpanel.repaint();
+		if(mframe != null)
+	  	 mframe.repaint();
+		getContentPane().repaint();
 		getContentPane().validate();
 	}
 
 	public void initiateStyles()
 	{
-		tablestyles = new jswStyles("initial");
-		jswStyle cellstyle = tablestyles.makeStyle("cell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
-		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
-
-		jswStyle cellcstyle = tablestyles.makeStyle("cellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
-
+		tablestyles = jswStyles.getTableStyles();
+		
+		jswStyle rowstyle = tablestyles.makeStyle("row");
+		rowstyle.putAttribute("height", "20");
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
 		col0style.setHorizontalAlign("RIGHT");
 		col0style.putAttribute("minwidth", "true");
-
 		jswStyle col1style = tablestyles.makeStyle("col_1");
 		col1style.putAttribute("fontStyle", Font.BOLD);
 		col1style.setHorizontalAlign("RIGHT");
-		//col1style.putAttribute("minwidth", "true");
-
-		jswStyle tablestyle = tablestyles.makeStyle("table");
-		tablestyle.putAttribute("backgroundColor", "White");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		col2style.putAttribute("horizontalAlignment", "RIGHT");
 		col2style.putAttribute("minwidth", "true");
 
-		allstyles = new jswStyles("allstyles");
-		jswStyle jswLabelStyles = allstyles.makeStyle("jswLabel");
-		jswLabelStyles.putAttribute("backgroundColor", "#C0C0C0");
-		jswLabelStyles.putAttribute("foregroundColor", "Black");
-		jswLabelStyles.putAttribute("borderWidth", "1");
-		jswLabelStyles.putAttribute("fontsize", "14");
-		jswLabelStyles.putAttribute("borderColor", "#C0C0C0");
+		panelstyles = new jswStyles("allstyles");
+		
+		jswStyle jswWidgetStyles = panelstyles.makeStyle("jswWidget");
+		jswWidgetStyles.putAttribute("backgroundColor","#e0dcdf");
+		jswWidgetStyles.putAttribute("boxbackgroundColor","GREEN");	
+		jswWidgetStyles.putAttribute("foregroundColor", "Black");
+		jswWidgetStyles.putAttribute("borderWidth", "0");
+		jswWidgetStyles.putAttribute("fontsize", "14");
+		jswWidgetStyles.putAttribute("borderColor", "blue");
+		
+		
+		jswStyle jswLabelStyles = panelstyles.makeStyle("jswLabel");
 
-		jswStyle jswButtonStyles = allstyles.makeStyle("jswButton");
-		jswButtonStyles.putAttribute("foregroundColor", "Blue");
+		jswStyle jswButtonStyles = panelstyles.makeStyle("jswButton");
 		jswButtonStyles.putAttribute("fontsize", "10");
 
-		jswStyle jswToggleButtonStyles = allstyles.makeStyle("jswToggleButton");
+		jswStyle jswToggleButtonStyles = panelstyles.makeStyle("jswToggleButton");
 		jswToggleButtonStyles.putAttribute("foregroundColor", "Red");
 
-		jswStyle jswTextBoxStyles = allstyles.makeStyle("jswTextBox");
-		jswTextBoxStyles.putAttribute("backgroundColor", "#e0dcdf");
-		jswTextBoxStyles.putAttribute("fontsize", "14");
+		jswStyle jswTextBoxStyles = panelstyles.makeStyle("jswTextBox");
 
-		jswStyle jswDropDownBoxStyles = allstyles.makeStyle("jswDropDownBox");
-		jswDropDownBoxStyles.putAttribute("backgroundColor", "yellow");
-		jswDropDownBoxStyles.putAttribute("foregroundColor", "black");
-		jswDropDownBoxStyles.putAttribute("fontsize", "14");
+		
+		jswStyle jswTextFieldStyles = panelstyles.makeStyle("jswTextField");
+		//jswTextFieldStyles.putAttribute("backgroundColor", "#e0dcdf");
 
-		jswStyle jswhpStyles = allstyles.makeStyle("jswHorizontalPanel");
-		jswhpStyles.putAttribute("backgroundColor", "yellow");
+		jswStyle jswDropDownBoxStyles = panelstyles.makeStyle("jswDropDownBox");
+		//jswDropDownBoxStyles.putAttribute("backgroundColor","#C0C0C0");
 
-		jswStyle jswDropDownContactBoxStyles = allstyles
+		jswStyle jswhpStyles = panelstyles.makeStyle("jswContainer");
+		jswhpStyles.putAttribute("backgroundColor", "#C0C0C0");
+
+		jswStyle jswDropDownContactBoxStyles = panelstyles
 				.makeStyle("jswDropDownContactBox");
 		jswDropDownContactBoxStyles.putAttribute("backgroundColor", "#C0C0C0");
 		jswDropDownContactBoxStyles.putAttribute("fontsize", "10");
 
-		jswStyle jswScrollPaneStyles = allstyles
+		jswStyle jswScrollPaneStyles = panelstyles
 				.makeStyle("jswScrollPaneStyles");
 		jswScrollPaneStyles.putAttribute("backgroundColor", "#C0C0C0");
 		jswScrollPaneStyles.putAttribute("fontsize", "10");
-
 		
-		jswStyle jswBorderStyle = allstyles.makeStyle("borderstyle");
+		jswStyle jswBorderStyle = panelstyles.makeStyle("borderstyle");
 		jswBorderStyle.putAttribute("borderWidth", "1");
 		// jswBorderStyle.putAttribute("borderColor", "#C0C0C0");
 		jswBorderStyle.putAttribute("borderColor", "black");
 
-		jswStyle hpanelStyle = allstyles.makeStyle("hpanelstyle");
+		jswStyle hpanelStyle = panelstyles.makeStyle("hpanelstyle");
 		hpanelStyle.putAttribute("borderWidth", "2");
-		hpanelStyle.putAttribute("borderColor", "red");
+		hpanelStyle.putAttribute("borderColor", "blue");
 		hpanelStyle.putAttribute("height", "100");
-		jswStyle pbStyle = allstyles.makeStyle("jswPushButton");
+		
+		jswStyle pbStyle = panelstyles.makeStyle("jswPushButton");
 		pbStyle.putAttribute("backgroundColor", "#C0C0C0");
 		pbStyle.putAttribute("fontsize", "10");
-		pbStyle.putAttribute("foregroundColor", "black");
-		jswStyle greenfont = allstyles.makeStyle("greenfont");
-		greenfont.putAttribute("foregroundColor", "green");
 		
-		jswStyles.importstyles("allstyles",allstyles);
-		jswStyles.importstyles("tablestyles",tablestyles);
+		pbStyle.putAttribute("foregroundColor", "black");
+		jswStyle greenfont = panelstyles.makeStyle("greenfont");
+		greenfont.putAttribute("foregroundColor", "green");
 		
 	}
 

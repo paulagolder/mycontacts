@@ -1,5 +1,6 @@
 package org.lerot.mycontact.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +11,7 @@ import javax.swing.event.ChangeListener;
 import org.lerot.gui.widgets.jswHorizontalPanel;
 import org.lerot.gui.widgets.jswPanel;
 import org.lerot.gui.widgets.jswRectLayout;
+import org.lerot.gui.widgets.jswStyle;
 import org.lerot.gui.widgets.jswTabbedPanel;
 import org.lerot.gui.widgets.jswVerticalLayout;
 import org.lerot.gui.widgets.jswVerticalPanel;
@@ -84,6 +86,34 @@ public class ToolsPanel extends jswPanel implements ActionListener,
 		}
 
 		validate();
+	}
+
+	@Override
+	public void doStyling()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void doStyling(jswStyle style)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public jswStyle getStyle()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Dimension jswGetMinimumSize()
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	

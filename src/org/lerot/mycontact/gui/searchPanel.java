@@ -105,7 +105,7 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 
 	public void makesearchPanel(selectorBox selbox, ActionListener alistener)
 	{
-		jswStyle scrollstyle = jswStyles.getStyles("allstyles").getStyle("jswScrollPaneStyles");
+		jswStyle scrollstyle = mcdb.panelstyles.getStyle("jswScrollPaneStyles");
 		Color bcolor = scrollstyle.getColor("backgroundColor", Color.BLUE);
 		setBackground(bcolor);
 		parentlistener = alistener;
@@ -121,7 +121,7 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 		idbox.add(idpanel1);
 		
 		searchfield = new jswTextField("Search for");
-	//	searchfield.setBorder(jswPanel.setLineBorder(Color.red, 5));
+	//	searchfield.setBorder(jswStyles.makeLineBorder(Color.red, 5));
 		if(selbox.getSearchterm()!= null && !selbox.getSearchterm().isEmpty())
 		{
 		searchfield.setText(selbox.getSearchterm());

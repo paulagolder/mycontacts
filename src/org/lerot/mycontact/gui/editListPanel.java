@@ -49,8 +49,8 @@ public class editListPanel extends jswVerticalPanel implements ActionListener
 		jswHorizontalPanel progressbar = new jswHorizontalPanel("progressbar",
 				false);
 		this.add(" FILLW ", progressbar);
-		taglistbox = new jswDropDownBox("tags", true, true);
-		taglistbox.addActionListener(this, "selectlist");
+		taglistbox = new jswDropDownBox(this,"tags", "selectlist");
+	
 		mctagList tags = new mctagList();
 		tags.reloadTags();
 		progressbar.add(" FILLW ", taglistbox);
@@ -174,21 +174,6 @@ public class editListPanel extends jswVerticalPanel implements ActionListener
 
 	}
 
-	public void xshow()
-	{
-		scrollableTextArea = new jswScrollPane(atttable);
-		scrollableTextArea.setName("resultscroll");
-		scrollableTextArea
-				.setBorder(BorderFactory.createLineBorder(Color.green));
-		scrollableTextArea.setHorizontalScrollBarPolicy(
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scrollableTextArea.setVerticalScrollBarPolicy(
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		this.add(" FILLH ", scrollableTextArea);
-		atttable.setVisible(true);
-		scrollableTextArea.setVisible(true);
-		mcdb.topgui.getContentPane().validate();
-
-	}
+	
 
 }
