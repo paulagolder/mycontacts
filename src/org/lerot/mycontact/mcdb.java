@@ -219,24 +219,30 @@ public class mcdb extends JFrame implements ActionListener
 		});
 
 		initiateStyles();
-		jswPanel.setPanelStyles(panelstyles);
+		
 		bigpanel = new jswVerticalPanel("bigpanel",true);
 		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
-		bigpanel.setName("bigpanel");;
+		bigpanel.setName("bigpanel");
+		bigpanel.setGlobalStyles(panelstyles);
 		bigpanel.setPreferredSize(new Dimension(800,500));
 		bigpanel.setSize(new Dimension(800,500));
 		bigpanel.setMinimumSize(new Dimension(800,500));
 		getContentPane().add(bigpanel);
 		jswHorizontalPanel optionBar = new jswHorizontalPanel();
 		buttonset = new jswPushButtonset(this, "mode", false, false);
+		//buttonset.setPreferredSize(new Dimension(200,40));
+		buttonset.setBorder(jswStyle.setLineBorder(Color.red, 1));
+		buttonset.setInsets(1);
 		buttonset.addNewOption("Browse");
 		buttonset.addNewOption("Search");
 		buttonset.addNewOption("Edit");
 		buttonset.addNewOption("Tools");
 		buttonset.setSelected("Browse");
-		optionBar.add(buttonset);
-		optionBar.setBorder(jswStyles.makeLineBorder(Color.GRAY, 1));
-		bigpanel.add(optionBar);
+		buttonset.doStyling();
+		optionBar.add(" ",buttonset);
+		optionBar.setBorder(jswStyles.makeLineBorder(Color.pink, 1));
+		//optionBar.setMaximumSize(new Dimension(800,100));
+		bigpanel.add(" ",optionBar);
 		jswHorizontalPanel sourceBar = new jswHorizontalPanel();
 		title= new jswLabel(dbtitle);
 		sourceBar.add(title);
@@ -359,7 +365,7 @@ public class mcdb extends JFrame implements ActionListener
 		tablestyles = jswStyles.getTableStyles();
 		
 		jswStyle rowstyle = tablestyles.makeStyle("row");
-		rowstyle.putAttribute("height", "20");
+		rowstyle.putAttribute("height", "10");
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
 		col0style.setHorizontalAlign("RIGHT");
@@ -371,7 +377,7 @@ public class mcdb extends JFrame implements ActionListener
 		col2style.putAttribute("horizontalAlignment", "RIGHT");
 		col2style.putAttribute("minwidth", "true");
 
-		panelstyles = new jswStyles("allstyles");
+		panelstyles = jswStyles.getDefaultStyles();
 		
 		jswStyle jswWidgetStyles = panelstyles.makeStyle("jswWidget");
 		jswWidgetStyles.putAttribute("backgroundColor","#e0dcdf");

@@ -80,7 +80,7 @@ public class jswDropPane extends jswPanel
 			ex.printStackTrace();
 		}
 		String stylename = this.getClass().getSimpleName();		
-		containerstyles.copyOver(panelstyles);
+		containerstyles.copyOver(globalstyles);
 		style.copyOver(containerstyles.getStyle("jswContainer"));
 		style.copyOver(containerstyles.getStyle(stylename));
 		style.setStylename(stylename);

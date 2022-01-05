@@ -427,7 +427,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeArrayTableStyles()
 	{
-		jswStyles tablestyles =  jswStyles.getTableStyles();
+		jswStyles tablestyles = jswStyles.clone("ArrayTableStyles",mcdb.tablestyles);
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "GREEN");
@@ -544,7 +544,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeLinkTableStyles()
 	{
-		jswStyles tablestyles =  mcdb.tablestyles;
+		jswStyles tablestyles =   jswStyles.clone("ArrayTableStyles",mcdb.tablestyles);
 
 		
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
@@ -686,7 +686,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeTableStyles()
 	{
-		jswStyles tablestyles = mcdb.tablestyles;
+		jswStyles tablestyles =jswStyles.clone("TableStyles",mcdb.tablestyles);
 		
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		//tablestyle.putAttribute("backgroundColor", "White");
@@ -749,7 +749,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 	public jswStyles makeTagTableStyles()
 	{
-		jswStyles tablestyles =  jswStyles.getTableStyles();
+		jswStyles tablestyles =  jswStyles.clone("TagTableStyles",mcdb.tablestyles);
 		jswStyle cellstyle = tablestyles.makeStyle("cell");
 		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
 		cellstyle.putAttribute("foregroundColor", "Blue");
@@ -844,7 +844,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			edit = "";
 			editattributekey = "";
-			idpanel2 = new jswLabel(mcdb.selbox.getSelcontact().getTID());
+			mcContact acontact = mcdb.selbox.getSelcontact();
+			String atid = acontact.getTID();
+			idpanel2 = new jswLabel(atid);
 			idbox.add(idpanel2);
 			//idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
 			
@@ -891,7 +893,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							attributepanel.addCell(animage.DisplayImage(), row,
 									2);
 							jswPanel imagebox = new jswVerticalPanel();
-							jswPanel buttonbox = new jswContainer(
+							jswPanel buttonbox = new jswHorizontalPanel(
 									"Editpanel buttonbox");
 							jswButton idupdate = new jswButton(this, "REPLACE");
 							buttonbox.add("RIGHT", idupdate);
@@ -905,7 +907,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							attributepanel.addCell(imagebox, row, 3);
 						} else if (anattribute.isArray())
 						{
-							jswPanel buttonbox = new jswContainer(
+							jswPanel buttonbox = new jswHorizontalPanel(
 									" button box ");
 							Map<mcfield, String> attarry = anattribute
 									.getFieldValueMap();
@@ -1003,7 +1005,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							atteditbox.setEnabled(true);
 							attributepanel.addCell(atteditbox, " FILLW ", row,
 									2);
-							jswPanel buttonbox = new jswContainer("button box");
+							jswPanel buttonbox = new jswHorizontalPanel("button box");
 							jswButton idupdate = new jswButton(this, "UPDATE",
 									"UPDATEATTRIBUTE");
 							buttonbox.add("RIGHT", idupdate);

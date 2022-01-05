@@ -76,10 +76,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	{
 		vcarddirectory = mcdb.topgui.desktop;
 		jswStyles defaultstyles = jswStyles.getDefaultStyles();
-		tablestyles = makeAttributeTableStyles();
+		tablestyles = StylesMakeAttributeTable();
 		//tablestyles = defaultstyles;
-		linktablestyles = makeLinkTableStyles();
-		jswStyles mystyles = containerstyles;
+		linktablestyles = StylesMakeLinkTable();
+		//jswStyles mystyles = mystyles;
 	}
 
 	@Override
@@ -423,35 +423,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		return attributepanel;
 	}
 
-	private jswStyles makeAttributeTableStyles()
-	{	
-		jswStyles tablestyles = jswStyles.getTableStyles();
-		
-		jswStyle rowstyle = tablestyles.makeStyle("row");
-		//col0style.putAttribute("fontStyle", Font.BOLD);
-		//col0style.setHorizontalAlign("RIGHT");
-		rowstyle.putAttribute("height", "20");
-
-		jswStyle col0style = tablestyles.makeStyle("col_0");
-		col0style.putAttribute("fontStyle", Font.BOLD);
-		col0style.setHorizontalAlign("RIGHT");
-		col0style.putAttribute("minwidth", "true");
-
-		jswStyle col1style = tablestyles.makeStyle("col_1");
-		col1style.putAttribute("fontStyle", Font.PLAIN);
-		col1style.setHorizontalAlign("LEFT");
-
-		jswStyle col2style = tablestyles.makeStyle("col_2");
-		col2style.putAttribute("horizontalAlignment", "LEFT");
-		col2style.putAttribute("maxwidth", "true");
-		col2style.putAttribute("backgroundColor", "yellow");
-
-		jswStyle col3style = tablestyles.makeStyle("col_3");
-		col3style.setHorizontalAlign("RIGHT");
-		
-		return tablestyles;
-	}
-
 	public void makeBrowsePanel()
 	{
 		jswVerticalPanel mainpanel = this;
@@ -466,7 +437,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 			mcAttributes attributes = selcontact.getAttributes();
 			jswHorizontalPanel idbox = new jswHorizontalPanel("idbox", false);
-			mainpanel.add(idbox);
+			idbox.setInsets(10);
+			mainpanel.add(" height=40 ",idbox);
 			if (attributes != null)
 			{
 				mcAttribute photoatt = attributes.find("photo");
@@ -594,7 +566,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	private jswVerticalPanel makeCorrespondancePanel(mcContact selcontact,
 			String title)
 	{
-		jswStyles cstyles = makeCorrespondenceStyles();
+		jswStyles cstyles = StylesMakeCorrespondence();
 		jswVerticalPanel frame = new jswVerticalPanel("correspondance panel",
 				false);
 		jswTable letterpanel = new jswTable("correspondance table", cstyles);
@@ -662,71 +634,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 		frame.setVisible(true);
 		return frame;
-	}
-
-	private jswStyles makeCorrespondenceStyles()
-	{
-		jswStyles tablestyles = jswStyles.getTableStyles();
-
-		jswStyle tablestyle = tablestyles.makeStyle("xtable");
-		tablestyle.putAttribute("backgroundColor", "#C0C0C0");
-		tablestyle.putAttribute("foregroundColor", "Green");
-		tablestyle.putAttribute("borderWidth", "2");
-		tablestyle.putAttribute("borderColor", "blue");
-
-		jswStyle cellstyle = tablestyles.makeStyle("xcell");
-		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
-		cellstyle.putAttribute("foregroundColor", "Blue");
-		cellstyle.putAttribute("borderWidth", "1");
-		cellstyle.putAttribute("borderColor", "white");
-		cellstyle.setHorizontalAlign("LEFT");
-		cellstyle.putAttribute("fontsize", "14");
-
-		jswStyle cellcstyle = tablestyles.makeStyle("xcellcontent");
-		cellcstyle.putAttribute("backgroundColor", "transparent");
-		cellcstyle.putAttribute("foregroundColor", "Red");
-		cellcstyle.setHorizontalAlign("LEFT");
-		cellcstyle.putAttribute("fontsize", "11");
-		
-		jswStyle rowstyle = tablestyles.makeStyle("row");
-		//col0style.putAttribute("fontStyle", Font.BOLD);
-		//col0style.setHorizontalAlign("RIGHT");
-		rowstyle.putAttribute("height", "50");
-
-		jswStyle col0style = tablestyles.makeStyle("col_0");
-		col0style.putAttribute("fontStyle", Font.BOLD);
-		col0style.setHorizontalAlign("RIGHT");
-		col0style.putAttribute("minwidth", "true");
-
-		jswStyle col1style = tablestyles.makeStyle("col_1");
-		col1style.putAttribute("fontStyle", Font.BOLD);
-		col1style.setHorizontalAlign("LEFT");
-		col1style.putAttribute("minwidth", "true");
-		col1style.putAttribute("width", "10");
-		col1style.putAttribute("horizontalAlignment", "LEFT");
-
-		jswStyle col2style = tablestyles.makeStyle("col_2");
-		// col2style.putAttribute("backgroundColor", "green");
-		col2style.putAttribute("horizontalAlignment", "LEFT");
-		col2style.putAttribute("minwidth", "true");
-		col2style.putAttribute("width", "10");
-
-		jswStyle col4style = tablestyles.makeStyle("col_4");
-		// col4style.putAttribute("backgroundColor", "green");
-		col4style.putAttribute("horizontalAlignment", "LEFT");
-		col4style.putAttribute("minwidth", "true");
-
-		jswStyle col5style = tablestyles.makeStyle("col_5");
-		// col5style.putAttribute("backgroundColor", "green");
-		col5style.putAttribute("horizontalAlignment", "LEFT");
-		col5style.putAttribute("minwidth", "true");
-
-		jswStyle col6style = tablestyles.makeStyle("col_6");
-		// col6style.putAttribute("backgroundColor", "green");
-		col6style.putAttribute("horizontalAlignment", "LEFT");
-		col6style.putAttribute("minwidth", "true");
-
-		return tablestyles;
 	}
 
 	private mcContacts makeLinkedFromList(mcContact selcontact, String selector)
@@ -800,32 +707,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		{
 			return null;
 		}
-	}
-
-	private jswStyles makeLinkTableStyles()
-	{
-		jswStyles tablestyles = mcdb.tablestyles;
-
-
-		jswStyle col0style = tablestyles.makeStyle("col_0");
-		col0style.putAttribute("fontStyle", Font.BOLD);
-		col0style.setHorizontalAlign("RIGHT");
-		col0style.putAttribute("minwidth", "true");
-
-		jswStyle col1style = tablestyles.makeStyle("col_1");
-		col1style.putAttribute("fontStyle", Font.BOLD);
-		col1style.setHorizontalAlign("LEFT");
-		col1style.putAttribute("horizontalAlignment", "LEFT");
-		
-		jswStyle col2style = tablestyles.makeStyle("col_2");
-		// col2style.putAttribute("horizontalAlignment", "RIGHT");
-		// col2style.putAttribute("minwidth", "true")
-
-		jswStyle col3style = tablestyles.makeStyle("col_3");
-		col3style.putAttribute("horizontalAlignment", "RIGHT");
-		col3style.putAttribute("minwidth", "true");
-
-		return tablestyles;
 	}
 
 	private mcContacts makeLinkToList(mcContact selcontact, String selector)
@@ -1107,7 +988,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	private void printVcard()
 	{
-
 		String name = selcontact.getName("sn fn");
 		name = name.replace(" ", "");
 		String date = mcDateDataType.getNow("_yyyyMMdd");
@@ -1120,7 +1000,6 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		fc.setFileFilter(filter);
 		fc.setSelectedFile(vfile);
 		int returnVal = fc.showSaveDialog(this);
-
 		if (returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			String vout = selcontact.toVcard();
@@ -1150,6 +1029,133 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		}
 	}
 
+	private jswStyles StylesMakeAttributeTable()
+	{	
+		jswStyles tablestyles = jswStyles.clone("AttributeTableStyles",mcdb.tablestyles);
+		
+		jswStyle rowstyle = tablestyles.makeStyle("row");
+		//col0style.putAttribute("fontStyle", Font.BOLD);
+		//col0style.setHorizontalAlign("RIGHT");
+		rowstyle.putAttribute("height", "20");
+		
+		jswStyle cellstyle = tablestyles.makeStyle("cell");
+		//col0style.putAttribute("fontStyle", Font.BOLD);
+		//col0style.setHorizontalAlign("RIGHT");
+		cellstyle.putAttribute("height", "20");
+		cellstyle.putAttribute("cellbordercolor", "red");
+		cellstyle.putAttribute("cellborderwidth", "1");
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.PLAIN);
+		col1style.setHorizontalAlign("LEFT");
+
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		col2style.putAttribute("horizontalAlignment", "LEFT");
+		col2style.putAttribute("maxwidth", "true");
+		col2style.putAttribute("backgroundColor", "yellow");
+
+		jswStyle col3style = tablestyles.makeStyle("col_3");
+		col3style.setHorizontalAlign("RIGHT");
+		
+		return tablestyles;
+	}
+
+	private jswStyles StylesMakeCorrespondence()
+	{
+		jswStyles tablestyles = jswStyles.clone("CorrespondanceStyles",mcdb.tablestyles);
+
+		jswStyle tablestyle = tablestyles.makeStyle("xtable");
+		tablestyle.putAttribute("backgroundColor", "#C0C0C0");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+
+		jswStyle cellstyle = tablestyles.makeStyle("xcell");
+		cellstyle.putAttribute("backgroundColor", "#C0C0C0");
+		cellstyle.putAttribute("foregroundColor", "Blue");
+		cellstyle.putAttribute("borderWidth", "1");
+		cellstyle.putAttribute("borderColor", "white");
+		cellstyle.setHorizontalAlign("LEFT");
+		cellstyle.putAttribute("fontsize", "14");
+
+		jswStyle cellcstyle = tablestyles.makeStyle("xcellcontent");
+		cellcstyle.putAttribute("backgroundColor", "transparent");
+		cellcstyle.putAttribute("foregroundColor", "Red");
+		cellcstyle.setHorizontalAlign("LEFT");
+		cellcstyle.putAttribute("fontsize", "11");
+		
+		jswStyle rowstyle = tablestyles.makeStyle("row");
+		//col0style.putAttribute("fontStyle", Font.BOLD);
+		//col0style.setHorizontalAlign("RIGHT");
+		rowstyle.putAttribute("height", "50");
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.setHorizontalAlign("LEFT");
+		col1style.putAttribute("minwidth", "true");
+		col1style.putAttribute("width", "10");
+		col1style.putAttribute("horizontalAlignment", "LEFT");
+
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		// col2style.putAttribute("backgroundColor", "green");
+		col2style.putAttribute("horizontalAlignment", "LEFT");
+		col2style.putAttribute("minwidth", "true");
+		col2style.putAttribute("width", "10");
+
+		jswStyle col4style = tablestyles.makeStyle("col_4");
+		// col4style.putAttribute("backgroundColor", "green");
+		col4style.putAttribute("horizontalAlignment", "LEFT");
+		col4style.putAttribute("minwidth", "true");
+
+		jswStyle col5style = tablestyles.makeStyle("col_5");
+		// col5style.putAttribute("backgroundColor", "green");
+		col5style.putAttribute("horizontalAlignment", "LEFT");
+		col5style.putAttribute("minwidth", "true");
+
+		jswStyle col6style = tablestyles.makeStyle("col_6");
+		// col6style.putAttribute("backgroundColor", "green");
+		col6style.putAttribute("horizontalAlignment", "LEFT");
+		col6style.putAttribute("minwidth", "true");
+
+		return tablestyles;
+	}
+
+	private jswStyles StylesMakeLinkTable()
+	{
+		jswStyles tablestyles = jswStyles.clone("LinkTableStyles",mcdb.tablestyles);
+
+
+		jswStyle col0style = tablestyles.makeStyle("col_0");
+		col0style.putAttribute("fontStyle", Font.BOLD);
+		col0style.setHorizontalAlign("RIGHT");
+		col0style.putAttribute("minwidth", "true");
+
+		jswStyle col1style = tablestyles.makeStyle("col_1");
+		col1style.putAttribute("fontStyle", Font.BOLD);
+		col1style.setHorizontalAlign("LEFT");
+		col1style.putAttribute("horizontalAlignment", "LEFT");
+		
+		jswStyle col2style = tablestyles.makeStyle("col_2");
+		// col2style.putAttribute("horizontalAlignment", "RIGHT");
+		// col2style.putAttribute("minwidth", "true")
+
+		jswStyle col3style = tablestyles.makeStyle("col_3");
+		col3style.putAttribute("horizontalAlignment", "RIGHT");
+		col3style.putAttribute("minwidth", "true");
+
+		return tablestyles;
+	}
+
 	String templateselector()
 	{
 		jswDropDownBox templatelist = new jswDropDownBox(this,"template");
@@ -1172,123 +1178,5 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			return null;
 	}
 
-/*	private jswVerticalPanel xmakeLinkedFromPanel(mcContact selcontact,
-			String selector, String title)
-	{
 
-		jswVerticalPanel frame = new jswVerticalPanel();
-		jswLabel memberheading = new jswLabel("+" + title);
-		frame.add(memberheading);
-
-		jswTable memberpanel = new jswTable(selector, linktablestyles);
-
-		if (selcontact != null)
-		{
-			mcAttributes getlinked = (new mcAttributes())
-					.FindByAttributeValue(selector, selcontact.getTID());
-			int row = 0;
-			for (Entry<String, mcAttribute> anentry : getlinked.entrySet())
-			{
-
-				// String attkey = anentry.getKey();
-				mcAttribute anattribute = anentry.getValue();
-				int cid = anattribute.getCid();
-				mcContact linkedcontact = mcdb.selbox.FindbyID(cid);
-
-				// if(selcontact.hasAttributeByValue(linkedcontact.getTID()))
-				// continue;
-
-				if (linkedcontact != null)
-				{
-					String value = linkedcontact.getTID();
-					jswLabel alabel = new jswLabel(value);
-					memberpanel.addCell(alabel, row, 0);
-					jswLabel aqual = new jswLabel(anattribute.getQualifier());
-					memberpanel.addCell(aqual, row, 1);
-					jswButton viewcontact = new jswButton(this, "VIEW",
-							"VIEW:" + cid);
-					memberpanel.addCell(viewcontact, row, 2);
-					if (selcontact.hasAttributeByValue(linkedcontact.getTID()))
-					{
-						jswLabel arefll = new jswLabel("found");
-						memberpanel.addCell(arefll, row, 3);
-					}
-				} else
-				{
-
-					String value = "New Linked Contact";
-
-					jswLabel alabel = new jswLabel(value);
-					memberpanel.addCell(alabel, row, 0);
-					jswLabel aqual = new jswLabel(anattribute.getQualifier());
-					memberpanel.addCell(aqual, row, 1);
-					jswLabel avalue = new jswLabel(" No Link ");
-					memberpanel.addCell(avalue, row, 2);
-				}
-				row++;
-			}
-			if (row == 0)
-			{
-				return null;
-			} else
-			{
-				frame.add(memberpanel);
-				return frame;
-			}
-		} else
-		{
-			return null;
-		}
-	}
-
-	private jswVerticalPanel xmakeLinkToPanel(mcContact selcontact,
-			mcContacts list, String title)
-	{
-
-		jswVerticalPanel frame = new jswVerticalPanel();
-		jswLabel memberheading = new jswLabel(title);
-		frame.add(memberheading);
-		jswTable memberpanel = new jswTable(title, linktablestyles);
-
-		if (list != null)
-		{
-			int row = 0;
-
-			for (Entry<String, mcContact> anentry : list.getContactlist()
-					.entrySet())
-			{
-
-				mcContact acontact = anentry.getValue();
-
-				if (acontact != null)
-				{
-					jswLabel alabel = new jswLabel(acontact.getTID());
-					memberpanel.addCell(alabel, row, 0);
-
-					jswButton viewcontact = new jswButton(this, "VIEW",
-							"VIEW:" + acontact.getIDstr());
-					jswTable memberattributes = makeAttributePanel(acontact,
-							"S");
-
-					memberpanel.addCell(memberattributes, " FILLW ", row, 1);
-					memberpanel.addCell(viewcontact, row, 2);
-
-					row++;
-				}
-			}
-
-			if (row == 0)
-			{
-				return null;
-			} else
-			{
-				frame.add(memberpanel);
-				return frame;
-			}
-		} else
-		{
-			return null;
-		}
-
-	}*/
 }
