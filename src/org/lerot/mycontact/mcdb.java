@@ -23,15 +23,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
-import org.lerot.gui.widgets.jswContainer;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswPanel;
-import org.lerot.gui.widgets.jswPushButtonset;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswStyles;
-import org.lerot.gui.widgets.jswVerticalLayout;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswContainer;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswPanel;
+import org.lerot.mywidgets.jswPushButtonset;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
+import org.lerot.mywidgets.jswVerticalLayout;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.gui.ToolsPanel;
 import org.lerot.mycontact.gui.browsePanel;
 import org.lerot.mycontact.gui.editPanel;
@@ -78,7 +78,7 @@ public class mcdb extends JFrame implements ActionListener
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
-	static String version = "V 15.0";
+	static String version = "V 22.0";
 	public static selectorBox selbox;
 	public static String letterfolder;
 	public static String docsfolder;
@@ -180,8 +180,7 @@ public class mcdb extends JFrame implements ActionListener
 			docsfolder = "C:/Users/" + user + "/Documents/correspondance";
 		} else
 		{
-			dotcontacts = "/home/" + user + "/.mccontacts/";
-			
+			dotcontacts = "/home/" + user + "/.mccontacts/";			
 			desktop = "/home/" + user + "/Desktop/";
 			letterfolder =  desktop+ "Labels and Letters/";
 			docsfolder ="/home/" + user + "/Documents/correspondance";
@@ -206,7 +205,6 @@ public class mcdb extends JFrame implements ActionListener
 		budir = props.getProperty("backupdirectory", dotcontacts+"/backup");
 		docs = props.getProperty("docs", "Documents/correspondance/");
 		currentcon = new mcDataSource(dotcontacts + dbsource);
-
 	
 		topgui = this;
 		addWindowListener(new WindowAdapter()
@@ -223,24 +221,23 @@ public class mcdb extends JFrame implements ActionListener
 		bigpanel = new jswVerticalPanel("bigpanel",true);
 		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
 		bigpanel.setName("bigpanel");
-		bigpanel.setGlobalStyles(panelstyles);
+	//	bigpanel.setGlobalStyles(panelstyles);
 		bigpanel.setPreferredSize(new Dimension(800,500));
 		bigpanel.setSize(new Dimension(800,500));
 		bigpanel.setMinimumSize(new Dimension(800,500));
 		getContentPane().add(bigpanel);
 		jswHorizontalPanel optionBar = new jswHorizontalPanel();
 		buttonset = new jswPushButtonset(this, "mode", false, false);
-		//buttonset.setPreferredSize(new Dimension(200,40));
-		buttonset.setBorder(jswStyle.setLineBorder(Color.red, 1));
-		buttonset.setInsets(1);
+		buttonset.setBorder(jswStyle.makeLineBorder(Color.red, 1));
+		//buttonset.setInsets(1);
 		buttonset.addNewOption("Browse");
 		buttonset.addNewOption("Search");
 		buttonset.addNewOption("Edit");
 		buttonset.addNewOption("Tools");
 		buttonset.setSelected("Browse");
-		buttonset.doStyling();
+		//buttonset.doStyling();
 		optionBar.add(" ",buttonset);
-		optionBar.setBorder(jswStyles.makeLineBorder(Color.pink, 1));
+		optionBar.setBorder(jswStyle.makeLineBorder(Color.pink, 1));
 		//optionBar.setMaximumSize(new Dimension(800,100));
 		bigpanel.add(" ",optionBar);
 		jswHorizontalPanel sourceBar = new jswHorizontalPanel();
@@ -248,15 +245,15 @@ public class mcdb extends JFrame implements ActionListener
 		sourceBar.add(title);
 		source= new jswLabel(dbsource);
 		sourceBar.add(source);
-		sourceBar.setBorder(jswStyles.makeLineBorder(Color.GREEN, 1));
+		sourceBar.setBorder(jswStyle.makeLineBorder(Color.GREEN, 1));
 		bigpanel.add(" height=40 ",sourceBar);
 		selbox = new selectorBox(this, this);
 		bigpanel.add("FILLW", selbox);
 		mainpanel = new jswVerticalPanel("mainpanel",false);
 		bigpanel.add(" FILLH ", mainpanel);
-		bigpanel.setBorder(jswStyles.makeLineBorder(Color.GRAY ,3));
+		bigpanel.setBorder(jswStyle.makeLineBorder(Color.GRAY ,3));
 		abrowsepanel = new browsePanel();
-		//abrowsepanel.setBorder(jswStyles.makeLineBorder(Color.RED ,5));
+		//abrowsepanel.setBorder(jswStyle.makeLineBorder(Color.RED ,5));
 		//abrowsepanel.setBackground(Color.yellow);
 		mainpanel.add(" FILLH ", abrowsepanel);
 		asearchpanel = new searchPanel();
@@ -299,12 +296,14 @@ public class mcdb extends JFrame implements ActionListener
 		System.out.println(os + " " + userhome);
 		System.out.println("opening :"+ dbsource);
 		Map<String, String> mychecks = currentcon.checkmcdb();
-		mychecks.get("Valid").equalsIgnoreCase("yes");
-		mychecks.get("No of Contacts");
+		if(mychecks.get("Valid").equalsIgnoreCase("yes")) 	System.out.println("Checks ok");
+		else System.out.println("Checks NOT ok");
+		String ncon = mychecks.get("No of Contacts");
 		dbtitle = mychecks.get("Title");
 		System.out.println("title "+ dbtitle);
 		title.setText(dbtitle);
 		source.setText(" ("+dbsource+")");
+		System.out.println("No of contacts = "+ ncon);
 		alldatatypes = new mcDataTypes();
 		alldatatypes.loadTypes();
 		attributetypes = new mcAttributeTypes();
@@ -360,10 +359,12 @@ public class mcdb extends JFrame implements ActionListener
 		getContentPane().validate();
 	}
 
-	public void initiateStyles()
+	public static void initiateStyles()
 	{
-		tablestyles = jswStyles.getTableStyles();
-		
+		tablestyles = jswStyles.getDefaultStyles();
+		tablestyles.name = "table";
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("background", "red");
 		jswStyle rowstyle = tablestyles.makeStyle("row");
 		rowstyle.putAttribute("height", "10");
 		jswStyle col0style = tablestyles.makeStyle("col_0");
@@ -378,7 +379,7 @@ public class mcdb extends JFrame implements ActionListener
 		col2style.putAttribute("minwidth", "true");
 
 		panelstyles = jswStyles.getDefaultStyles();
-		
+		panelstyles.name = "panel";
 		jswStyle jswWidgetStyles = panelstyles.makeStyle("jswWidget");
 		jswWidgetStyles.putAttribute("backgroundColor","#e0dcdf");
 		jswWidgetStyles.putAttribute("boxbackgroundColor","GREEN");	

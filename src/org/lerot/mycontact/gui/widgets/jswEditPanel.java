@@ -10,7 +10,7 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import org.lerot.gui.widgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswHorizontalPanel;
 
 public class jswEditPanel extends jswHorizontalPanel implements ActionListener
 {

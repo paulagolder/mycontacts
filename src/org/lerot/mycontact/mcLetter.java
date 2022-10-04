@@ -94,10 +94,10 @@ public class mcLetter
 
 	public void saveOdt(File file) throws Exception
 	{
-		OfficeTextElement contentRoot = odf.getContentRoot();
+		/*OfficeTextElement contentRoot = odf.getContentRoot();
 		contentRoot.setAttribute("dc.title", " a long title ");
 		iteratorOverEveryVariableSet(contentRoot.getChildNodes());
-		odf.save(file);
+		odf.save(file);*/
 	}
 
 	public void setVariable(String key, String value)

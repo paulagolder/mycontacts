@@ -8,13 +8,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswPanel;
-import org.lerot.gui.widgets.jswRectLayout;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswTabbedPanel;
-import org.lerot.gui.widgets.jswVerticalLayout;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswPanel;
+import org.lerot.mywidgets.jswRectLayout;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswTabbedPanel;
+import org.lerot.mywidgets.jswVerticalLayout;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcdb;
 
 public class ToolsPanel extends jswPanel implements ActionListener,
@@ -88,28 +88,28 @@ public class ToolsPanel extends jswPanel implements ActionListener,
 		validate();
 	}
 
-	@Override
+
 	public void doStyling()
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public void doStyling(jswStyle style)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public jswStyle getStyle()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public Dimension jswGetMinimumSize()
 	{
 		// TODO Auto-generated method stub

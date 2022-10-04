@@ -10,14 +10,14 @@ import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import javax.swing.ScrollPaneConstants;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswDropDownBox;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswScrollPane;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswDropDownBox;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswScrollPane;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
@@ -49,7 +49,7 @@ public class editListPanel extends jswVerticalPanel implements ActionListener
 		jswHorizontalPanel progressbar = new jswHorizontalPanel("progressbar",
 				false);
 		this.add(" FILLW ", progressbar);
-		taglistbox = new jswDropDownBox(this,"tags", "selectlist");
+		taglistbox = new jswDropDownBox((ActionListener)this,"tags", "selectlist");
 	
 		mctagList tags = new mctagList();
 		tags.reloadTags();
@@ -140,6 +140,8 @@ public class editListPanel extends jswVerticalPanel implements ActionListener
 		selectedcontacts = mcdb.selbox.searchTag(tag);
 		atttable.removeAll();
 		int i = 0;
+		if(selectedcontacts != null)
+		{
 		for (Entry<String, mcContact> contactentry : selectedcontacts
 				.entrySet())
 		{
@@ -157,6 +159,7 @@ public class editListPanel extends jswVerticalPanel implements ActionListener
 			// System.out.println(" adding "+ ct);
 		}
 		atttable.repaint();
+		}
 
 	}
 

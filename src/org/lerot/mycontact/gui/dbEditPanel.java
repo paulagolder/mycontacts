@@ -16,13 +16,13 @@ import javax.swing.ButtonGroup;
 import javax.swing.JComponent;
 import javax.swing.JRadioButton;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswTextBox;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswTextBox;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcDataSource;
 import org.lerot.mycontact.mcdb;
 

@@ -10,16 +10,16 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswCheckbox;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswScrollPane;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswStyles;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswCheckbox;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswScrollPane;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
 import org.lerot.mycontact.mctagList;
@@ -197,7 +197,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	public manageTagsPanel()
 	{
-		super("managetagspanel");
+		super("managetagspanel",false);
 		tagstablestyles = makeTagsTableStyles();
 		tagList = new mctagList();
 		jswHorizontalPanel header = new jswHorizontalPanel();
@@ -289,7 +289,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 
 	private jswStyles makeTagsTableStyles()
 	{
-		jswStyles tablestyles = jswStyles.getTableStyles();
+		jswStyles tablestyles = mcdb.tablestyles;
 
 		jswStyle tablestyle = tablestyles.makeStyle("table");
 		tablestyle.putAttribute("backgroundColor", "White");
@@ -328,7 +328,6 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 		col2style.putAttribute("minwidth", "true");
 		tablestyles.copyStyle("col_0", "col_3");
 		tablestyles.copyStyle("col_1", "col_4");
-		;
 		tablestyles.copyStyle("col_2", "col_5");
 		tablestyles.copyStyle("col_0", "col_6");
 		tablestyles.copyStyle("col_1", "col_7");

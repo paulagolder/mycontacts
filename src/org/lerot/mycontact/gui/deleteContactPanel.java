@@ -6,13 +6,13 @@ import java.util.Vector;
 
 import javax.swing.ButtonGroup;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswCheckbox;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswCheckbox;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;

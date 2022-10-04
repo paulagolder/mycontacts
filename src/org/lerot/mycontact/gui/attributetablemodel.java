@@ -16,44 +16,47 @@ public class attributetablemodel extends AbstractTableModel
 	// public final Object[] longValues = { "", new Integer(20), new Float(20),
 	// new Float(20), Boolean.TRUE };
 
-	@Override
+	
+
 	public int getColumnCount()
 	{
 		return columnNames.length;
 	}
 
-	@Override
+
 	public int getRowCount()
 	{
 		return data.size();
 	}
 
-	@Override
+
 	public Object getValueAt(int row, int col)
 	{
-		return ((Vector<?>) data.get(row)).get(col);
+		Object value = ((Vector<?>) data.get(row)).get(col);
+		if(col==3) return (Boolean)value;
+		else return (String)value;
 	}
 
-	@Override
+
 	public String getColumnName(int col)
 	{
 		return columnNames[col];
 	}
 
-	@Override
+
 	public Class<? extends Object> getColumnClass(int c)
 	{
 		return getValueAt(0, c).getClass();
 	}
 
-	@Override
+
 	public void setValueAt(Object value, int row, int col)
 	{
 		data.get(row).setElementAt(value, col);
 		fireTableCellUpdated(row, col);
 	}
 
-	@Override
+
 	public boolean isCellEditable(int row, int col)
 	{
 		if (3 == col || 1 == col)

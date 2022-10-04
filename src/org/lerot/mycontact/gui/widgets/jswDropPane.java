@@ -39,9 +39,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import org.lerot.gui.widgets.jswPanel;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswStyles;
+import org.lerot.mywidgets.jswPanel;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcUtilities;
@@ -80,10 +80,10 @@ public class jswDropPane extends jswPanel
 			ex.printStackTrace();
 		}
 		String stylename = this.getClass().getSimpleName();		
-		containerstyles.copyOver(globalstyles);
-		style.copyOver(containerstyles.getStyle("jswContainer"));
-		style.copyOver(containerstyles.getStyle(stylename));
-		style.setStylename(stylename);
+		containerstyles.copyStyles(mcdb.panelstyles);
+		style.copyAll(containerstyles.getStyle("jswContainer"));
+		style.copyAll(containerstyles.getStyle(stylename));
+		style.setStyleName(stylename);
 		doStyling(style);
         direction = adirection;
 		setLayout(new GridBagLayout());
@@ -356,28 +356,28 @@ public class jswDropPane extends jswPanel
 		}
 	}
 
-	@Override
+
 	public void doStyling()
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public void doStyling(jswStyle style)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+
 	public jswStyle getStyle()
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
+
 	public Dimension jswGetMinimumSize()
 	{
 		// TODO Auto-generated method stub

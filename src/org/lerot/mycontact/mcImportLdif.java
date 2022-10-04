@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 
-import org.lerot.gui.widgets.jswLabel;
+import org.lerot.mywidgets.jswLabel;
 
 public class mcImportLdif extends mcImports
 {

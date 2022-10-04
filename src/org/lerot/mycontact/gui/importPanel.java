@@ -9,13 +9,13 @@ import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswCheckbox;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswImage;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswCheckbox;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswImage;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcAttributes;
 import org.lerot.mycontact.mcContact;
@@ -601,7 +601,7 @@ public class importPanel extends jswVerticalPanel implements ActionListener
 						// if (!anattribute.ignore())
 						{
 							jswLabel alabel3 = new jswLabel(quallabel);
-							alabel3.applyStyle(mcdb.panelstyles,"greenfont");
+							alabel3.applyStyles(mcdb.panelstyles,"greenfont");
 							attributepanel.addCell(alabel3, row, 0);
 							String value = anattribute.getValue();
 							if (value == null) continue;

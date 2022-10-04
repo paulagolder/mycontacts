@@ -9,16 +9,16 @@ import java.util.Map.Entry;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswPanel;
-import org.lerot.gui.widgets.jswScrollPane;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswStyles;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswPanel;
+import org.lerot.mywidgets.jswScrollPane;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
@@ -121,7 +121,7 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 		idbox.add(idpanel1);
 		
 		searchfield = new jswTextField("Search for");
-	//	searchfield.setBorder(jswStyles.makeLineBorder(Color.red, 5));
+	//	searchfield.setBorder(jswStyle.makeLineBorder(Color.red, 5));
 		if(selbox.getSearchterm()!= null && !selbox.getSearchterm().isEmpty())
 		{
 		searchfield.setText(selbox.getSearchterm());

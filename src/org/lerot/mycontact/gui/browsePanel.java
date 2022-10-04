@@ -30,21 +30,21 @@ import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.lerot.gui.widgets.TextTransfer;
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswDropDownBox;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswImage;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswPanel;
-import org.lerot.gui.widgets.jswScrollPane;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswStyles;
-import org.lerot.gui.widgets.jswTable;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswThumbwheel;
-import org.lerot.gui.widgets.jswVerticalLayout;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.TextTransfer;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswDropDownBox;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswImage;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswPanel;
+import org.lerot.mywidgets.jswScrollPane;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
+import org.lerot.mywidgets.jswTable;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswThumbwheel;
+import org.lerot.mywidgets.jswVerticalLayout;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcAttributeType;
 import org.lerot.mycontact.mcAttributeTypes;
@@ -57,6 +57,7 @@ import org.lerot.mycontact.mcLetter;
 //import org.lerot.mycontact.mcMember;
 import org.lerot.mycontact.mcPDF;
 import org.lerot.mycontact.mcdb;
+import org.lerot.mycontact.gui.widgets.jswDropDownContactBox;
 import org.lerot.mycontact.gui.widgets.jswDropPane;
 
 public class browsePanel extends jswVerticalPanel implements ActionListener
@@ -252,7 +253,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			int lettkey = Integer.parseInt(action.substring(9));
 			mcCorrespondance aletter = new mcCorrespondance(lettkey);
 			aletter.getLetter(lettkey);
-			aletter.setStatus(statuseditbox.getSelected());
+			aletter.setStatus(statuseditbox.getSelectedValue());
 			aletter.setSubject(subjecteditbox.getText());
 			aletter.setDate(dateeditbox.getText());
 			aletter.saveLetter();
@@ -358,7 +359,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 								// formatted
 								// value
 								jswLabel slabel = new jswLabel(value);
-								slabel.setBorder(jswStyles.makeLineBorder(Color.blue, 2));
+								slabel.setBorder(jswStyle.makeLineBorder(Color.blue, 2));
 								// slabel.getLabel().setBorder(setLineBorder(Color.pink,
 								// 2));
 								slabel.getLabel().setBackground(Color.green);
@@ -455,7 +456,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			jswLabel idpanel2 = new jswLabel(" ");		
 			idbox.add(idpanel2);
 			idpanel2.setText(selcontact.getName());
-			idpanel2.doStyling();
+			//idpanel2.doStyling();
+			idpanel2.applyStyles(this);
 			jswButton vcardexport = new jswButton(this, "VCard");
 			idbox.add("RIGHT", vcardexport);
 			selcontact.fillContact();
@@ -554,10 +556,10 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			jswDropPane correspondancereceived = new jswDropPane("received");
 			bottom.add("  WIDTH=100 FILLW ", correspondancereceived);
 			correspondancereceived
-					.setBorder(jswStyles.makeLineBorder(Color.YELLOW, 3));
-			makenote.setBorder(jswStyles.makeLineBorder(Color.RED, 3));
+					.setBorder(jswStyle.makeLineBorder(Color.YELLOW, 3));
+			makenote.setBorder(jswStyle.makeLineBorder(Color.RED, 3));
 			correspondancesent
-					.setBorder(jswStyles.makeLineBorder(Color.GREEN, 3));
+					.setBorder(jswStyle.makeLineBorder(Color.GREEN, 3));
 			mainpanel.add(" MAXHEIGHT=100 ", bottom);
 		}
 
@@ -875,7 +877,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			optionPane.add(panel);
 			dialog = optionPane.createDialog(null, "Print Label");
 			dialog.setVisible(true);
-			int pane = (int) optionPane.getValue();
+			int pane = (Integer) optionPane.getValue();
 			if (pane == 0)
 			{
 				int sp = startpos.getValue();
@@ -1033,6 +1035,12 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	{	
 		jswStyles tablestyles = jswStyles.clone("AttributeTableStyles",mcdb.tablestyles);
 		
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("backgroundColor", "#C0C0C0");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
+		
 		jswStyle rowstyle = tablestyles.makeStyle("row");
 		//col0style.putAttribute("fontStyle", Font.BOLD);
 		//col0style.setHorizontalAlign("RIGHT");
@@ -1057,7 +1065,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		jswStyle col2style = tablestyles.makeStyle("col_2");
 		col2style.putAttribute("horizontalAlignment", "LEFT");
 		col2style.putAttribute("maxwidth", "true");
-		col2style.putAttribute("backgroundColor", "yellow");
+		//col2style.putAttribute("backgroundColor", "yellow");
 
 		jswStyle col3style = tablestyles.makeStyle("col_3");
 		col3style.setHorizontalAlign("RIGHT");
@@ -1134,6 +1142,11 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 	{
 		jswStyles tablestyles = jswStyles.clone("LinkTableStyles",mcdb.tablestyles);
 
+		jswStyle tablestyle = tablestyles.makeStyle("table");
+		tablestyle.putAttribute("backgroundColor", "#C0C0C0");
+		tablestyle.putAttribute("foregroundColor", "Green");
+		tablestyle.putAttribute("borderWidth", "2");
+		tablestyle.putAttribute("borderColor", "blue");
 
 		jswStyle col0style = tablestyles.makeStyle("col_0");
 		col0style.putAttribute("fontStyle", Font.BOLD);
@@ -1158,7 +1171,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 	String templateselector()
 	{
-		jswDropDownBox templatelist = new jswDropDownBox(this,"template");
+		jswDropDownBox templatelist = new jswDropDownBox((ActionListener)this,"template");
 		for (String text : mcLetter.getTemplateList())
 		{
 			templatelist.addElement(text);
@@ -1171,7 +1184,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		optionPane.add(templatelist);
 		dialog = optionPane.createDialog(null, "Select Template");
 		dialog.setVisible(true);
-		int pane = (int) optionPane.getValue();
+		int pane = (Integer) optionPane.getValue();
 		if (pane == 0)
 			return templatelist.getSelectedValue();
 		else

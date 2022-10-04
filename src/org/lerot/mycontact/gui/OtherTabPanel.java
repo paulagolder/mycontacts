@@ -2,10 +2,10 @@ package org.lerot.mycontact.gui;
 
 import java.awt.Dimension;
 
-import org.lerot.gui.widgets.jswRectLayout;
-import org.lerot.gui.widgets.jswTabLayout;
-import org.lerot.gui.widgets.jswTabbedPanel;
-import org.lerot.gui.widgets.jswVerticalLayout;
+import org.lerot.mywidgets.jswRectLayout;
+//import org.lerot.mywidgets.jswTabLayout;
+import org.lerot.mywidgets.jswTabbedPanel;
+import org.lerot.mywidgets.jswVerticalLayout;
 
 public class OtherTabPanel extends jswTabbedPanel
 {

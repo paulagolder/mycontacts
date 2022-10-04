@@ -13,8 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.plaf.basic.BasicComboBoxRenderer;
 
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswStyles;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
 
@@ -56,6 +57,15 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		else return true;
 	}
 	
+	public jswDropDownContactBox(ActionListener c,String inlabel)
+	{
+		this(inlabel,false,false,2);
+		this.addActionListener(c,inlabel);
+	}
+	
+	
+	
+
 	public jswDropDownContactBox(String inLabel, boolean haslabel,
 			boolean hasborder, int width)
 	{
@@ -73,13 +83,13 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 		setName(inLabel);
 		if (hasborder)
 		{
-			if (haslabel) setBorder(jswStyles.makeLineBorder());
+			if (haslabel) setBorder(jswStyle.makeLineBorder());
 			else
-				setBorder(jswStyles.makecborder(inLabel));
+				setBorder(jswStyle.makecborder(inLabel));
 		} else
-			setBorder(jswStyles.makeborder());
+			setBorder(jswStyle.makeborder());
 		add("FILLW", contactddbox);
-		doStyling();
+		//doStyling();
 	}
 
 	public void addActionListener(ActionListener c)
@@ -255,6 +265,12 @@ public class jswDropDownContactBox extends jswHorizontalPanel
 			 }
 		 }
 		return null;
+	}
+
+	public void addElement(String text)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

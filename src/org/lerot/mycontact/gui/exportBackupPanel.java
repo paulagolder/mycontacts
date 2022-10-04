@@ -14,14 +14,14 @@ import javax.swing.JFileChooser;
 import javax.swing.JRadioButton;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.lerot.gui.widgets.jswButton;
-import org.lerot.gui.widgets.jswDropDownBox;
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswLabel;
-import org.lerot.gui.widgets.jswOption;
-import org.lerot.gui.widgets.jswOptionset;
-import org.lerot.gui.widgets.jswTextField;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswButton;
+import org.lerot.mywidgets.jswDropDownBox;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswLabel;
+import org.lerot.mywidgets.jswOption;
+import org.lerot.mywidgets.jswOptionset;
+import org.lerot.mywidgets.jswTextField;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
@@ -67,16 +67,16 @@ public class exportBackupPanel extends jswVerticalPanel
 		header.add(" FILLW ", heading);
 		this.add(header);
 		jswHorizontalPanel filterbar = new jswHorizontalPanel();
-		optionset = new jswOptionset(this,"source", false);
+		optionset = new jswOptionset("source", false,this);
 		allcontacts = optionset
-				.addNewOption("All Contacts " + mcdb.selbox.countAll(), false);
+				.addNewOption("All Contacts " + mcdb.selbox.countAll(), false).getButton();
 		//allcontacts.setTag("all");
 		browsecontacts = optionset.addNewOption(
 				"Browse Contacts " + mcdb.selbox.getBrowsecontactlist().size(),
-				false);
+				false).getButton();
 		//browsecontacts.setTag("browse");
 		selectedcontacts = optionset.addNewOption("Selected Contacts "
-				+ mcdb.selbox.getSearchResultList().size(), false);
+				+ mcdb.selbox.getSearchResultList().size(), false).getButton();
 		//selectedcontacts.setTag("selected");
 		filterbar.add(" LEFT ", allcontacts);
 		filterbar.add(" MIDDLE ", browsecontacts);

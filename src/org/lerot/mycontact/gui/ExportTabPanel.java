@@ -1,7 +1,6 @@
 package org.lerot.mycontact.gui;
 
-import org.lerot.gui.widgets.jswTabbedPanel;
-import org.lerot.gui.widgets.jswVerticalLayout;
+import org.lerot.mywidgets.jswTabbedPanel;
 
 public class ExportTabPanel extends jswTabbedPanel
 {
@@ -16,8 +15,8 @@ public class ExportTabPanel extends jswTabbedPanel
 		//setLayout(new jswVerticalLayout());
 		exportpanel1 = new exportPanel();
 		addTab("Export Contacts", exportpanel1);
-		labelpanel2 = new labelprintPanel();
-		addTab("Print Labels", labelpanel2);
+	/*	labelpanel2 = new labelprintPanel();
+		addTab("Print Labels", labelpanel2);*/ 
 		setSelectedComponent(exportpanel1);
 
 	}

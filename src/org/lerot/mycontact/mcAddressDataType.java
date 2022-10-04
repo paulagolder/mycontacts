@@ -345,7 +345,7 @@ public class mcAddressDataType extends mcKeyValueDataType
 	{
 		try
 		{
-			HashMap<String, Vector<String>> addlist = new HashMap<String, Vector<String>>();
+			/*HashMap<String, Vector<String>> addlist = new HashMap<String, Vector<String>>();
 			SAXReader reader = new SAXReader();
 			Document doc = reader
 					.read(mcdb.topgui.dotcontacts + "/addressTemplates.xml");
@@ -361,7 +361,7 @@ public class mcAddressDataType extends mcKeyValueDataType
 				}
 				addlist.put(key, vlines);
 			}
-			return addlist;
+			return addlist;*/
 
 		} catch (Exception e)
 		{

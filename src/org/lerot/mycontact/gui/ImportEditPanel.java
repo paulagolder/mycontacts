@@ -9,13 +9,13 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.lerot.gui.widgets.jswButton;
+import org.lerot.mywidgets.jswButton;
 
-import org.lerot.gui.widgets.jswHorizontalPanel;
-import org.lerot.gui.widgets.jswOptionset;
-import org.lerot.gui.widgets.jswStyle;
-import org.lerot.gui.widgets.jswStyles;
-import org.lerot.gui.widgets.jswVerticalPanel;
+import org.lerot.mywidgets.jswHorizontalPanel;
+import org.lerot.mywidgets.jswOptionset;
+import org.lerot.mywidgets.jswStyle;
+import org.lerot.mywidgets.jswStyles;
+import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcdb;
@@ -51,7 +51,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 			int ndel = 0;
 			for (int k = 0; k < nrows; k++)
 			{
-				boolean isselected = (boolean) tablemodel.getValueAt(k, 3);
+				boolean isselected = (Boolean) tablemodel.getValueAt(k, 3);
 				if (isselected)
 				{
 					System.out.println("deleteing"
@@ -88,7 +88,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 			int ndel = 0;
 			for (int k = 0; k < nrows; k++)
 			{
-				boolean isselected = (boolean) tablemodel.getValueAt(k, 3);
+				boolean isselected = (Boolean) tablemodel.getValueAt(k, 3);
 				if (isselected)
 				{
 					ndel++;
@@ -102,7 +102,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 			{
 				for (int k = 0; k < nrows; k++)
 				{
-					boolean isselected = (boolean) tablemodel.getValueAt(k, 3);
+					boolean isselected = (Boolean) tablemodel.getValueAt(k, 3);
 					if (isselected)
 					{
 						String edattkey = attributekey.get(k);
@@ -216,7 +216,7 @@ public class ImportEditPanel extends jswVerticalPanel implements ActionListener
 		thispanel.setBackground(new Color(0, 0, 0, 0));
 		jswHorizontalPanel idbox = new jswHorizontalPanel("idbox", false);
 		thispanel.add(idbox);
-		optset = new jswOptionset(this,"source",true);
+		optset = new jswOptionset("source",true,this);
 
 		jswHorizontalPanel actions = new jswHorizontalPanel("actions", false);
 		thispanel.add(actions);

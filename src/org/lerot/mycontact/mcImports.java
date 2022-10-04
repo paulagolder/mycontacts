@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.lerot.gui.widgets.jswLabel;
+import org.lerot.mywidgets.jswLabel;
 
 import java.util.Set;
 import java.util.Vector;

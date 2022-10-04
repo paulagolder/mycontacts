@@ -18,7 +18,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.lerot.gui.widgets.jswCheckbox;
+import org.lerot.mywidgets.jswCheckbox;
 
 public class mcContacts extends mcDataObject
 {
@@ -1147,6 +1147,7 @@ public class mcContacts extends mcDataObject
 				}
 				n++;
 			}
+			System.out.println("loaded "+n+" contacts");
 	}
 	
 	public  static mcContact retrieveContact(int id)
