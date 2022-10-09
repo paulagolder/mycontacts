@@ -5,9 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -559,7 +561,15 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 	{
 		//kind = ct.getAttribute("kind");
 		//kind = ct.getAttribute("kind");
-		TID = ct.getAttribute("tid");
+		TID = ct.getAttribute("id");
+		String updatetext = ct.getAttribute("updated");
+		try {
+		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+		    Date parsedDate = dateFormat.parse( updatetext);
+		    update = new java.sql.Timestamp(parsedDate.getTime());
+		} catch(Exception e) { 
+			update=null;
+		}
 		setCID(contactnumber);
 	
 		NodeList nl = ct.getChildNodes();
@@ -669,7 +679,12 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 					{
 						String maupdate = matchedatt.getUpdate();
 						String aniupdate = aniattribute.getUpdate();
-						if(maupdate.compareTo(aniupdate)<0)
+						if(aniupdate == null && maupdate != null)
+						{
+							matchedatt.updateAttribute(aniattribute);
+							updates++;
+						}
+						else if(maupdate.compareTo(aniupdate)<0)
 						{
 						matchedatt.updateAttribute(aniattribute);
 						updates++;

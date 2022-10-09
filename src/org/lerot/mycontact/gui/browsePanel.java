@@ -317,15 +317,14 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 				attributes = selcontact.getAttributes();
 			}
 			int row = 0;
-			mcAttributeTypes attributetypes = mcdb.topgui.attributetypes;
-			if (attributetypes == null)
+		//	mcAttributeTypes attributetypes = mcAttributeTypes;
+			if (mcAttributeTypes.getAll() == null)
 			{
 				attributepanel.addCell(new jswLabel("no attributes"), 0, 1);
 
 			}
 			int attcount = 0;
-			for (Entry<String, mcAttributeType> anentry : attributetypes
-					.entrySet())
+			for (Entry<String, mcAttributeType> anentry : mcAttributeTypes.entrySet())
 			{
 				String attkey = anentry.getKey();
 				mcAttributeType attype = anentry.getValue();
@@ -859,7 +858,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			for (Entry<String, Map<String, String>> entry : mcdb.labeltemplates
 					.entrySet())
 			{
-				pagelayout.addElement(entry.getKey());
+				pagelayout.addItem(entry.getKey());
 			}
 			jswThumbwheel startpos = new jswThumbwheel("Starting Position", 1,
 					10);
@@ -1174,7 +1173,7 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 		jswDropDownBox templatelist = new jswDropDownBox((ActionListener)this,"template");
 		for (String text : mcLetter.getTemplateList())
 		{
-			templatelist.addElement(text);
+			templatelist.addItem(text);
 		}
 		JDialog dialog = null;
 		JOptionPane optionPane = new JOptionPane();

@@ -2,6 +2,7 @@ package org.lerot.mycontact;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -40,7 +41,8 @@ public class mcImportXML extends mcImports
 		}
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		LinkedHashMap<String, mcImportexception> exceptions = new LinkedHashMap<String, mcImportexception>();
-
+		mcAttribute anattribute = new mcAttribute(0);
+		Vector<String> attkeylist = anattribute .dbloadAttributeKeyList();
 		try
 		{
 			DocumentBuilder db = dbf.newDocumentBuilder();
@@ -58,6 +60,8 @@ public class mcImportXML extends mcImports
 					Element el = (Element) nl.item(i);
 					mcContact icontact = new mcContact();
 					icontact.loadXML(el, i);
+					//String ct = icontact.toXML(attkeylist);
+					//System.out.println(" imported contact :" + ct);
 					mcContact existingcontact = mcdb.selbox.getAllcontactlist()
 							.FindbyTID(icontact.getTID());
 					if (existingcontact == null)
@@ -65,15 +69,15 @@ public class mcImportXML extends mcImports
 						System.out.println(" not found  contact :" + icontact);
 					} else
 					{
-						if(existingcontact.getID()==0)
+						//if(existingcontact.getID()==0)
 						{
 							System.out.println(" found "+existingcontact);
 						}
 						
 						 if (icontact.matches(existingcontact))
 						{
-							//System.out.println(" importing contact :"
-							// +icontact+" no changes");
+							System.out.println(" importing contact :"
+							 +icontact+" no changes");
 						} else
 						{
 							if (!test)

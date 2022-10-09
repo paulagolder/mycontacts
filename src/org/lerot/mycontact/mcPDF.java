@@ -293,7 +293,7 @@ public class mcPDF
 	{
 		try
 		{
-			/*HashMap<String, Map<String, String>> addlist = new HashMap<String, Map<String, String>>();
+			HashMap<String, Map<String, String>> addlist = new HashMap<String, Map<String, String>>();
 			SAXReader reader = new SAXReader();
 			org.dom4j.Document doc = reader
 					.read(mcdb.topgui.dotcontacts + "/labelTemplates.xml");
@@ -311,7 +311,7 @@ public class mcPDF
 				}
 				addlist.put(key, vlines);
 			}
-			return addlist;*/
+			return addlist;
 
 		} catch (Exception e)
 		{

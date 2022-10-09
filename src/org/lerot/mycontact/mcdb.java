@@ -72,9 +72,9 @@ public class mcdb extends JFrame implements ActionListener
 	public static jswStyles tablestyles;
 	public static Component browserpanel;
 	public static String certificatepath;
-	
+
 	private static final long serialVersionUID = 1L;
-	public static  boolean started = false;
+	public static boolean started = false;
 	public static boolean showborders;
 	public static String temppath;
 	public static mcdb topgui;
@@ -94,10 +94,10 @@ public class mcdb extends JFrame implements ActionListener
 		{
 		}
 		UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-	
-		 mframe = new mcdb(900, 700);
-		 mframe.setVisible(true);
-	
+
+		mframe = new mcdb(900, 700);
+		mframe.setVisible(true);
+
 		mframe.addWindowListener(new WindowAdapter()
 		{
 
@@ -109,22 +109,16 @@ public class mcdb extends JFrame implements ActionListener
 		});
 		mframe.getContentPane().setLayout(
 				new BoxLayout(mframe.getContentPane(), BoxLayout.X_AXIS));
-		//mframe.setLocation(50, 50);
-		//mframe.pack();
-	
 		Dimension actual = new Dimension();
 		actual.width = 900;
-	    actual.height = 700;
+		actual.height = 700;
 		mframe.setSize(actual);
-	
-		//mframe.pack();	
-		    Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-		    int x = (int) ((dimension.getWidth() - mframe.getWidth()) / 2);
-		    int y = (int) ((dimension.getHeight() - mframe.getHeight()) / 2);
-		    mframe.setLocation(x, y);
-		//mframe.pack();	
-		//mframe.setVisible(true);
-		    
+
+		Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+		int x = (int) ((dimension.getWidth() - mframe.getWidth()) / 2);
+		int y = (int) ((dimension.getHeight() - mframe.getHeight()) / 2);
+		mframe.setLocation(x, y);
+
 	}
 
 	public browsePanel abrowsepanel;
@@ -153,8 +147,8 @@ public class mcdb extends JFrame implements ActionListener
 	private ImageIcon jstatIcon;
 	public mcImports imported;
 	public String desktop;
-	private mcDataTypes alldatatypes;
-	public mcAttributeTypes attributetypes;
+	public static mcDataTypes alldatatypes;
+	public static mcAttributeTypes myattributetypes;
 	public Properties props;
 	public String propsfile;
 	private String dbtitle;
@@ -163,7 +157,7 @@ public class mcdb extends JFrame implements ActionListener
 	private jswLabel title;
 	private jswLabel source;
 	public String budir;
-	
+
 	public mcdb(int w, int h)
 	{
 		super("MyContacts " + version);
@@ -180,13 +174,14 @@ public class mcdb extends JFrame implements ActionListener
 			docsfolder = "C:/Users/" + user + "/Documents/correspondance";
 		} else
 		{
-			dotcontacts = "/home/" + user + "/.mccontacts/";			
+			dotcontacts = "/home/" + user + "/.mccontacts/";
 			desktop = "/home/" + user + "/Desktop/";
-			letterfolder =  desktop+ "Labels and Letters/";
-			docsfolder ="/home/" + user + "/Documents/correspondance";
+			letterfolder = desktop + "Labels and Letters/";
+			docsfolder = "/home/" + user + "/Documents/correspondance";
 		}
-		java.net.URL jstatIconURL = ClassLoader.getSystemClassLoader().getResource("mccontacts.png");
-		
+		java.net.URL jstatIconURL = ClassLoader.getSystemClassLoader()
+				.getResource("mccontacts.png");
+
 		if (jstatIconURL != null)
 		{
 			jstatIcon = new ImageIcon(jstatIconURL);
@@ -202,10 +197,10 @@ public class mcdb extends JFrame implements ActionListener
 		propsfile = dotcontacts + "properties.xml";
 		props = readProperties(propsfile);
 		dbsource = props.getProperty("database", "mcdb.sqlite");
-		budir = props.getProperty("backupdirectory", dotcontacts+"/backup");
+		budir = props.getProperty("backupdirectory", dotcontacts + "/backup");
 		docs = props.getProperty("docs", "Documents/correspondance/");
 		currentcon = new mcDataSource(dotcontacts + dbsource);
-	
+
 		topgui = this;
 		addWindowListener(new WindowAdapter()
 		{
@@ -217,44 +212,38 @@ public class mcdb extends JFrame implements ActionListener
 		});
 
 		initiateStyles();
-		
-		bigpanel = new jswVerticalPanel("bigpanel",true);
+
+		bigpanel = new jswVerticalPanel("bigpanel", true);
 		bigpanel.setBorder(BorderFactory.createLineBorder(Color.blue));
 		bigpanel.setName("bigpanel");
-	//	bigpanel.setGlobalStyles(panelstyles);
-		bigpanel.setPreferredSize(new Dimension(800,500));
-		bigpanel.setSize(new Dimension(800,500));
-		bigpanel.setMinimumSize(new Dimension(800,500));
+		bigpanel.setPreferredSize(new Dimension(800, 500));
+		bigpanel.setSize(new Dimension(800, 500));
+		bigpanel.setMinimumSize(new Dimension(800, 500));
 		getContentPane().add(bigpanel);
 		jswHorizontalPanel optionBar = new jswHorizontalPanel();
 		buttonset = new jswPushButtonset(this, "mode", false, false);
 		buttonset.setBorder(jswStyle.makeLineBorder(Color.red, 1));
-		//buttonset.setInsets(1);
 		buttonset.addNewOption("Browse");
 		buttonset.addNewOption("Search");
 		buttonset.addNewOption("Edit");
 		buttonset.addNewOption("Tools");
 		buttonset.setSelected("Browse");
-		//buttonset.doStyling();
-		optionBar.add(" ",buttonset);
+		optionBar.add(" ", buttonset);
 		optionBar.setBorder(jswStyle.makeLineBorder(Color.pink, 1));
-		//optionBar.setMaximumSize(new Dimension(800,100));
-		bigpanel.add(" ",optionBar);
+		bigpanel.add(" ", optionBar);
 		jswHorizontalPanel sourceBar = new jswHorizontalPanel();
-		title= new jswLabel(dbtitle);
+		title = new jswLabel(dbtitle);
 		sourceBar.add(title);
-		source= new jswLabel(dbsource);
+		source = new jswLabel(dbsource);
 		sourceBar.add(source);
 		sourceBar.setBorder(jswStyle.makeLineBorder(Color.GREEN, 1));
-		bigpanel.add(" height=40 ",sourceBar);
+		bigpanel.add(" height=40 ", sourceBar);
 		selbox = new selectorBox(this, this);
 		bigpanel.add("FILLW", selbox);
-		mainpanel = new jswVerticalPanel("mainpanel",false);
+		mainpanel = new jswVerticalPanel("mainpanel", false);
 		bigpanel.add(" FILLH ", mainpanel);
-		bigpanel.setBorder(jswStyle.makeLineBorder(Color.GRAY ,3));
+		bigpanel.setBorder(jswStyle.makeLineBorder(Color.GRAY, 3));
 		abrowsepanel = new browsePanel();
-		//abrowsepanel.setBorder(jswStyle.makeLineBorder(Color.RED ,5));
-		//abrowsepanel.setBackground(Color.yellow);
 		mainpanel.add(" FILLH ", abrowsepanel);
 		asearchpanel = new searchPanel();
 		asearchpanel.makesearchPanel(selbox, this);
@@ -294,24 +283,24 @@ public class mcdb extends JFrame implements ActionListener
 	public void startup()
 	{
 		System.out.println(os + " " + userhome);
-		System.out.println("opening :"+ dbsource);
+		System.out.println("opening :" + dbsource);
 		Map<String, String> mychecks = currentcon.checkmcdb();
-		if(mychecks.get("Valid").equalsIgnoreCase("yes")) 	System.out.println("Checks ok");
-		else System.out.println("Checks NOT ok");
+		if (mychecks.get("Valid").equalsIgnoreCase("yes"))
+			System.out.println("Checks ok");
+		else
+			System.out.println("Checks NOT ok");
 		String ncon = mychecks.get("No of Contacts");
 		dbtitle = mychecks.get("Title");
-		System.out.println("title "+ dbtitle);
+		System.out.println("title " + dbtitle);
 		title.setText(dbtitle);
-		source.setText(" ("+dbsource+")");
-		System.out.println("No of contacts = "+ ncon);
-		alldatatypes = new mcDataTypes();
-		alldatatypes.loadTypes();
-		attributetypes = new mcAttributeTypes();
-		attributetypes.loadAttributeTypes();
+		source.setText(" (" + dbsource + ")");
+		System.out.println("No of contacts = " + ncon);
+		mcDataTypes.loadTypes();
+		mcAttributeTypes.loadAttributeTypes();
 		selbox.setBrowseFilter("all");
 		mode = "BROWSE";
 		mcLetter.getTemplates(dotcontacts);
-		labeltemplates =  mcPDF.readTemplates();
+		labeltemplates = mcPDF.readTemplates();
 	}
 
 	public void refreshView()
@@ -351,10 +340,9 @@ public class mcdb extends JFrame implements ActionListener
 			mainpanel.add(" FILLW ", toolspanel);
 			toolspanel.repaint();
 		}
-	
+
 		mainpanel.repaint();
-		if(mframe != null)
-	  	 mframe.repaint();
+		if (mframe != null) mframe.repaint();
 		getContentPane().repaint();
 		getContentPane().validate();
 	}
@@ -381,30 +369,29 @@ public class mcdb extends JFrame implements ActionListener
 		panelstyles = jswStyles.getDefaultStyles();
 		panelstyles.name = "panel";
 		jswStyle jswWidgetStyles = panelstyles.makeStyle("jswWidget");
-		jswWidgetStyles.putAttribute("backgroundColor","#e0dcdf");
-		jswWidgetStyles.putAttribute("boxbackgroundColor","GREEN");	
+		jswWidgetStyles.putAttribute("backgroundColor", "#e0dcdf");
+		jswWidgetStyles.putAttribute("boxbackgroundColor", "GREEN");
 		jswWidgetStyles.putAttribute("foregroundColor", "Black");
 		jswWidgetStyles.putAttribute("borderWidth", "0");
 		jswWidgetStyles.putAttribute("fontsize", "14");
 		jswWidgetStyles.putAttribute("borderColor", "blue");
-		
-		
+
 		jswStyle jswLabelStyles = panelstyles.makeStyle("jswLabel");
 
 		jswStyle jswButtonStyles = panelstyles.makeStyle("jswButton");
 		jswButtonStyles.putAttribute("fontsize", "10");
 
-		jswStyle jswToggleButtonStyles = panelstyles.makeStyle("jswToggleButton");
+		jswStyle jswToggleButtonStyles = panelstyles
+				.makeStyle("jswToggleButton");
 		jswToggleButtonStyles.putAttribute("foregroundColor", "Red");
 
 		jswStyle jswTextBoxStyles = panelstyles.makeStyle("jswTextBox");
 
-		
 		jswStyle jswTextFieldStyles = panelstyles.makeStyle("jswTextField");
-		//jswTextFieldStyles.putAttribute("backgroundColor", "#e0dcdf");
+		// jswTextFieldStyles.putAttribute("backgroundColor", "#e0dcdf");
 
 		jswStyle jswDropDownBoxStyles = panelstyles.makeStyle("jswDropDownBox");
-		//jswDropDownBoxStyles.putAttribute("backgroundColor","#C0C0C0");
+		// jswDropDownBoxStyles.putAttribute("backgroundColor","#C0C0C0");
 
 		jswStyle jswhpStyles = panelstyles.makeStyle("jswContainer");
 		jswhpStyles.putAttribute("backgroundColor", "#C0C0C0");
@@ -418,7 +405,7 @@ public class mcdb extends JFrame implements ActionListener
 				.makeStyle("jswScrollPaneStyles");
 		jswScrollPaneStyles.putAttribute("backgroundColor", "#C0C0C0");
 		jswScrollPaneStyles.putAttribute("fontsize", "10");
-		
+
 		jswStyle jswBorderStyle = panelstyles.makeStyle("borderstyle");
 		jswBorderStyle.putAttribute("borderWidth", "1");
 		// jswBorderStyle.putAttribute("borderColor", "#C0C0C0");
@@ -428,15 +415,15 @@ public class mcdb extends JFrame implements ActionListener
 		hpanelStyle.putAttribute("borderWidth", "2");
 		hpanelStyle.putAttribute("borderColor", "blue");
 		hpanelStyle.putAttribute("height", "100");
-		
+
 		jswStyle pbStyle = panelstyles.makeStyle("jswPushButton");
 		pbStyle.putAttribute("backgroundColor", "#C0C0C0");
 		pbStyle.putAttribute("fontsize", "10");
-		
+
 		pbStyle.putAttribute("foregroundColor", "black");
 		jswStyle greenfont = panelstyles.makeStyle("greenfont");
 		greenfont.putAttribute("foregroundColor", "green");
-		
+
 	}
 
 	public java.util.Properties readProperties(String propsfile)
@@ -461,62 +448,87 @@ public class mcdb extends JFrame implements ActionListener
 		}
 		return null;
 	}
-	
-	 private void initDragAndDrop() {
-	        this.setDropTarget(new DropTarget(){
-	            /**
-				 * 
-				 */
-				private static final long serialVersionUID = 1L;
-               // mcContact selcontact = mcdb.selbox.getSelcontact();
-				@Override
-	            public synchronized void drop(DropTargetDropEvent dtde) {
-	                try {
-	                    System.out.println("File dropped 487 ");
-	                	mcContact selcontact = mcdb.selbox.getSelcontact();
-	                	 File directory = new File(mcdb.docsfolder+File.separator+selcontact.getID());
-                 	    if (! directory.exists())
-                 	    {
-                 	        directory.mkdir();
-                 	    }
-	                    Transferable transfer = dtde.getTransferable();
-	                    if(transfer.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-	                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-	                        List objects = (List)transfer.getTransferData(DataFlavor.javaFileListFlavor);
-	                        for(Object object : objects) {
-	                        	
-	                            if(object instanceof File) {
-	                                File source = (File)object;
-	                              //  File dest = new File(System.getProperty("user.home")+File.separator+"source.getName());"
-	                                File dest = new File(mcdb.docsfolder+File.separator+selcontact.getID()+File.separator+source.getName());
-		                     	       
-	                                Files.copy(Paths.get(source.getAbsolutePath()), Paths.get(dest.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
-	                                SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
-	                            	String date = sdf.format(source.lastModified());
-	                                selcontact.addCorrespondance(source.getName(),date, "gunge",dest);
-	                                
-	                                System.out.println("File copied from 509 "+source.getAbsolutePath()+" to "+dest.getAbsolutePath());
-	                            }
-	                        }
-	                    } else if(transfer.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-	                        dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-	                        String type = (String)transfer.getTransferData(DataFlavor.stringFlavor);
-	                        System.out.println("Data flavor not supported: "+type);
-	                    } else {
-	                        System.out.println("Data flavor not supported.");
-	                    }
-	                } catch(UnsupportedFlavorException ex) {
-	                    System.err.println("UFException "+ex.getMessage());
-	                } catch(IOException ex) {
-	                    System.err.println("IOException "+ex.getMessage());
-	                } catch(Exception ex) {
-	                    System.err.println("Exception "+ex.getMessage());
-	                } finally {
-	                    dtde.dropComplete(true);
-	                }
-	            }
-	        });
-	    }
 
+	private void initDragAndDrop()
+	{
+		this.setDropTarget(new DropTarget()
+		{
+			private static final long serialVersionUID = 1L;
+
+			// mcContact selcontact = mcdb.selbox.getSelcontact();
+			@Override
+			public synchronized void drop(DropTargetDropEvent dtde)
+			{
+				try
+				{
+					System.out.println("File dropped 487 ");
+					mcContact selcontact = mcdb.selbox.getSelcontact();
+					File directory = new File(mcdb.docsfolder + File.separator
+							+ selcontact.getID());
+					if (!directory.exists())
+					{
+						directory.mkdir();
+					}
+					Transferable transfer = dtde.getTransferable();
+					if (transfer.isDataFlavorSupported(
+							DataFlavor.javaFileListFlavor))
+					{
+						dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+						List objects = (List) transfer
+								.getTransferData(DataFlavor.javaFileListFlavor);
+						for (Object object : objects)
+						{
+
+							if (object instanceof File)
+							{
+								File source = (File) object;
+								// File dest = new
+								// File(System.getProperty("user.home")+File.separator+"source.getName());"
+								File dest = new File(mcdb.docsfolder
+										+ File.separator + selcontact.getID()
+										+ File.separator + source.getName());
+
+								Files.copy(Paths.get(source.getAbsolutePath()),
+										Paths.get(dest.getAbsolutePath()),
+										StandardCopyOption.REPLACE_EXISTING);
+								SimpleDateFormat sdf = new SimpleDateFormat(
+										"YYYY-MM-dd");
+								String date = sdf.format(source.lastModified());
+								selcontact.addCorrespondance(source.getName(),
+										date, "gunge", dest);
+
+								System.out.println("File copied from 509 "
+										+ source.getAbsolutePath() + " to "
+										+ dest.getAbsolutePath());
+							}
+						}
+					} else if (transfer
+							.isDataFlavorSupported(DataFlavor.stringFlavor))
+					{
+						dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+						String type = (String) transfer
+								.getTransferData(DataFlavor.stringFlavor);
+						System.out
+								.println("Data flavor not supported: " + type);
+					} else
+					{
+						System.out.println("Data flavor not supported.");
+					}
+				} catch (UnsupportedFlavorException ex)
+				{
+					System.err.println("UFException " + ex.getMessage());
+				} catch (IOException ex)
+				{
+					System.err.println("IOException " + ex.getMessage());
+				} catch (Exception ex)
+				{
+					System.err.println("Exception " + ex.getMessage());
+				} finally
+				{
+					dtde.dropComplete(true);
+				}
+			}
+		});
+	}
 
 }

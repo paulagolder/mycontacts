@@ -6,52 +6,46 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
+
 
 public class mcAttributeTypes extends mcDataObject
 {
+	static HashMap<String, mcAttributeType> attributetypelist;
 
 	public mcAttributeTypes()
 	{
-		super();
-		
+		super();		
 	}
 
-	public Vector<String> getallAttributes()
+	public static ArrayList<String> toList()
 	{
-		ArrayList<Map<String, String>> rowlist = mcdb.topgui.attributetypes.doQuery("select DISTINCT(attributeKey) from attribute order by attributeLabel ");
-		Vector<String> typelist = new Vector<String>();
-		for (Map<String, String> row : rowlist)
-		{
-			if (row.containsKey("attributeKey"))
-				typelist.add(row.get("attributeKey"));
-		}
-		return typelist;
+		Set<String> list = attributetypelist.keySet();
+		ArrayList<String> mainList = new ArrayList<String>();
+		mainList.addAll(list);
+		return  mainList;
 	}
 
-	
-
-	HashMap<String, mcAttributeType> attributetypelist;
-
-	public boolean containsKey(String key)
+	public static boolean containsKey(String key)
 	{
 		return attributetypelist.containsKey(key);
 	}
 
-	public mcAttributeType findType(String atttype)
+	public static mcAttributeType findType(String atttype)
 	{
 		if (attributetypelist.containsKey(atttype)) return attributetypelist
 				.get(atttype);
 		else
+		{
 			return null;
+		}
 	}
 
-	public HashMap<String, mcAttributeType> getAttributeTypes()
+	public static HashMap<String, mcAttributeType> getAttributeTypes()
 	{
 		return attributetypelist;
 	}
 
-	public void loadAttributeTypes()
+	public static void loadAttributeTypes()
 	{
 		ArrayList<Map<String, String>> rowlist = doQuery("select * from attribute order by displayOrder ");
 		attributetypelist = new LinkedHashMap<String, mcAttributeType>();
@@ -66,11 +60,14 @@ public class mcAttributeTypes extends mcDataObject
 		System.out.println( " loaded attributetypes "+attributetypelist.size());
 	}
 	
-	
-
-	public Set<Entry<String, mcAttributeType>> entrySet()
+	public static Set<Entry<String, mcAttributeType>> entrySet()
 	{
 		return attributetypelist.entrySet();
+	}
+
+	public static HashMap<String, mcAttributeType> getAll()
+	{
+		return attributetypelist;
 	}
 
 }

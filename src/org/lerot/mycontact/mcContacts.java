@@ -967,8 +967,8 @@ public class mcContacts extends mcDataObject
 	public int backupXML(String exportfilename)
 	{
 
-		mcAttribute anattrinbute = new mcAttribute(0);
-		Vector<String> attkeylist = anattrinbute .dbloadAttributeKeyList();
+		mcAttribute anattribute = new mcAttribute(0);
+		Vector<String> attkeylist = anattribute .dbloadAttributeKeyList();
 	//	mcMappings mappings = mcdb.topgui.currentcon.createMappings("export",
 	//			"XML");
 		PrintWriter printWriter;
@@ -1118,7 +1118,7 @@ public class mcContacts extends mcDataObject
 	
 	public void refreshAllContacts()
 	{
-		//System.out.println("reloading all contacts ");
+		System.out.println("reloading all contacts ");
 		contactlist = new TreeMap<String, mcContact>(new MyContactComparator());
 		String query = "drop  table if exists allcontacts";
 		doExecute(query);

@@ -2,6 +2,8 @@ package org.lerot.mycontact.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.Vector;
 
 import javax.swing.ButtonGroup;
@@ -18,7 +20,7 @@ import org.lerot.mycontact.mcContacts;
 import org.lerot.mycontact.mcdb;
 
 public class deleteContactPanel extends jswVerticalPanel implements
-		ActionListener
+		ActionListener, ComponentListener
 {
 	private static final long serialVersionUID = 1L;
 	private ButtonGroup bg;
@@ -34,7 +36,7 @@ public class deleteContactPanel extends jswVerticalPanel implements
 
 	public deleteContactPanel()
 	{
-
+        this.addComponentListener(this);
 		jswHorizontalPanel header = new jswHorizontalPanel();
 		jswLabel heading = new jswLabel(" Delete Contacts ");
 		header.add(" FILLW ", heading);
@@ -120,6 +122,9 @@ public class deleteContactPanel extends jswVerticalPanel implements
 	}
 
 	
+	 
+	
+	 
 
 	public void initialise()
 	{
@@ -199,5 +204,35 @@ public class deleteContactPanel extends jswVerticalPanel implements
 		mcdb.topgui.mainpanel.repaint();
 		mcdb.topgui.getContentPane().validate();
 
+	}
+
+	@Override
+	public void componentHidden(ComponentEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void componentResized(ComponentEvent arg0)
+	{
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void componentShown(ComponentEvent event) 
+	{
+		int n= mcdb.selbox.browsecontactlist.size();
+	    initialise();
+		System.out.println("contact delete - action View "+n );
+	 
 	}
 }

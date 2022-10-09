@@ -29,7 +29,6 @@ import org.lerot.mycontact.mcdb;
 public class dbEditPanel extends jswVerticalPanel implements ActionListener
 {
 	private static final long serialVersionUID = 1L;
-	// private static Vector<String> databases;
 	private ButtonGroup bg;
 	Vector<String> found;
 	JRadioButton[] options;
@@ -55,7 +54,7 @@ public class dbEditPanel extends jswVerticalPanel implements ActionListener
 		jswButton refreshbutton = new jswButton(this, "refresh", "refresh");
 		printbar.add(refreshbutton);
 		this.add(printbar);
-		resulttable = new jswTable("dbfound", mcdb.topgui.tablestyles);
+		resulttable = new jswTable("dbfound", mcdb.tablestyles);
 		this.add(resulttable);
 
 		newdbpanel = new jswVerticalPanel();

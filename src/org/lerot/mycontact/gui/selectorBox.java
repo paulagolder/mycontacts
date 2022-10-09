@@ -114,7 +114,9 @@ public class selectorBox extends jswVerticalPanel
 	public void actionPerformed(ActionEvent evt)
 	{
 		String action = evt.getActionCommand().toUpperCase();
-
+        Object activeobject = evt.getSource();
+    //    System.out.println(
+	//			"source =  " + activeobject.toString());
 		if (action.equals("BROWSESELECT"))
 		{
 			setBrowseFilter(tagselectbox);
@@ -526,9 +528,9 @@ public class selectorBox extends jswVerticalPanel
 		taglist = new mctagList();
 		taglist.reloadTags();
 		tagselectbox.removeActionListener(this);
-		tagselectbox.addElement("all");
-		tagselectbox.addElement("selection");
-		tagselectbox.addElement("friend");
+		tagselectbox.addItem("all");
+		tagselectbox.addItem("selection");
+		tagselectbox.addItem("friend");
 		tagselectbox.addList(taglist.getTaglist());
 		tagselectbox.addActionListener(this);
 
@@ -536,7 +538,7 @@ public class selectorBox extends jswVerticalPanel
 
 	public Vector<String> getTaglist()
 	{
-		return taglist.toVector();
+		return taglist.toList();
 	}
 	
 	public jswStyle createStyle()

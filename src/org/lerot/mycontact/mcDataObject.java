@@ -90,7 +90,7 @@ public class mcDataObject
 
 	
 	
-	public ArrayList<Map<String, String>> doQuery(String sqlstr)
+	public static ArrayList<Map<String, String>> doQuery(String sqlstr)
 	{
 		ArrayList<Map<String, String>> Rowlist = new ArrayList<Map<String, String>>();
 		ResultSetMetaData rsmd = null;

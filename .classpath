@@ -14,7 +14,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/looks-2.1-pre2.jar"/>
-	<classpathentry kind="lib" path="/home/paul/applications/MyWidgets.jar"/>
 	<classpathentry kind="lib" path="lib/commons-net-ftp-2.0.jar"/>
 	<classpathentry kind="lib" path="lib/imgscalr-lib-4.2.jar"/>
 	<classpathentry kind="lib" path="lib/itextpdf-5.5.3.jar"/>
@@ -22,7 +21,9 @@
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.7.15-M1.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="lib/javax.mail.jar"/>
-	<classpathentry kind="lib" path="lib/odfdom-java-0.8.7.jar"/>
 	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/MyWidgets"/>
+	<classpathentry kind="lib" path="/home/paul/installations/jarlibray/simple-odf-0.8.2-incubating-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="lib/jaxen-1.1.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

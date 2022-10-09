@@ -15,8 +15,8 @@ public class ExportTabPanel extends jswTabbedPanel
 		//setLayout(new jswVerticalLayout());
 		exportpanel1 = new exportPanel();
 		addTab("Export Contacts", exportpanel1);
-	/*	labelpanel2 = new labelprintPanel();
-		addTab("Print Labels", labelpanel2);*/ 
+		labelpanel2 = new labelprintPanel();
+		addTab("Print Labels", labelpanel2);
 		setSelectedComponent(exportpanel1);
 
 	}

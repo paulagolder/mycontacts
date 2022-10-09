@@ -3,11 +3,15 @@ package org.lerot.mycontact;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.JComponent;
@@ -25,10 +29,20 @@ public class mcAttribute extends mcDataObject
 	{
 		// Element element = (Element) nodes.item(i);
 		Element at = (Element) anode;
-		String attroot = at.getNodeName();
+		//String  = at.getNodeName();
+		String attroot = at.getAttribute("key");
 		String qualifier = at.getAttribute("qualifier");
-		String update = at.getAttribute("update");
-		mcAttribute newatt = new mcAttribute(0, attroot, qualifier, update);
+		String typename = at.getAttribute("type");	 
+		String update = at.getAttribute("updated");
+		/*try {
+		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+		    Date parsedDate = dateFormat.parse( updatetext);
+		    update = new java.sql.Timestamp(parsedDate.getTime());
+		} catch(Exception e) { 
+			update=null;
+		}*/
+		//String update = at.getAttribute("updated");
+		mcAttribute newatt = new mcAttribute(attroot, qualifier, typename,update, anode);
 		return newatt;
 	}
 
@@ -62,7 +76,6 @@ public class mcAttribute extends mcDataObject
 	int displayOrder = 0;
 	private String qualifier = null;
 	private String root = null;
-
 	private String update = null;
 
 	public mcAttribute(int nid)
@@ -99,6 +112,19 @@ public class mcAttribute extends mcDataObject
 		setValue("");
 	}
 
+
+	public mcAttribute(String attroot, String aqualifier, String typename,String updated,Node anode)
+	{
+		super();
+		cid = -1;
+		root = attroot;
+		qualifier = aqualifier;
+		update = updated;
+		attributetype = mcAttributeTypes.findType(root);
+		//attributetype = mcAttributeTypes.findType(typename);
+		//mcDataType datatype = attributetype.dt;
+		this.loadXML(anode);
+	}
 
 	public boolean containsValue(String testvalue)
 	{
@@ -431,16 +457,13 @@ public class mcAttribute extends mcDataObject
 
 	public void loadXML(Node anode)
 	{
-		// Element element = (Element) nodes.item(i);
-		Element at = (Element) anode;
-
-		mcDataType type = getType();
-		// if (!type.equals(attributetype.getDatatype().getTypekey()))
-		// {
-		// System.out.println(" problem with type in xml import :" + type);
-		// return;
-		// }
-		if (isArray())
+		Element at = (Element) anode;		
+		if (attributetype == null )
+		{
+			 System.out.println(" problem with type in xml import :" );
+		}
+		
+		if (attributetype != null && attributetype.dt.isArrayType())
 		{
 			NodeList nl = at.getElementsByTagName("field");
 			if (nl != null && nl.getLength() > 0)
@@ -462,16 +485,8 @@ public class mcAttribute extends mcDataObject
 			}
 		} else
 		{
-			NodeList nl = at.getElementsByTagName("text");
-			String value = "";
-			for (int i = 0; i < nl.getLength(); i++)
-			{
-				Element fld = (Element) nl.item(i);
-				String line = fld.getTextContent();
-				value += line;
-			}
+			String value = at.getAttribute("value");
 			setValue(value);
-
 		}
 	}
 
@@ -480,7 +495,7 @@ public class mcAttribute extends mcDataObject
 		if (existingatt == null) return false;
 		if (!getKey().equalsIgnoreCase(existingatt.getKey())) return false;
 		if (!getType().equals(existingatt.getType())) return false;
-		// String avalue = getValue();
+		//String avalue =  existingatt.getValue()
 		String bvalue = existingatt.getValue();
 		return matchesValue(bvalue);
 		// return true;
@@ -573,15 +588,15 @@ public class mcAttribute extends mcDataObject
 	private void setType()
 	{
 		String attkey = getKey();
-		mcAttributeTypes attypes = mcdb.topgui.attributetypes;
-		attributetype = attypes.findType(attkey);
+
+		attributetype = mcAttributeTypes.findType(attkey);
 		if (attributetype == null)
-			attributetype = mcdb.topgui.attributetypes.findType(root);
+			attributetype = mcAttributeTypes.findType(root);
 		if (attributetype == null)
 		{
 			System.out.println(
 					" not found type in mcattribute " + getKey() + "?" + root);
-			attributetype = mcdb.topgui.attributetypes.findType("default");
+			attributetype = mcAttributeTypes.findType("default");
 		}
 		displayOrder = attributetype.getOrder();
 		displaygroup = attributetype.getDisplaygroup();
@@ -678,6 +693,10 @@ public class mcAttribute extends mcDataObject
 			 else if (attype.isType("textlist"))
 				{
 	                 Set<String> oldtags = getTags();
+	                 if(oldtags == null)
+	                 {
+	                	 oldtags = new TreeSet<String> ();
+	                 }
 	                 oldtags.add(newvalue);
 	                 setValue(oldtags); 
 				}else if (attype.isType("cumulativetext"))

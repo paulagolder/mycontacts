@@ -9,8 +9,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -38,6 +40,7 @@ import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcAddressDataType;
 import org.lerot.mycontact.mcAttribute;
 import org.lerot.mycontact.mcAttributeType;
+import org.lerot.mycontact.mcAttributeTypes;
 import org.lerot.mycontact.mcAttributes;
 import org.lerot.mycontact.mcContact;
 import org.lerot.mycontact.mcContacts;
@@ -362,7 +365,8 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			} else
 				System.out.println("ep action1 " + action + " unrecognised ");
 		}
-		System.out.println("ep action1 " + " is null ");
+		else
+	    	System.out.println("ep action1 " + " is null ");
 
 		// mcdb.topgui.refreshView();
 
@@ -872,9 +876,15 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		{
 			edit = "";
 			editattributekey = "";
+			idpanel2 = new jswLabel();
 			mcContact acontact = mcdb.selbox.getSelcontact();
-			String atid = acontact.getTID();
-			idpanel2 = new jswLabel(atid);
+			if(acontact != null)
+			{
+				String atid = acontact.getTID();
+				idpanel2.setText(atid);
+			}
+			//String atid = acontact.getTID();
+			//idpanel2 = new jswLabel(atid);
 			idbox.add(idpanel2);
 			// idpanel2.setText(mcdb.selbox.getSelcontact().getTID());
 
@@ -1095,9 +1105,9 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 				if (edit == "")
 				{
-					jswLabel alab = new jswLabel();
-					alab.setText(attributequalifier);
-					attributepanel.addCell(alab, row, 1);
+					//jswLabel alab = new jswLabel();
+					//alab.setText(attributequalifier);
+					//attributepanel.addCell(alab, row, 1);
 					jswButton idedit = new jswButton(this, "EDIT ME..",
 							"EDITATTRIBUTE:" + attributekey);
 					attributepanel.addCell(idedit, row, 3);
@@ -1114,8 +1124,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			jswHorizontalPanel newattributepanel = new jswHorizontalPanel();
 			newlabel = new jswDropDownBox(this, "Select:");
 			// newlabel.setPreferredSize(new Dimension(100, 24));
-			Vector<String> varry = mcdb.topgui.attributetypes
-					.getallAttributes();
+			ArrayList<String> varry = mcAttributeTypes.toList();
 			newlabel.addList(varry);
 			newattributepanel.add(" WIDTH=200 ", newlabel);
 			jswPanel buttonbox = new jswHorizontalPanel();

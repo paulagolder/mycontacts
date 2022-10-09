@@ -23,7 +23,7 @@ public class mcDataTypes extends mcDataObject
 			return null;
 	}
 
-	public  void loadTypes()
+	public static  void loadTypes()
 	{
 		con = datasource.getConnection();
 		typelist = new HashMap<String, mcDataType>();

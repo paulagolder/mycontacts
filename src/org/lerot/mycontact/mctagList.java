@@ -22,12 +22,8 @@ public class mctagList extends mcDataObject
 
 	public  void reloadTags()
 	{
-		selectAllTags();
-	}
-
-	public  void selectAllTags()
-	{
-		//System.out.println("reloading tags ");
+		
+		System.out.println("reloading tags ");
 		Map<String, Integer> ustaglist = new HashMap<String, Integer>();
 		taglistcomparator comparator = new taglistcomparator(ustaglist);
 
@@ -44,7 +40,7 @@ public class mctagList extends mcDataObject
 			{
 				mcAttribute tatt = new mcAttribute(k, "tags", "");
 				tatt.load(resset);
-				if (tatt.isType("taglist"))
+				if (tatt.isType("textlist"))
 				{
 					Set<String> tagset = mcTagListDataType.getTags(tatt);
 					for (String tag : tagset)
@@ -207,7 +203,7 @@ public class mctagList extends mcDataObject
 		return taglist.entrySet();
 	}
 
-	public Vector<String> toVector()
+	public Vector<String> toList()
 	{
 		Vector<String> tags = new Vector<String>();
 		for( Entry<String, Integer> entrytag : entrySet())
@@ -219,7 +215,7 @@ public class mctagList extends mcDataObject
 
 	public String get(int i)
 	{
-		return toVector().get(0);
+		return toList().get(0);
 	}
 
 	

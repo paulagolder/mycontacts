@@ -28,7 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
+import org.odftoolkit.simple.TextDocument;
+//import org.odftoolkit.odfdom.TextDocument;
 import org.odftoolkit.odfdom.dom.element.office.OfficeTextElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,7 +43,7 @@ public class mcLetter
 {
 
 	private Map<String, String> map = new HashMap<String, String>();
-	private OdfTextDocument odf;
+	private TextDocument odf;
 	private static Vector<String> templates;
 
 	private String outputFileName;
@@ -89,15 +90,15 @@ public class mcLetter
 
 	public void readOdt(File file) throws Exception
 	{
-		odf = OdfTextDocument.loadDocument(file);
+		odf = TextDocument.loadDocument(file);
 	}
 
 	public void saveOdt(File file) throws Exception
 	{
-		/*OfficeTextElement contentRoot = odf.getContentRoot();
-		contentRoot.setAttribute("dc.title", " a long title ");
+		OfficeTextElement contentRoot = odf.getContentRoot();
+		contentRoot.getAttributeNS("dc.title", " a long title ");
 		iteratorOverEveryVariableSet(contentRoot.getChildNodes());
-		odf.save(file);*/
+		odf.save(file);
 	}
 
 	public void setVariable(String key, String value)

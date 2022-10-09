@@ -121,7 +121,7 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 		layoutpanel = new jswDropDownBox(this,"Select layout");
 		for (Entry<String, Map<String, String>> entry: mcdb.labeltemplates.entrySet())
 		{
-		   // layoutpanel.addElement(entry.getKey() ); // paul fixing
+		    layoutpanel.addItem(entry.getKey() ); // paul fixing
 		}
 		optionbar.add(layoutpanel);
 		startpos = new jswThumbwheel("Start Position", 1, 10);
