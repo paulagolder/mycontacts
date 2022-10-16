@@ -17,6 +17,9 @@ import org.xml.sax.SAXException;
 public class mcImportXML extends mcImports
 {
 	boolean test = true;
+	int maxcid = 0;
+	int newobjects=0;
+	int changedobjects =0;
 	jswLabel message;
 	static String[] Nfields = { "sn", "fn", "mn", "title", "sufix" };
 	static String[] ADRfields = { "pobox", "extaddr", "street", "city",
@@ -25,6 +28,7 @@ public class mcImportXML extends mcImports
 	public mcImportXML(String importfilename)
 	{
 		super(importfilename, "xml");
+		
 	}
 
 	public LinkedHashMap<String, mcImportexception> importall(boolean test,
@@ -60,37 +64,39 @@ public class mcImportXML extends mcImports
 					Element el = (Element) nl.item(i);
 					mcContact icontact = new mcContact();
 					icontact.loadXML(el, i);
-					//String ct = icontact.toXML(attkeylist);
-					//System.out.println(" imported contact :" + ct);
-					mcContact existingcontact = mcdb.selbox.getAllcontactlist()
-							.FindbyTID(icontact.getTID());
+			//		System.out.println(" imported contact :" + icontact);
+					String ct = icontact.toXML(attkeylist);
+					//System.out.println(ct+"/n/n");
+					mcContact existingcontact = mcdb.selbox.getAllcontactlist().FindbyTID(icontact.getTID());
 					if (existingcontact == null)
 					{
-						System.out.println(" not found  contact :" + icontact);
+						System.out.println(" make new  contact :" + icontact);
+						mcContact newcontact = new mcContact(icontact);
+					
+						int cid = newcontact.insertNewContact();
+						newcontact.updateContact();
+    					newobjects++;
 					} else
 					{
-						//if(existingcontact.getID()==0)
+	//		            System.out.println(" found "+existingcontact);
+						if (icontact.matches(existingcontact))
 						{
-							System.out.println(" found "+existingcontact);
-						}
-						
-						 if (icontact.matches(existingcontact))
-						{
-							System.out.println(" importing contact :"
-							 +icontact+" no changes");
+	//						System.out.println(" ignoring contact :"
+	//						 +icontact+" no changes");
 						} else
 						{
+							System.out.println(" importing contact :"
+									 +icontact+" with changes");
 							if (!test)
 							{
-								System.out.println(
-										" changed contact  :" + icontact);
 								int changes = existingcontact
 										.updateContact(icontact);
 								 if(changes>0)
 								 {
 								 existingcontact.updateContact();
 								 System.out.println(
-											" updated contact  :" + icontact);
+											" updated contact  :" + icontact + " "+changes);
+								 changedobjects++;
 								 }
 							}
 							k++;
@@ -98,7 +104,7 @@ public class mcImportXML extends mcImports
 					}
 				}
 				System.out
-						.println(" importing " + nl.getLength() + " Contacts");
+						.println(" imported: " + newobjects+ " Contacts  and updated :"+changedobjects);
 			}
 
 		} catch (ParserConfigurationException pce)

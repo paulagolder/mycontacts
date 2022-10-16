@@ -54,8 +54,8 @@ public class exportBackupPanel extends jswVerticalPanel
 	private jswOptionset optionset;
 	private mcContacts exportsource;
 	private JRadioButton allcontacts;
-	private  JRadioButton browsecontacts;
-	private  JRadioButton selectedcontacts;
+	private JRadioButton browsecontacts;
+	private JRadioButton selectedcontacts;
 	private jswButton testbutton;
 	private File fileToSave;
 
@@ -67,17 +67,19 @@ public class exportBackupPanel extends jswVerticalPanel
 		header.add(" FILLW ", heading);
 		this.add(header);
 		jswHorizontalPanel filterbar = new jswHorizontalPanel();
-		optionset = new jswOptionset("source", false,this);
+		optionset = new jswOptionset("source", false, this);
 		allcontacts = optionset
-				.addNewOption("All Contacts " + mcdb.selbox.countAll(), false).getButton();
-		//allcontacts.setTag("all");
+				.addNewOption("All Contacts " + mcdb.selbox.countAll(), false)
+				.getButton();
+		// allcontacts.setTag("all");
 		browsecontacts = optionset.addNewOption(
 				"Browse Contacts " + mcdb.selbox.getBrowsecontactlist().size(),
 				false).getButton();
-		//browsecontacts.setTag("browse");
-		selectedcontacts = optionset.addNewOption("Selected Contacts "
-				+ mcdb.selbox.getSearchResultList().size(), false).getButton();
-		//selectedcontacts.setTag("selected");
+		// browsecontacts.setTag("browse");
+		selectedcontacts = optionset.addNewOption(
+				"Selected Contacts " + mcdb.selbox.getSearchResultList().size(),
+				false).getButton();
+		// selectedcontacts.setTag("selected");
 		filterbar.add(" LEFT ", allcontacts);
 		filterbar.add(" MIDDLE ", browsecontacts);
 		browsecontacts.setSelected(true);
@@ -95,7 +97,7 @@ public class exportBackupPanel extends jswVerticalPanel
 		selectedfile.setEnabled(true);
 		System.out.println(bufilename);
 		filebar.add(" LEFT WIDTH=200 ", selectedfile);
-		exporttypebox = new jswDropDownBox(this,"type");
+		exporttypebox = new jswDropDownBox(this, "type");
 		Vector<String> varry = new Vector<String>();
 		varry.add("XML");
 		exporttypebox.addList(varry);
@@ -145,6 +147,7 @@ public class exportBackupPanel extends jswVerticalPanel
 			FileNameExtensionFilter filter = new FileNameExtensionFilter(
 					"Backup", "xml", "XML");
 			fc.setFileFilter(filter);
+			  fc.setSelectedFile(file);
 			int returnVal = fc.showSaveDialog(this);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION)

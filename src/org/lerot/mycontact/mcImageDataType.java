@@ -107,7 +107,7 @@ public class mcImageDataType extends mcDataType
 		String[] lines = getEncodedLines(value);
 		for(String aline : lines)
 		{
-			output  += "<value>"+aline+"</value>"+ "\n";;
+			output  += "  <value>"+aline+"</value>"+ "\n";;
 		}
 		return output;
 		

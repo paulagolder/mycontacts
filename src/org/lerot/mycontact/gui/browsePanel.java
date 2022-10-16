@@ -464,8 +464,8 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 			if (contactattributes != null) mainpanel.add(contactattributes);
 
 			mcContacts relationlist = makeLinkToList(selcontact, "related");
-			mcContacts memberoflist = makeLinkToList(selcontact, "org");
-			mcContacts hasmemberslist = makeLinkToList(selcontact, "member");
+			mcContacts memberoflist = makeLinkToList(selcontact, "memberof");
+			mcContacts hasmemberslist = makeLinkToList(selcontact, "hasmember");
 			if (relationlist != null)
 			{
 				jswVerticalPanel arelationslist = makeLinkToPanel(relationlist,
@@ -504,14 +504,14 @@ public class browsePanel extends jswVerticalPanel implements ActionListener
 
 			if (memberoflist != null)
 			{
-				jswVerticalPanel aorglist = makeLinkToPanel(memberoflist, "org",
+				jswVerticalPanel aorglist = makeLinkToPanel(memberoflist, "memberof",
 						"Member Of");
 				mainpanel.add(aorglist);
 			}
 			mcContacts exrelnlist = makeLinkedFromList(selcontact, "related");
-			mcContacts exmemberoflist = makeLinkedFromList(selcontact, "org");
+			mcContacts exmemberoflist = makeLinkedFromList(selcontact, "memberof");
 			mcContacts exhasmemberslist = makeLinkedFromList(selcontact,
-					"member");
+					"hasmember");
 			// exhasmemberslist.remove(hasmemberslist);
 			exmemberoflist.remove(memberoflist);
 			exrelnlist.remove(relationlist);

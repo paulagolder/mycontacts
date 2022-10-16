@@ -54,7 +54,7 @@ public class mcImportVcard extends mcImports
 					if (!test)
 					{
 						String imptid= nextcontact.getTID();	
-						if(mcContacts.updateContactfromImport(imptid,nextcontact)) countupdates ++;;
+						if(mcContacts.updateContactfromVcardImport(imptid,nextcontact)) countupdates ++;;
 					}
 					nextcontact = cr.getContact();
 				}

@@ -47,6 +47,7 @@ public class mcAttributeType extends mcDataObject
 			displayOrder = Integer.parseInt(row.get("displayOrder"));
 		if (row.containsKey("displaygroups"))
 			displaygroup = row.get("displaygroups");
+		if ( displaygroup==null) displaygroup="";
 	}
 
 	void setDisplaygroup(String displaygroup)
@@ -162,7 +163,7 @@ public class mcAttributeType extends mcDataObject
 
 	public Set<String> getTags(String value)
 	{
-		if (isType("taglist")) return mcTagListDataType.getTags(value);
+		if (isType("textlist")) return mcTagListDataType.getSetfromString(value);
 		else
 			return null;
 	}

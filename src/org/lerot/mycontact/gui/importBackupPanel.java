@@ -8,25 +8,25 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map.Entry;
+
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.lerot.mycontact.mcDateDataType;
+import org.lerot.mycontact.mcImportXML;
 import org.lerot.mycontact.mcImportexception;
+import org.lerot.mycontact.mcMappings;
+import org.lerot.mycontact.mcdb;
 import org.lerot.mywidgets.jswButton;
 import org.lerot.mywidgets.jswHorizontalPanel;
 import org.lerot.mywidgets.jswLabel;
 import org.lerot.mywidgets.jswTextField;
 import org.lerot.mywidgets.jswVerticalPanel;
-import org.lerot.mycontact.mcDateDataType;
-import org.lerot.mycontact.mcImportXML;
-import org.lerot.mycontact.mcMappings;
-import org.lerot.mycontact.mcdb;
 
-public class importBackupPanel extends jswVerticalPanel implements
-		ActionListener
+public class importBackupPanel extends jswVerticalPanel
+		implements ActionListener
 {
 
-		
 	private static final long serialVersionUID = 1L;
 	jswButton exceptionbutton;
 	LinkedHashMap<String, mcImportexception> exceptions;
@@ -48,11 +48,10 @@ public class importBackupPanel extends jswVerticalPanel implements
 	private String importtype;
 	private mcMappings importmappings;
 	private mcImportXML xmlimporter;
-	
 
 	public importBackupPanel()
 	{
-		
+
 		importtested = false;
 		showImportBackupPanel();
 	}
@@ -69,14 +68,14 @@ public class importBackupPanel extends jswVerticalPanel implements
 		jswHorizontalPanel filebar = new jswHorizontalPanel();
 		selbutton = new jswButton(this, "Select");
 		filebar.add(" LEFT ", selbutton);
-	     String bufilename = mcdb.topgui.budir+"/contacts_bu_"+mcDateDataType.getNow("yyyyMMdd")+".xml";
-	    
-	      
-			selectedfile = new jswTextField(bufilename);
-			selectedfile.setText(bufilename);
-			selectedfile.setEnabled(true);
-			//selectedfile.setSize(200,20);
-			 // System.out.println(bufilename);
+		String bufilename = mcdb.topgui.budir + "/contacts_bu_"
+				+ mcDateDataType.getNow("yyyyMMdd") + ".xml";
+
+		selectedfile = new jswTextField(bufilename);
+		selectedfile.setText(bufilename);
+		selectedfile.setEnabled(true);
+		// selectedfile.setSize(200,20);
+		// System.out.println(bufilename);
 		filebar.add(" LEFT WIDTH=400  ", selectedfile);
 
 		this.add(filebar);
@@ -122,13 +121,14 @@ public class importBackupPanel extends jswVerticalPanel implements
 		{
 			JFileChooser fc = new JFileChooser();
 			fc.setDialogTitle("Select a file to import");
-	        String bufilename = selectedfile.getText();
-	        File file = new File(bufilename);
-	        fc.setCurrentDirectory(file.getParentFile());
-	     
-			FileNameExtensionFilter filter = new FileNameExtensionFilter("Backup","xml", "XML");
+			String bufilename = selectedfile.getText();
+			File file = new File(bufilename);
+			fc.setCurrentDirectory(file.getParentFile());
+
+			FileNameExtensionFilter filter = new FileNameExtensionFilter(
+					"Backup", "xml", "XML");
 			fc.setFileFilter(filter);
-				int returnVal = fc.showOpenDialog(this);
+			int returnVal = fc.showOpenDialog(this);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
@@ -143,8 +143,7 @@ public class importBackupPanel extends jswVerticalPanel implements
 				{
 					extension = importfile.getName().substring(i + 1);
 				}
-			
-		
+
 				exceptionbutton.setVisible(false);
 				importbutton.setVisible(true);
 				importerrors.setVisible(false);
@@ -157,8 +156,8 @@ public class importBackupPanel extends jswVerticalPanel implements
 		} else if (command == "Print Exceptions")
 		{
 			JFileChooser fc = new JFileChooser();
-			FileNameExtensionFilter filter = new FileNameExtensionFilter(
-					"text", "text");
+			FileNameExtensionFilter filter = new FileNameExtensionFilter("text",
+					"text");
 			fc.setFileFilter(filter);
 			int returnVal = fc.showSaveDialog(this);
 
@@ -173,21 +172,19 @@ public class importBackupPanel extends jswVerticalPanel implements
 							.entrySet())
 					{
 						mcImportexception impex = except.getValue();
-						writer.println(impex.getToken() + ","
-								+ impex.getCount() + ",\"" + impex.getExample()
-								+ "\"");
+						writer.println(impex.getToken() + "," + impex.getCount()
+								+ ",\"" + impex.getExample() + "\"");
 					}
 					writer.close();
-				} catch (FileNotFoundException | UnsupportedEncodingException e1)
+				} catch (FileNotFoundException
+						| UnsupportedEncodingException e1)
 				{
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
-		}  else if (command == "Import File")
+		} else if (command == "Import File")
 		{
-
-
 			importerrors.removeAll();
 			importerrors.setVisible(true);
 			jswHorizontalPanel runningmessage = new jswHorizontalPanel();
@@ -195,32 +192,29 @@ public class importBackupPanel extends jswVerticalPanel implements
 			messagelabel = new jswLabel();
 			runningmessage.add(" FILLW ", messagelabel);
 			this.repaint();
-			
-				System.out.println(" import xml ");
-				xmlimporter = new mcImportXML(importfilename);
-				exceptions = xmlimporter.importall(false, messagelabel);
-			//	exceptions = mcdb.topgui.imported.makeImport(false, messagelabel);
-				if (exceptions.size() > 0) exceptionbutton.setVisible(true);
-				importbutton.setVisible(false);
-			
-				System.out.println(" import  ended");
-				mcdb.topgui.startup();
+			System.out.println(" import xml ");
+			xmlimporter = new mcImportXML(importfilename);
+			exceptions = xmlimporter.importall(false, messagelabel);
+			// exceptions = mcdb.topgui.imported.makeImport(false,
+			// messagelabel);
+			if (exceptions.size() > 0) exceptionbutton.setVisible(true);
+			importbutton.setVisible(false);
+			System.out.println(" import  ended");
+			mcdb.topgui.startup();
 			this.repaint();
 
 			System.out.println("  import finished");
 
 		} else
-			System.out.println(" command in importsetup not recognised "
-					+ command);
+			System.out.println(
+					" command in importsetup not recognised " + command);
 		this.repaint();
 	}
 
 	public void refresh()
 	{
 		// TODO Auto-generated method stub
-		
-	}
 
-	
+	}
 
 }

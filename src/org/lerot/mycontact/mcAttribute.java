@@ -3,14 +3,13 @@ package org.lerot.mycontact;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -25,29 +24,65 @@ import org.w3c.dom.NodeList;
 public class mcAttribute extends mcDataObject
 {
 
-	public static mcAttribute attributefromXML(Node anode)
+	public static mcAttribute attribute_a_fromXML(Node anode)
 	{
 		// Element element = (Element) nodes.item(i);
 		Element at = (Element) anode;
-		//String  = at.getNodeName();
-		String attroot = at.getAttribute("key");
-		String qualifier = at.getAttribute("qualifier");
-		String typename = at.getAttribute("type");	 
-		String update = at.getAttribute("updated");
-		/*try {
-		    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
-		    Date parsedDate = dateFormat.parse( updatetext);
-		    update = new java.sql.Timestamp(parsedDate.getTime());
-		} catch(Exception e) { 
-			update=null;
-		}*/
-		//String update = at.getAttribute("updated");
-		mcAttribute newatt = new mcAttribute(attroot, qualifier, typename,update, anode);
-		return newatt;
+		// String = at.getNodeName();
+		String attroot = at.getNodeName();
+	
+			String qualifier = at.getAttribute("qualifier");
+			String typename = at.getAttribute("datatype");
+			String updatetext = at.getAttribute("update");
+			
+			/* try { SimpleDateFormat dateFormat = new
+			 SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS"); Date parsedDate =
+			 dateFormat.parse( updatetext); update_ts = new
+			 java.sql.Timestamp(parsedDate.getTime()); } catch(Exception e) {
+			 update_ts=null; }*/
+			
+			// String update = at.getAttribute("updated");
+			mcAttribute newatt = new mcAttribute(-1,attroot, qualifier);
+			if(newatt.attributetype.dt.isArrayType()) {
+				newatt.getAttributevalue().loadArrayValueXML(anode,updatetext);
+			}else
+				newatt.getAttributevalue().loadValueXML(anode,updatetext);
+			return newatt;
+	
+	}
+	
+	public static mcAttribute attribute_b_fromXML(Node anode)
+	{
+		// Element element = (Element) nodes.item(i);
+		Element at = (Element) anode;
+		// String = at.getNodeName();
+		String attroot = at.getNodeName();
+		
+			String attkey = at.getAttribute("key");
+			attroot = null;
+			String qualifier = null;
+			if (attkey.contains("/"))
+			{
+				attroot = attkey.substring(0, attkey.indexOf("/"));
+				qualifier = attkey.substring(attkey.indexOf("/") + 1);
+			} else
+			{
+				attroot = attkey;
+				qualifier = "";
+			}
+
+			String updatetext = at.getAttribute("updated");
+			String typename = at.getAttribute("type");
+			mcAttribute newatt = new mcAttribute(-1,attroot, qualifier);
+			if(newatt.attributetype.dt.isArrayType()) {
+				newatt.getAttributevalue().loadArrayValueXML(anode,updatetext);
+			}else
+				newatt.getAttributevalue().loadValueXML_b(anode,updatetext);
+			return newatt;
+		
 	}
 
-	public void dbDeleteAttribute(Integer acid, String aroot,
-			String aqual)
+	public void dbDeleteAttribute(Integer acid, String aroot, String aqual)
 	{
 		PreparedStatement st;
 		String query = "delete from attributeValues where cid= ?  && root = ? && qualifier = ? ";
@@ -70,13 +105,14 @@ public class mcAttribute extends mcDataObject
 	}
 
 	public mcAttributeType attributetype = null;
-	mcAttributeValue attributevalue = null;
+	private mcAttributeValue attributevalue = null;
 	private Integer cid = null;
 	private String displaygroup = "";
 	int displayOrder = 0;
 	private String qualifier = null;
 	private String root = null;
-	private String update = null;
+	//private String update = null;
+	//private Timestamp update_ts=null;
 
 	public mcAttribute(int nid)
 	{
@@ -97,39 +133,41 @@ public class mcAttribute extends mcDataObject
 		root = akey;
 		qualifier = attqual;
 		setType();
-		setValue("");
+		setAttributevalue(new mcAttributeValue(this));
 	}
 
-	public mcAttribute(int nid, String attroot, String attqual,
+/*	public mcAttribute(int nid, String attroot, String attqual,
 			String attupdate)
 	{
 		super();
 		cid = nid;
 		root = attroot;
 		qualifier = attqual;
-		update = attupdate;
+		//update = attupdate;
 		setType();
-		setValue("");
-	}
+		attributevalue = new mcAttributeValue(this);
+	}*/
 
-
-	public mcAttribute(String attroot, String aqualifier, String typename,String updated,Node anode)
+	/*public mcAttribute(String attroot, String aqualifier, String typename)
 	{
 		super();
 		cid = -1;
 		root = attroot;
 		qualifier = aqualifier;
-		update = updated;
+		//update = updated;
 		attributetype = mcAttributeTypes.findType(root);
-		//attributetype = mcAttributeTypes.findType(typename);
-		//mcDataType datatype = attributetype.dt;
-		this.loadXML(anode);
-	}
+		if (attributetype == null)
+		{
+			System.out.println(" attributetype is null ");
+		} 
+	}*/
+	
+	
 
 	public boolean containsValue(String testvalue)
 	{
-		if (attributevalue.isNull()) return false;
-		String value = attributevalue.stringvalue;
+		if (getAttributevalue().isNull()) return false;
+		String value = getAttributevalue().getStringvalue();
 		mcDataType type = getType();
 		return type.valueContained(testvalue, value);
 	}
@@ -148,13 +186,11 @@ public class mcAttribute extends mcDataObject
 			st.executeUpdate();
 			st.close();
 			disconnect();
-
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 		System.out.println(" attribute deleted ");
-
 	}
 
 	public void dbinsertAttribute()
@@ -183,12 +219,11 @@ public class mcAttribute extends mcDataObject
 	{
 		ArrayList<Map<String, String>> rowlist = doQuery(
 				"select * from attribute order by displayOrder ");
-		Vector<String> attributelist = new Vector<String>();
+		Vector<String> attributelist = new Vector<>();
 		for (Map<String, String> row : rowlist)
 		{
 			mcAttribute alabtype = new mcAttribute(0);
 			String attkey = row.get("attributeKey");
-
 			attributelist.add(attkey);
 		}
 		return attributelist;
@@ -196,7 +231,7 @@ public class mcAttribute extends mcDataObject
 
 	public void dbupdateAttribute()
 	{
-		//(new mcDataObject()).setConnection(mcdb.topgui.currentcon);
+		// (new mcDataObject()).setConnection(mcdb.topgui.currentcon);
 		PreparedStatement st;
 		String query = "update attributeValues set 'value' = ? , 'update_dt'= ? where cid= ? and root=?  and qualifier= ? ";
 		try
@@ -215,7 +250,7 @@ public class mcAttribute extends mcDataObject
 		{
 			e.printStackTrace();
 		}
-	
+
 	}
 
 	public void dbupsertAttribute()
@@ -229,7 +264,7 @@ public class mcAttribute extends mcDataObject
 			getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, getValue());
-			String update = getUpdate();
+			String update = getAttributevalue().getUpdate();
 			if (update == null || update.isEmpty())
 			{
 				update = getDateTime();
@@ -238,7 +273,7 @@ public class mcAttribute extends mcDataObject
 			st.setInt(3, cid);
 			st.setString(4, getRoot());
 			st.setString(5, getQualifier());
-			st.executeUpdate();	
+			st.executeUpdate();
 			int rescount = st.getUpdateCount();
 			st.close();
 			disconnect();
@@ -246,20 +281,20 @@ public class mcAttribute extends mcDataObject
 			{
 				dbinsertAttribute();
 			}
-	
+
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
 		}
 	}
 
-	public void deleteTags(Set<String> ataglist)
+/*	public void deleteTags(Set<String> ataglist)
 	{
 		String newtagvalues = mcTagListDataType.deleteTags(this.getValue(),
 				ataglist);
-		setValue(newtagvalues);
+		attributevalue.setValue(newtagvalues);
 		// updateAttributeValue();
-	}
+	}*/
 
 	public Integer getCid()
 	{
@@ -273,10 +308,12 @@ public class mcAttribute extends mcDataObject
 
 	public boolean isDisplaygroup(String dg)
 	{
-		if(displaygroup.contains(dg)) return true;
-		else return false;
+		if (displaygroup.contains(dg))
+			return true;
+		else
+			return false;
 	}
-	
+
 	public String getDisplaygroup()
 	{
 		return displaygroup;
@@ -295,7 +332,7 @@ public class mcAttribute extends mcDataObject
 
 	public Map<mcfield, String> getFieldValueMap()
 	{
-		return attributetype.getFieldValueMap(attributevalue.getValue());
+		return attributetype.getFieldValueMap(getAttributevalue().getValue());
 	}
 
 	public String getFormattedValue()
@@ -305,8 +342,8 @@ public class mcAttribute extends mcDataObject
 
 	public String getFormattedValue(String fmt)
 	{
-		if (attributevalue == null) return " *empty* ";
-		return attributetype.getFormattedValue(attributevalue, fmt);
+		if (getAttributevalue() == null) return " *empty* ";
+		return attributetype.getFormattedValue(getAttributevalue(), fmt);
 	}
 
 	public JComponent getImage(int targetheight)
@@ -328,9 +365,9 @@ public class mcAttribute extends mcDataObject
 
 	public Map<String, String> getMap()
 	{
-		if (attributevalue == null) return null;
+		if (getAttributevalue() == null) return null;
 
-		return attributetype.getKeyValueMap(attributevalue.getValue());
+		return attributetype.getKeyValueMap(getAttributevalue().getValue());
 
 	}
 
@@ -359,30 +396,29 @@ public class mcAttribute extends mcDataObject
 
 	public mcDataType getType()
 	{
-		 if(attributetype == null) return new mcTextDataType();
+		if (attributetype == null) return new mcTextDataType();
 		return attributetype.getDatatype();
 	}
-	
+
 	public String getDataTypeKey()
 	{
 		return attributetype.getDatatype().getTypekey();
 	}
 
-
-	String getUpdate()
+/*	String getUpdate()
 	{
 		return update;
-	}
+	}*/
 
 	public String getValue()
 	{
-		return attributevalue.getValue();
+		return getAttributevalue().getValue();
 	}
 
 	public String getVcardValue()
 	{
-		if (attributevalue == null) return "";
-		String value = attributetype.getVcardValue(attributevalue);
+		if (getAttributevalue() == null) return "";
+		String value = attributetype.getVcardValue(getAttributevalue());
 		if (value == null)
 			return "";
 		else
@@ -395,12 +431,7 @@ public class mcAttribute extends mcDataObject
 		return attributetype.dt.toVcardValue(attvalue);
 	}
 
-	public void insertValues(Set<String> ataglist)
-	{
-		String newtagvalues = mcTagListDataType.insertTags(this.getValue(),
-				ataglist);
-		setValue(newtagvalues);
-	}
+	
 
 	public boolean isArray()
 	{
@@ -427,43 +458,19 @@ public class mcAttribute extends mcDataObject
 		return attributetype.isType(string);
 	}
 
-	protected void load(ResultSet inmap)
+	
+
+/*	public void loadValueXML(Node anode)
 	{
-		try
+		Element at = (Element) anode;
+		if (attributetype == null)
 		{
-			String strvalue = "*";
-			cid = inmap.getInt("cid");
-			strvalue = inmap.getString("value");
-			if (strvalue == null || strvalue.isEmpty())
-				setValue("null");
-			else
-				setValue(strvalue.trim());
-			
-			
-			try
-			{
-				setUpdate(inmap.getString("update_dt"));
-
-			} catch (Exception e)
-			{
-				System.out.println(" not worked " + getUpdate() + " " + e);
-			}
-
-		} catch (SQLException e)
-		{
-
+			System.out.println(" problem with type in xml import :");
+			return;
 		}
-	}
+		update = 
 
-	public void loadXML(Node anode)
-	{
-		Element at = (Element) anode;		
-		if (attributetype == null )
-		{
-			 System.out.println(" problem with type in xml import :" );
-		}
-		
-		if (attributetype != null && attributetype.dt.isArrayType())
+		if ( attributetype.dt.isArrayType())
 		{
 			NodeList nl = at.getElementsByTagName("field");
 			if (nl != null && nl.getLength() > 0)
@@ -485,17 +492,21 @@ public class mcAttribute extends mcDataObject
 			}
 		} else
 		{
-			String value = at.getAttribute("value");
-			setValue(value);
+				NodeList nl = at.getElementsByTagName("value");
+				Node valuenode;
+				if (nl.getLength() > 0)
+				{
+					valuenode = nl.item(0);
+					String value = valuenode.getTextContent();
+					setValue(value);
+				}			
 		}
-	}
+	}*/
 
 	public boolean matches(mcAttribute existingatt)
 	{
-		if (existingatt == null) return false;
-		if (!getKey().equalsIgnoreCase(existingatt.getKey())) return false;
-		if (!getType().equals(existingatt.getType())) return false;
-		//String avalue =  existingatt.getValue()
+		if ((existingatt == null) || !getKey().equalsIgnoreCase(existingatt.getKey()) || !getType().equals(existingatt.getType())) return false;
+		// String avalue = existingatt.getValue()
 		String bvalue = existingatt.getValue();
 		return matchesValue(bvalue);
 		// return true;
@@ -506,8 +517,7 @@ public class mcAttribute extends mcDataObject
 		String avalue = getValue();
 
 		if (testValue == null && avalue == null) return true;
-		if (testValue != null && avalue == null) return false;
-		if (testValue == null && avalue != null) return false;
+		if ((testValue != null && avalue == null) || (testValue == null && avalue != null)) return false;
 
 		boolean matches = attributetype.dt.matchesVcardValue(avalue, testValue);
 		if (!matches)
@@ -524,8 +534,7 @@ public class mcAttribute extends mcDataObject
 		String avalue = getValue();
 
 		if (testValue == null && avalue == null) return true;
-		if (testValue != null && avalue == null) return false;
-		if (testValue == null && avalue != null) return false;
+		if ((testValue != null && avalue == null) || (testValue == null && avalue != null)) return false;
 
 		boolean matches = attributetype.dt.matchesVcardValue(avalue, testValue);
 		if (!matches)
@@ -588,7 +597,6 @@ public class mcAttribute extends mcDataObject
 	private void setType()
 	{
 		String attkey = getKey();
-
 		attributetype = mcAttributeTypes.findType(attkey);
 		if (attributetype == null)
 			attributetype = mcAttributeTypes.findType(root);
@@ -602,36 +610,19 @@ public class mcAttribute extends mcDataObject
 		displaygroup = attributetype.getDisplaygroup();
 	}
 
-	public void setUpdate()
-	{
-
-		Calendar calendar = Calendar.getInstance();
-		java.util.Date now = calendar.getTime();
-		java.sql.Timestamp currentTimestamp = new java.sql.Timestamp(
-				now.getTime());
-		setUpdate(currentTimestamp.toString());
-
-	}
-
-	void setUpdate(String update)
-	{
-		this.update = update;
-	}
-
-	public void setValue(Map<String, String> valuelist)
+	public void setValue(Map<String, String> valuelist,String update)
 	{
 		String arrayvaluestring = attributetype.arrayToArrayString(valuelist);
-		attributevalue = new mcAttributeValue(this, arrayvaluestring);
-
+		setAttributevalue(new mcAttributeValue(this, arrayvaluestring,update));
 	}
-	
-	public void setValue(Set<String> tokenlist)
+
+	public void setValue(Set<String> tokenlist,String update)
 	{
-			String tokenstring = attributetype.arrayToString(tokenlist);
-			attributevalue = new mcAttributeValue(this, tokenstring);
+		String tokenstring = attributetype.arrayToString(tokenlist);
+		setAttributevalue(new mcAttributeValue(this, tokenstring,update));
 	}
 
-	public void setValue(String strvalue)
+	public void setValue(String strvalue,String update)
 	{
 		String newvalue = strvalue.trim();
 		if (!newvalue.isEmpty())
@@ -655,11 +646,11 @@ public class mcAttribute extends mcDataObject
 				newvalue = newvalue.trim();
 			} else if (attype.isType("image"))
 			{
-				;
+
 			} else if (attype.isType("textlist"))
 			{
 				newvalue = newvalue.trim();
-			}else if (attype.isType("taglist"))
+			} else if (attype.isType("taglist"))
 			{
 				newvalue = newvalue.trim();
 			} else if (attype.isType("cumulativetext"))
@@ -671,69 +662,64 @@ public class mcAttribute extends mcDataObject
 			}
 		}
 
-		attributevalue = new mcAttributeValue(this, newvalue);
+		setAttributevalue(new mcAttributeValue(this, newvalue,update));
 	}
-	
-	public void addTag(String strvalue)
+
+	public void addTag(String strvalue,String update)
 	{
 		String newvalue = strvalue.trim();
 		if (!newvalue.isEmpty())
 		{
 			mcDataType attype = getType();
-			 if (attype.isType("taglist"))
+			if (attype.isType("taglist"))
 			{
-                 Set<String> oldtags = getTags();
-                 if(oldtags == null)
-                 {
-                	 
-                 }
-                 oldtags.add(newvalue);
-                 setValue(oldtags);
-			}
-			 else if (attype.isType("textlist"))
+				Set<String> oldtags = getTags();
+				if (oldtags == null)
 				{
-	                 Set<String> oldtags = getTags();
-	                 if(oldtags == null)
-	                 {
-	                	 oldtags = new TreeSet<String> ();
-	                 }
-	                 oldtags.add(newvalue);
-	                 setValue(oldtags); 
-				}else if (attype.isType("cumulativetext"))
+
+				}
+				oldtags.add(newvalue);
+				setValue(oldtags,update);
+			} else if (attype.isType("textlist"))
+			{
+				Set<String> oldtags = getTags();
+				if (oldtags == null)
+				{
+					oldtags = new TreeSet<>();
+				}
+				oldtags.add(newvalue);
+				setValue(oldtags,update);
+			} else if (attype.isType("cumulativetext"))
 			{
 				System.out.println(" updating cumtextlist for " + this);
 				String oldvalue = getValue();
 				newvalue = oldvalue + ";"
 						+ mcUtilities.formatCumulativeText(newvalue);
-				attributevalue = new mcAttributeValue(this, newvalue);
-			}
-			else
+				setAttributevalue(new mcAttributeValue(this, newvalue,update));
+			} else
 			{
-				setValue(strvalue);
+				setValue(strvalue,update);
 			}
 		}
 
-		
 	}
-	
-	
 
-	public void setValue(Vector<String> valuelist)
+	public void setValue(Vector<String> valuelist,String update)
 	{
 		String arrayvaluestring = attributetype.arrayToString(valuelist);
-		attributevalue = new mcAttributeValue(this, arrayvaluestring);
+		setAttributevalue(new mcAttributeValue(this, arrayvaluestring,update));
 	}
 
 	@Override
 	public String toString()
 	{
 		return getKey() + "(" + attributetype.getAttributeLabel() + ")" + ":"
-				+ attributevalue.stringvalue + "  ";
+				+ getAttributevalue().getStringvalue() + "  ";
 	}
 
 	public String toXCard()
 	{
-		if (attributevalue == null) return "";
+		if (getAttributevalue() == null) return "";
 		String outxml = "";
 
 		outxml = " <" + getRoot() + " >";
@@ -742,10 +728,10 @@ public class mcAttribute extends mcDataObject
 		{
 			parameters += "<type><text>" + getQualifier() + "</text></type>\n";
 		}
-		parameters += "<update><date>" + getUpdate() + "</date></update>\n";
+		parameters += "<update><date>" + getAttributevalue().getUpdate() + "</date></update>\n";
 		outxml += "<parameters>" + parameters + "</parameters >\n";
 
-		outxml += attributetype.getXMLValue(attributevalue) + "\n";
+		outxml += attributetype.getXMLValue(getAttributevalue()) + "\n";
 
 		outxml += " </" + getRoot() + ">" + "\n";
 
@@ -754,7 +740,7 @@ public class mcAttribute extends mcDataObject
 
 	public String toXML()
 	{
-		if (attributevalue == null) return "";
+		if (getAttributevalue() == null) return "";
 		String outxml = "";
 		outxml = " <" + getRoot() + "  ";
 		if (getQualifier() != null && !getQualifier().isEmpty())
@@ -762,23 +748,25 @@ public class mcAttribute extends mcDataObject
 			outxml += " qualifier=\'" + getQualifier() + "\' ";
 		}
 		outxml += " datatype=\'" + getDataTypeKey() + "\' ";
-		
-		if (getUpdate() != null && !getUpdate().isEmpty())
+
+		if (getAttributevalue().getUpdate() != null && !getAttributevalue().getUpdate().isEmpty())
 		{
-			outxml += " update=\'" + getUpdate() + "\' ";
+			outxml += " update=\'" + getAttributevalue().getUpdate() + "\' ";
 		}
 		outxml += " > \n";
-		outxml += attributetype.getXMLValue(attributevalue) + "\n";// paul to fix one extra cr
+		outxml += attributetype.getXMLValue(getAttributevalue()); // + "\n";// paul
+		// to fix one
+		// extra cr
 		outxml += " </" + getRoot() + ">" + "\n";
 		return outxml;
 	}
 
 	public void updateAttribute(mcAttribute aniattribute)
 	{
-		String value = aniattribute.getValue();
-		String update = aniattribute.getUpdate();
-		setValue(value);
-		setUpdate(update);
+		String value = aniattribute.getAttributevalue().getValue();
+		String update = aniattribute.getAttributevalue().getUpdate();
+		getAttributevalue().setValue(value,update);
+		dbupsertAttribute();
 	}
 
 	public void updateQualifier(String newqualifier)
@@ -812,6 +800,25 @@ public class mcAttribute extends mcDataObject
 
 	}
 
+	public mcAttributeValue getAttributevalue()
+	{
+		return attributevalue;
+	}
+
+	public void setAttributevalue(mcAttributeValue attributevalue)
+	{
+		this.attributevalue = attributevalue;
+	}
+
+	public boolean moreRecentThan(mcAttribute otheratt)
+	{
+		String thisupdate = this.attributevalue.getUpdate();
+		String otherupdate = otheratt.attributevalue.getUpdate();
+		if(thisupdate == null && otherupdate != null) return true;
+		if (thisupdate.compareTo(otherupdate) >0 ) return true;
+		else return false;
+	}
+	
 	
 
 }

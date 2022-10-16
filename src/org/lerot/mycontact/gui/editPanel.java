@@ -113,7 +113,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 					// System.out.println("reply =" + n);
 					if (n == YES)
 					{
-						selcontact.updateFromImport(imcontact);
+						selcontact.updateFromVcardImport(imcontact);
 					}
 				}
 
@@ -140,7 +140,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							.parse(imaddr);
 					String addarray = mcUtilities
 							.keyvaluesmaptoArrayString(addmap, "=");
-					edattribute.setValue(addarray);
+					edattribute.getAttributevalue().setValue(addarray,"now");
 					edattribute.dbupdateAttribute();
 					edit = "";
 					System.out.println("    update  " + editattributekey);
@@ -169,7 +169,8 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				System.out.println("adding " + selcontact + " to " + linktype
 						+ " " + linkcontact);
 				mcAttribute newatt = selcontact.createAttribute(linktype,
-						linkcontact.getIDstr(), linkcontact.getTID());
+						linkcontact.getIDstr());
+				newatt.getAttributevalue().setValue(linkcontact.getTID(),"now");
 				newatt.dbupsertAttribute();
 
 			} else if (action.startsWith("REFLECT:"))
@@ -187,13 +188,13 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				{
 					qualifier = selcontact.getIDstr();
 				}
-				if (root.equals("org"))
-					root = "member";
-				else if (root.equals("member")) root = "org";
+				if (root.equals("hasmember"))
+					root = "memberof";
+				else if (root.equals("memberof")) root = "hasmember";
 				System.out.println("adding  link + to " + data[0] + " " + root
 						+ " " + qualifier);
-				mcAttribute newatt = selcontact.createAttribute(root, qualifier,
-						linkcontact.getTID());
+				mcAttribute newatt = selcontact.createAttribute(root, qualifier);
+				newatt.getAttributevalue().setValue(linkcontact.getTID(),"now");
 				newatt.dbupsertAttribute();
 			} else if (action.startsWith("ADDGROUP"))
 			{
@@ -256,7 +257,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				String newattributevalue = atteditbox.getText();
 				String newattributequalifier = atype.getText();
 				edattribute.setQualifier(newattributequalifier);
-				edattribute.setValue(newattributevalue);
+				edattribute.getAttributevalue().setValue(newattributevalue,"now");
 				edattribute.dbupdateAttribute();
 				edit = "";
 				// System.out.println(" attribute "+edattribute.getRoot()+"
@@ -269,7 +270,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 					if (abox == null) break;
 					valuelist.put(abox.getTag(), abox.getText().trim());
 				}
-				edattribute.setValue(valuelist);
+				edattribute.getAttributevalue().setValue(valuelist,"now");
 				String newattributequalifier = atype.getText();
 				edattribute.updateQualifier(newattributequalifier);
 				edattribute.dbupdateAttribute();
@@ -323,7 +324,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				// System.out.println("reply =" + n);
 				if (n == YES)
 				{
-					edattribute.deleteTags(ataglist);
+					edattribute.getAttributevalue().deleteTags(ataglist);
 					edattribute.dbupdateAttribute();
 					edit = "";
 				}
@@ -335,7 +336,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				// jswTextField atag = newtagpanel;
 				String newtagvalue = newtagpanel.getText().trim();
 				ataglist.add(newtagvalue);
-				edattribute.insertValues(ataglist);
+				edattribute.getAttributevalue().insertTagValues(ataglist);
 				edattribute.dbupdateAttribute();
 				edit = "editattribute";
 			} else if (action.equals("DELETEATTRIBUTE"))
@@ -368,7 +369,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		else
 	    	System.out.println("ep action1 " + " is null ");
 
-		// mcdb.topgui.refreshView();
+		makeEditPanel();
 
 		// mcdb.topgui.getContentPane().validate();
 	}
@@ -1122,7 +1123,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		if (edit == "")
 		{
 			jswHorizontalPanel newattributepanel = new jswHorizontalPanel();
-			newlabel = new jswDropDownBox(this, "Select:");
+			newlabel = new jswDropDownBox(null, "Select:","something");
 			// newlabel.setPreferredSize(new Dimension(100, 24));
 			ArrayList<String> varry = mcAttributeTypes.toList();
 			newlabel.addList(varry);
@@ -1137,18 +1138,18 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 		jswVerticalPanel reltionslist = makeLinkToPanel(selcontact, "related",
 				"Related to");
 		if (reltionslist != null) add(reltionslist);
-		jswVerticalPanel memberstlist = makeLinkToPanel(selcontact, "member",
+		jswVerticalPanel memberstlist = makeLinkToPanel(selcontact, "hasmember",
 				"Has Members");
 		if (memberstlist != null) add(memberstlist);
-		jswVerticalPanel orglist = makeLinkToPanel(selcontact, "org",
+		jswVerticalPanel orglist = makeLinkToPanel(selcontact, "memberof",
 				"Member Of");
 		if (orglist != null) add(orglist);
 
 		jswVerticalPanel linkedcontactlist = makeLinkedFromPanel(selcontact,
-				"org", "ex-Org");
+				"hasmember", "ex-Org");
 		if (linkedcontactlist != null) add(linkedcontactlist);
 		jswVerticalPanel linkedmemberlist = makeLinkedFromPanel(selcontact,
-				"member", "ex-Member");
+				"memberof", "ex-Member");
 		if (linkedmemberlist != null) add(linkedmemberlist);
 		jswVerticalPanel linkedrelationlist = makeLinkedFromPanel(selcontact,
 				"related", "ex-Related");
@@ -1162,8 +1163,8 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 
 			linkselect = new jswDropDownBox(this, edattributename);
 			Vector<String> llist = new Vector<String>();
-			llist.add("org");
-			llist.add("member");
+			llist.add("memberof");
+			llist.add("hasmember");
 			llist.add("related");
 			linkselect.addList(llist);
 			newmemberpanel.add(linkselect);

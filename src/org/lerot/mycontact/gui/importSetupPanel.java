@@ -333,7 +333,7 @@ public class importSetupPanel extends jswVerticalPanel implements
 		{
 			String foriegnkey = command.substring(7);
 			String[] choices = { "ignore", "name", "address", "phone",
-					"mobile", "email", "note","org","related","member" , "anniversary", "birthday"};
+					"mobile", "email", "note","hasmember","related","memberof" , "anniversary", "birthday"};
 			String input = (String) JOptionPane.showInputDialog(null,
 					foriegnkey, "Add to importkeys as ",
 					JOptionPane.QUESTION_MESSAGE, null, // Use

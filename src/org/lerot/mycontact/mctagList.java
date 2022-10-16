@@ -39,7 +39,7 @@ public class mctagList extends mcDataObject
 			while (resset.next())
 			{
 				mcAttribute tatt = new mcAttribute(k, "tags", "");
-				tatt.load(resset);
+				tatt.getAttributevalue().loadfromDB(resset);
 				if (tatt.isType("textlist"))
 				{
 					Set<String> tagset = mcTagListDataType.getTags(tatt);
@@ -86,7 +86,7 @@ public class mctagList extends mcDataObject
 			while (resset.next())
 			{
 				mcAttribute tatt = new mcAttribute(k, "tags","");
-				tatt.load(resset);
+				tatt.getAttributevalue().loadfromDB(resset);
 				if (tatt.isType("taglist"))
 				{
 					attarr.add(tatt);	
@@ -99,7 +99,7 @@ public class mctagList extends mcDataObject
 					Set<String> tagset = mcTagListDataType.getTags(tatt);
 					//System.out.println(tagset);
 					mcTagListDataType.insertTags(tatt.getValue(), tagset);
-					tatt.insertValues(tagset);
+					tatt.getAttributevalue().insertTagValues(tagset);
 					tatt.dbupdateAttribute();
 					System.out.println("===="+tatt.getValue());
 			}

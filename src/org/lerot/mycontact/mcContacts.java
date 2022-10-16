@@ -82,7 +82,7 @@ public class mcContacts extends mcDataObject
 		return -1;
 	}
 
-	public static boolean updateContactfromImport(String imptid, mcImportContact impcontact)
+	public static boolean updateContactfromVcardImport(String imptid, mcImportContact impcontact)
 	{
 		mcContact foundcontact = mcdb.selbox.getAllcontactlist()
 				.FindbyTID(imptid);
@@ -90,7 +90,7 @@ public class mcContacts extends mcDataObject
 		if (foundcontact != null)
 		{
 			foundcontact.refreshAttributes();
-			isupdated = foundcontact.updateFromImport(impcontact);
+			isupdated = foundcontact.updateFromVcardImport(impcontact);
 			if(isupdated)
 			{
 				System.out.println("updated " + foundcontact.toString());
@@ -255,10 +255,14 @@ public class mcContacts extends mcDataObject
 		String ntid = mcUtilities.normalisename(selcontactTID);
 		for (Entry<String, mcContact> anentry : contactlist.entrySet())
 		{
-
 			mcContact acontact = anentry.getValue();
 			String ctid = acontact.getTID();
-
+			if(ctid ==  null)
+			{
+//				System.out.println(" not found looking for " + selcontactTID);
+				return null;
+			}
+			
 			String nctid = mcUtilities.normalisename(ctid);
 			if (ctid.equalsIgnoreCase(selcontactTID)) return acontact;
 			if (nctid.equalsIgnoreCase(ntid)) return acontact;

@@ -3,6 +3,7 @@ package org.lerot.mycontact;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -42,7 +43,31 @@ public class mcTextListDataType extends mcDataType
 		return tokenstring;
 	}
 
+	static String makeString(String atoken)
+	{
+		String tokenstring = "";
+
+			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null") && atoken.length() >2)
+			{
+				tokenstring = atoken + "; ";
+			}
+		return tokenstring;
+	}
 	
+	public static String makestring(Map<String, String> valuelist)
+	{
+		String tokenstring = "{";
+		for (Entry<String, String> anentry : valuelist.entrySet())
+		{
+	
+			
+				tokenstring = anentry.getKey()+":" +anentry.getValue()+ ", ";
+			
+			
+		}
+		tokenstring += "}";
+		return tokenstring;
+	}
 	
 
 	public mcTextListDataType()
@@ -144,7 +169,7 @@ public class mcTextListDataType extends mcDataType
 	public String toXML(String value)
 	{
 		SortedSet<String> tokenlist = getTokens(value);
-		String outxml = "<value>";
+		String outxml = "  <value>";
 		String sep="";
 		for (String atoken : tokenlist)
 		{
@@ -153,7 +178,7 @@ public class mcTextListDataType extends mcDataType
 			outxml +=  sep+outtag;
 			sep = ",";
 		}
-		outxml += "</value>";
+		outxml += " </value>";
 		return outxml;
 	}
 
@@ -232,4 +257,6 @@ public class mcTextListDataType extends mcDataType
 		}
 		return tokens;
 	}
+
+	
 }

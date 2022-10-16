@@ -64,7 +64,7 @@ public class mcTIDDataType extends mcDataType
 	@Override
 	public String toXML(String value)
 	{
-		return "<value>"+StringEscapeUtils.escapeXml(value)+"</value>";
+		return "  <value>"+StringEscapeUtils.escapeXml(value)+"</value>";
 	}
 
 	@Override

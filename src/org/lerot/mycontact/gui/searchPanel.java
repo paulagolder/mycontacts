@@ -65,7 +65,7 @@ public class searchPanel extends jswVerticalPanel implements ActionListener
 				{
 					tags = new mcAttribute(scontact.getID(), "tags", "");
 				}
-				tags.addTag("selected");
+				tags.getAttributevalue().insertTagValue("selected");
 				tags.dbupdateAttribute();
 			}
 		}
