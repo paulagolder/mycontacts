@@ -14,13 +14,12 @@ import org.apache.commons.lang3.StringEscapeUtils;
 public class mcTextListDataType extends mcDataType
 {
 
-	
 	private static String makeSimpleString(Set<String> tokenlist)
 	{
 		String tokenstring = "";
 		for (String atoken : tokenlist)
 		{
-			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null") )
+			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null"))
 			{
 				tokenstring = tokenstring + atoken + ", ";
 			}
@@ -33,12 +32,13 @@ public class mcTextListDataType extends mcDataType
 		String tokenstring = "";
 		for (String atoken : tokenlist)
 		{
-			//System.out.println("|"+atag+"|"+atag.length());
-			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null") && atoken.length() >2)
+			// System.out.println("|"+atag+"|"+atag.length());
+			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null")
+					&& atoken.length() > 2)
 			{
 				tokenstring = tokenstring + atoken + "; ";
 			}
-			
+
 		}
 		return tokenstring;
 	}
@@ -47,28 +47,24 @@ public class mcTextListDataType extends mcDataType
 	{
 		String tokenstring = "";
 
-			if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null") && atoken.length() >2)
-			{
-				tokenstring = atoken + "; ";
-			}
+		if (!atoken.isEmpty() && !atoken.equalsIgnoreCase("null")
+				&& atoken.length() > 2)
+		{
+			tokenstring = atoken + "; ";
+		}
 		return tokenstring;
 	}
-	
+
 	public static String makestring(Map<String, String> valuelist)
 	{
 		String tokenstring = "{";
 		for (Entry<String, String> anentry : valuelist.entrySet())
 		{
-	
-			
-				tokenstring = anentry.getKey()+":" +anentry.getValue()+ ", ";
-			
-			
+			tokenstring += anentry.getKey() + ":" + anentry.getValue() + ", ";
 		}
 		tokenstring += "}";
 		return tokenstring;
 	}
-	
 
 	public mcTextListDataType()
 	{
@@ -77,23 +73,25 @@ public class mcTextListDataType extends mcDataType
 
 	public mcTextListDataType(String astring, String bstring)
 	{
-		super(astring,  bstring);
+		super(astring, bstring);
 	}
 
 	@Override
 	public int compareTo(String aarray, String barray)
 	{
-		SortedSet<String> aset = getTokens(aarray); 
+		SortedSet<String> aset = getTokens(aarray);
 		SortedSet<String> bset = getTokens(barray);
 		for (final Iterator<String> it = bset.iterator(); it.hasNext();)
 		{
 			String btag = it.next();
-			if (!aset.contains(btag)) { return 1; }
+			if (!aset.contains(btag))
+			{ return 1; }
 		}
 		for (final Iterator<String> it = aset.iterator(); it.hasNext();)
 		{
 			String atag = it.next();
-			if (!bset.contains(atag)) { return -1; }
+			if (!bset.contains(atag))
+			{ return -1; }
 		}
 		return 0;
 	}
@@ -148,10 +146,11 @@ public class mcTextListDataType extends mcDataType
 	{
 		SortedSet<String> tokenlist = getTokens(value);
 		String outlist = "";
-		for(String token:tokenlist)
+		for (String token : tokenlist)
 		{
-			//if(tag.contains(";")) tag.replace(";",":");// should not be necessary if data properly formated paul fix
-			outlist += token+";";
+			// if(tag.contains(";")) tag.replace(";",":");// should not be
+			// necessary if data properly formated paul fix
+			outlist += token + ";";
 		}
 		return outlist;
 	}
@@ -170,12 +169,12 @@ public class mcTextListDataType extends mcDataType
 	{
 		SortedSet<String> tokenlist = getTokens(value);
 		String outxml = "  <value>";
-		String sep="";
+		String sep = "";
 		for (String atoken : tokenlist)
 		{
 			String outtag = StringEscapeUtils.escapeXml(atoken);
-			if(outtag.contains(",")) outtag = "\""+outtag+"\"";
-			outxml +=  sep+outtag;
+			if (outtag.contains(",")) outtag = "\"" + outtag + "\"";
+			outxml += sep + outtag;
 			sep = ",";
 		}
 		outxml += " </value>";
@@ -186,12 +185,14 @@ public class mcTextListDataType extends mcDataType
 	public boolean valueContained(String testvalue, String attvalue)
 	{
 		SortedSet<String> taglist = getTokens(attvalue);
-		if (taglist.contains(testvalue)) { return true; }
+		if (taglist.contains(testvalue))
+		{ return true; }
 		return false;
 	}
-	
-	public static Vector<String> parseTokenString(String csv_string, char delimiter)
-	{ 
+
+	public static Vector<String> parseTokenString(String csv_string,
+			char delimiter)
+	{
 		Vector<String> outarray = new Vector<String>();
 		int l = csv_string.length();
 		int i = 0;
@@ -237,26 +238,24 @@ public class mcTextListDataType extends mcDataType
 		return outarray;
 	}
 
-	
 	static SortedSet<String> getTokens(String tags)
 	{
 		SortedSet<String> tokens = new TreeSet<String>();
-		char sep =';';
-		if(!tags.contains(";"))  sep=',';
-         Vector<String> tokenarray = parseTokenString(tags,sep);
+		char sep = ';';
+		if (!tags.contains(";")) sep = ',';
+		Vector<String> tokenarray = parseTokenString(tags, sep);
 		for (String token : tokenarray)
 		{
 			token = token.trim();
 			if (!token.isEmpty() && !token.equals(";") && !token.equals("null")
-					&& !tokens.contains(token) && token.length()>1)
+					&& !tokens.contains(token) && token.length() > 1)
 			{
 				token = token.replace("#", "");
-				token= token.replace(";", "");
+				token = token.replace(";", "");
 				tokens.add(token);
 			}
 		}
 		return tokens;
 	}
 
-	
 }

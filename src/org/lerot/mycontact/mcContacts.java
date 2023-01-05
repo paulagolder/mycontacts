@@ -228,9 +228,9 @@ public class mcContacts extends mcDataObject
 		for (Entry<String, mcContact> anentry : contactlist.entrySet())
 		{
 			mcContact acontact = anentry.getValue();
-			String strid = acontact.getSimpleIDstr();
+			//String strid = acontact.getSimpleIDstr();
 			String strid2 = acontact.getIDstr();
-			int id3 = acontact.getID();
+			//int id3 = acontact.getID();
 			if (strid2.equalsIgnoreCase(selcontactID))
 				return acontact;
 		}
@@ -1067,7 +1067,7 @@ public class mcContacts extends mcDataObject
 		{
 			getConnection();
 			st = con.prepareStatement(query);
-			st.setString(1, "%#" + searchterm + ";%");
+			st.setString(1, "%" + searchterm + "%");
 			st.setString(2, "tags");
 			ResultSet resset = st.executeQuery();
 			while (resset.next())

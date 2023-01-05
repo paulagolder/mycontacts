@@ -43,7 +43,9 @@ public class mcAttribute extends mcDataObject
 			
 			// String update = at.getAttribute("updated");
 			mcAttribute newatt = new mcAttribute(-1,attroot, qualifier);
-			if(newatt.attributetype.dt.isArrayType()) {
+			if(newatt.attributetype.dt.isImage()) {
+				newatt.getAttributevalue().loadImageXML(anode,updatetext);
+			}else if(newatt.attributetype.dt.isArrayType()) {
 				newatt.getAttributevalue().loadArrayValueXML(anode,updatetext);
 			}else
 				newatt.getAttributevalue().loadValueXML(anode,updatetext);
@@ -74,6 +76,9 @@ public class mcAttribute extends mcDataObject
 			String updatetext = at.getAttribute("updated");
 			String typename = at.getAttribute("type");
 			mcAttribute newatt = new mcAttribute(-1,attroot, qualifier);
+			if(newatt.attributetype.dt.isImage()) {
+				newatt.getAttributevalue().loadImageXML(anode,updatetext);
+			}else
 			if(newatt.attributetype.dt.isArrayType()) {
 				newatt.getAttributevalue().loadArrayValueXML(anode,updatetext);
 			}else
@@ -111,8 +116,7 @@ public class mcAttribute extends mcDataObject
 	int displayOrder = 0;
 	private String qualifier = null;
 	private String root = null;
-	//private String update = null;
-	//private Timestamp update_ts=null;
+
 
 	public mcAttribute(int nid)
 	{
@@ -135,34 +139,6 @@ public class mcAttribute extends mcDataObject
 		setType();
 		setAttributevalue(new mcAttributeValue(this));
 	}
-
-/*	public mcAttribute(int nid, String attroot, String attqual,
-			String attupdate)
-	{
-		super();
-		cid = nid;
-		root = attroot;
-		qualifier = attqual;
-		//update = attupdate;
-		setType();
-		attributevalue = new mcAttributeValue(this);
-	}*/
-
-	/*public mcAttribute(String attroot, String aqualifier, String typename)
-	{
-		super();
-		cid = -1;
-		root = attroot;
-		qualifier = aqualifier;
-		//update = updated;
-		attributetype = mcAttributeTypes.findType(root);
-		if (attributetype == null)
-		{
-			System.out.println(" attributetype is null ");
-		} 
-	}*/
-	
-	
 
 	public boolean containsValue(String testvalue)
 	{
@@ -236,7 +212,7 @@ public class mcAttribute extends mcDataObject
 		String query = "update attributeValues set 'value' = ? , 'update_dt'= ? where cid= ? and root=?  and qualifier= ? ";
 		try
 		{
-			getConnection();
+			con=datasource.getConnection();
 			st = con.prepareStatement(query);
 			st.setString(1, getValue());
 			st.setString(2, getDateTime());
@@ -245,7 +221,7 @@ public class mcAttribute extends mcDataObject
 			st.setString(5, getQualifier());
 			st.executeUpdate();
 			st.close();
-			disconnect();
+			datasource.disconnect();
 		} catch (SQLException e)
 		{
 			e.printStackTrace();
@@ -287,14 +263,6 @@ public class mcAttribute extends mcDataObject
 			e.printStackTrace();
 		}
 	}
-
-/*	public void deleteTags(Set<String> ataglist)
-	{
-		String newtagvalues = mcTagListDataType.deleteTags(this.getValue(),
-				ataglist);
-		attributevalue.setValue(newtagvalues);
-		// updateAttributeValue();
-	}*/
 
 	public Integer getCid()
 	{
@@ -405,10 +373,6 @@ public class mcAttribute extends mcDataObject
 		return attributetype.getDatatype().getTypekey();
 	}
 
-/*	String getUpdate()
-	{
-		return update;
-	}*/
 
 	public String getValue()
 	{
@@ -460,48 +424,6 @@ public class mcAttribute extends mcDataObject
 
 	
 
-/*	public void loadValueXML(Node anode)
-	{
-		Element at = (Element) anode;
-		if (attributetype == null)
-		{
-			System.out.println(" problem with type in xml import :");
-			return;
-		}
-		update = 
-
-		if ( attributetype.dt.isArrayType())
-		{
-			NodeList nl = at.getElementsByTagName("field");
-			if (nl != null && nl.getLength() > 0)
-			{
-				String outline = " { ";
-				for (int i = 0; i < nl.getLength(); i++)
-				{
-					Element fld = (Element) nl.item(i);
-					String key = fld.getAttribute("key");
-					String value = fld.getAttribute("value");
-					if (value.contains("'"))
-					{
-						outline = outline + key + ":\"" + value + "\" , ";
-					} else
-						outline = outline + key + ":\'" + value + "\' , ";
-				}
-				outline += " }";
-				setValue(outline);
-			}
-		} else
-		{
-				NodeList nl = at.getElementsByTagName("value");
-				Node valuenode;
-				if (nl.getLength() > 0)
-				{
-					valuenode = nl.item(0);
-					String value = valuenode.getTextContent();
-					setValue(value);
-				}			
-		}
-	}*/
 
 	public boolean matches(mcAttribute existingatt)
 	{
@@ -581,7 +503,6 @@ public class mcAttribute extends mcDataObject
 	public void setID(int newid)
 	{
 		cid = newid;
-
 	}
 
 	void setKey(String atttkey)

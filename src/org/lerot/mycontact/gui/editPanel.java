@@ -63,7 +63,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 	private static jswStyles arraytablestyles;
 	private static jswStyles tablestyles;
 	private static jswStyles linktablestyles;
-	private jswTextBox atteditbox;
+	private jswTextField atteditbox;
 	private jswTextField[] attfieldeditbox = new jswTextField[10];
 	private jswCheckbox[] tagcheckbox = new jswCheckbox[10];
 	private mcAttribute edattribute;
@@ -75,7 +75,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 	private jswLabel tagspanel;
 	private jswTextField newtagpanel;
 	private String vcarddirectory;
-	private jswTextBox atype;
+	private jswTextField atype;
 	boolean addselector = false;
 
 	private String edattributename;
@@ -634,7 +634,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 					String value = anattribute.getValue();
 					String qualifier = anattribute.getQualifier();
 					String attributekey = anattribute.getKey();
-					mcContact linkedcontact = mcdb.selbox.FindbyTID(value);
+					mcContact linkedcontact = mcdb.selbox.FindbyIDstr(qualifier);
 
 					if (linkedcontact != null)
 					{
@@ -644,7 +644,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 							memberpanel.addCell(alabel, row, 0);
 							jswLabel aqlabel = new jswLabel(qualifier);
 							memberpanel.addCell(aqlabel, row, 1);
-							atteditbox = new jswTextBox("qualifier");
+							atteditbox = new jswTextField("qualifier");
 							atteditbox.setText(qualifier);
 							atteditbox.setEnabled(true);
 							memberpanel.addCell(atteditbox, " FILLW ", row, 1);
@@ -878,6 +878,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			edit = "";
 			editattributekey = "";
 			idpanel2 = new jswLabel();
+			idpanel2.applyStyles(mcdb.panelstyles.getStyle("largeLabel"));
 			mcContact acontact = mcdb.selbox.getSelcontact();
 			if(acontact != null)
 			{
@@ -921,7 +922,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 				{
 					if (editattributekey.equalsIgnoreCase(attributekey))
 					{
-						atype = new jswTextBox("Qualifier?");
+						atype = new jswTextField("Qualifier?");
 						atype.setText(attributequalifier);
 						atype.setEnabled(true);
 						attributepanel.addCell(atype, " FILLW ", row, 1);
@@ -1039,7 +1040,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 						} else
 						{
 							String value = anattribute.getFormattedValue();
-							atteditbox = new jswTextBox("Box_" + value);
+							atteditbox = new jswTextField("Box_" + value);
 							atteditbox.setText(value);
 							atteditbox.setEnabled(true);
 							attributepanel.addCell(atteditbox, " FILLW ", row,
@@ -1161,7 +1162,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			jswHorizontalPanel newmemberpanel = new jswHorizontalPanel();
 			newmemberpanel.applyStyles(mcdb.panelstyles, "borderstyle");
 
-			linkselect = new jswDropDownBox(this, edattributename);
+			linkselect = new jswDropDownBox(null, edattributename);
 			Vector<String> llist = new Vector<String>();
 			llist.add("memberof");
 			llist.add("hasmember");
@@ -1173,7 +1174,7 @@ public class editPanel extends jswVerticalPanel implements ActionListener
 			parentselect.addList(mcdb.selbox.getAllcontactlist()
 					.makeOrderedContactsVector());
 			newmemberpanel.add(parentselect);// paul to fix
-			atteditbox = new jswTextBox("attedit");
+			atteditbox = new jswTextField("attedit");
 			atteditbox.setEnabled(true);
 			newmemberpanel.add(atteditbox);
 			jswPanel buttonbox = new jswHorizontalPanel();

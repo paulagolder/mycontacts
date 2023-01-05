@@ -377,9 +377,13 @@ public class mcdb extends JFrame implements ActionListener
 		jswWidgetStyles.putAttribute("borderColor", "blue");
 
 		jswStyle jswLabelStyles = panelstyles.makeStyle("jswLabel");
+		jswStyle largelabelStyle = panelstyles.makeStyle("largeLabel");
+		largelabelStyle.putAttribute("fontsize", "30");
+		largelabelStyle.putAttribute("foregroundColor", "Red");
 
 		jswStyle jswButtonStyles = panelstyles.makeStyle("jswButton");
 		jswButtonStyles.putAttribute("fontsize", "10");
+		
 
 		jswStyle jswToggleButtonStyles = panelstyles
 				.makeStyle("jswToggleButton");

@@ -39,7 +39,7 @@ public class selectorBox extends jswVerticalPanel
 
 	mcImports imported;
 
-	private jswTextBox filterbox;
+	private jswTextField filterbox;
 	private jswDropDownBox tagselectbox;
 	jswDropDownContactBox contactselectbox;
 	private jswLabel allcontacts;
@@ -83,13 +83,13 @@ public class selectorBox extends jswVerticalPanel
 		jswButton previous = new jswButton(this, "Previous");
 		selectbox.add(" LEFT ", previous);
 
-		filterbox = new jswTextBox("stuff");
+		filterbox = new jswTextField("stuff");
 		filterbox.setEnabled(true);
 		filterbox.textbox.setMinimumSize(new Dimension(40, 15));
 		filterbox.addFocusListener(this);
 		filterbox.addKeyListener(this);
 		filterbox.setBorder(jswStyle.makeLineBorder(Color.gray, 1));
-		selectbox.add(" FILLW=30 ", filterbox);
+		selectbox.add(" WIDTH=90 ", filterbox);
 		jswButton filterbutton = new jswButton(this, ">", "NEXTFILTER");
 		//filterbutton.setPreferredSize(new Dimension(100, 15));
 		filterbutton.setMinimumSize(new Dimension(40, 30));
@@ -382,8 +382,7 @@ public class selectorBox extends jswVerticalPanel
 	{
 		mcContacts found = new mcContacts();
 		if (tag == null)
-		{
-			
+		{		
 			return null;
 		} else if (tag == "all")
 		{
@@ -409,7 +408,6 @@ public class selectorBox extends jswVerticalPanel
 			return found;
 		} else
 		{
-
 			TreeSet<String> foundids = allcontactlist.searchTags(tag);
 			for (String id : foundids)
 			{

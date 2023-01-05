@@ -85,24 +85,31 @@ public class mctagList extends mcDataObject
 			Vector<mcAttribute> attarr = new Vector<mcAttribute>();
 			while (resset.next())
 			{
-				mcAttribute tatt = new mcAttribute(k, "tags","");
+				int cid = resset.getInt("cid");
+				String qual = resset.getString("qualifier");
+				mcAttribute tatt = new mcAttribute(cid, "tags",qual);
+				
 				tatt.getAttributevalue().loadfromDB(resset);
-				if (tatt.isType("taglist"))
-				{
-					attarr.add(tatt);	
+				if (tatt.isType("textlist"))
+				{		
+					 attarr.add(tatt);						
+					 k++;
 				}
 			}
 			st.close();
-			disconnect();
+			datasource.disconnect();
+			k=0;
 			for (mcAttribute tatt : attarr)
 			{					
-					Set<String> tagset = mcTagListDataType.getTags(tatt);
-					//System.out.println(tagset);
-					mcTagListDataType.insertTags(tatt.getValue(), tagset);
-					tatt.getAttributevalue().insertTagValues(tagset);
-					tatt.dbupdateAttribute();
-					System.out.println("===="+tatt.getValue());
+				Set<String> tagset = mcTagListDataType.getTags(tatt);
+				mcAttributeValue attv = tatt.getAttributevalue();
+				attv.replaceTagValues(tagset);
+				tatt.setAttributevalue(attv);
+				tatt.dbupdateAttribute();
+				System.out.println("===="+tatt.getValue());				
+				k++;
 			}
+			System.out.println("===="+k +" updated ");
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -145,7 +152,7 @@ public class mctagList extends mcDataObject
 			st = con.prepareStatement(query);
 			st.setString(1, newtag );
 			st.setString(2, attkey + "%");
-			st.setString(3, "%#"+oldtag + ";%");
+			st.setString(3, "%"+oldtag + ",%");
 			//System.out.println("After : " + st.toString());
 			st.executeUpdate();
 			st.close();
@@ -165,7 +172,7 @@ public class mctagList extends mcDataObject
 		{
 			con =  datasource.getConnection();
 			st = con.prepareStatement(query);
-			st.setString(1, "#" + todelete + ";");
+			st.setString(1,  todelete + ";");
 			st.setString(2, attkey);
 			st.executeUpdate();
 			st.close();

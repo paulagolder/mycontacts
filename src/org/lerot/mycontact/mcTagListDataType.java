@@ -32,16 +32,20 @@ public class mcTagListDataType extends mcTextListDataType
 	{
 		SortedSet<String> tokens = new TreeSet<String>();
 		char sep = ';';
-		if (!tags.contains(";")) sep = ',';
+		tags = tags.trim();
+		if(tags.endsWith(";"))sep = ';';
+		else if (tags.endsWith(",")) sep=',';
+		else sep = ';';
 		Vector<String> tokenarray = parseTagString(tags, sep);
 		for (String token : tokenarray)
 		{
 			token = token.trim();
-			if (!token.isEmpty() && !token.equals(";") && !token.equals("null")
+			if (!token.isEmpty() && !token.equals(";") && !token.equals("null") && !token.equals(",")
 					&& !tokens.contains(token) && token.length() > 1)
 			{
 				token = token.replace("#", "");
 				token = token.replace(";", "");
+				if(token.startsWith(",")) token = token.substring(1);
 				tokens.add(token);
 			}
 		}
@@ -73,6 +77,18 @@ public class mcTagListDataType extends mcTextListDataType
 		return makeTagString(oldtags);
 	}
 
+	public static String replaceTags( Set<String> ataglist)
+	{
+		for (String atag : ataglist)
+		{
+			if (atag.length() > 1)
+			{
+				if (atag.contains(";")) atag.replace(";", ":");
+			}
+		}
+		return makeTagString(ataglist);
+	}
+	
 	public static String makeString(Set<String> taglist)
 	{
 		String outtags = "";
@@ -98,7 +114,7 @@ public class mcTagListDataType extends mcTextListDataType
 			if (!atag.isEmpty() && !atag.equalsIgnoreCase("null")
 					&& atag.length() > 2)
 			{
-				outtags = outtags + "#" + atag + "; ";
+				outtags = outtags +  atag + "; ";
 			}
 
 		}

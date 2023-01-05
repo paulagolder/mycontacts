@@ -135,7 +135,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			{
 				newtag.replace("#", "");
 				newtag.replace(";", "");
-				newtag = "#" + newtag + ";";
+				newtag = newtag + ";";
 				if (newtag.length() > 4)
 				{
 
@@ -169,7 +169,7 @@ public class manageTagsPanel extends jswVerticalPanel implements ActionListener
 			{
 				newtag.replace("#", "");
 				newtag.replace(";", "");
-				newtag = "#" + newtag + ";";
+				newtag =  newtag + ";";
 				if (newtag.length() > 4)
 				{
 

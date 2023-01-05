@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -29,7 +30,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 	private static final long serialVersionUID = 1L;
 	JFileChooser fc;
 	jswHorizontalPanel importbar;
-	jswButton importbutton;
+	jswButton exportbutton;
 	private jswVerticalPanel exportlog;
 	File exportfile;
 	String exporttype;
@@ -52,6 +53,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 
 	private jswButton testbutton;
 	private jswLabel browselabel;
+	private jswButton savebutton;
 
 	public exportPanel()
 	{
@@ -82,7 +84,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		varry.add("Ical");
 		varry.add("XML");
 		exporttypebox.addList(varry);
-		filebar.add(" LEFT WIDTH=200 ", exporttypebox);
+		filebar.add(" LEFT WIDTH=50 ", exporttypebox);
 		checkbox = new jswCheckbox[20];
 		for (int i = 0; i < 20; i++)
 		{
@@ -93,14 +95,13 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		{
 			option[i] = new jswCheckbox("*");
 		}
-		jswButton savebutton = new jswButton(this, "Save");
+		savebutton = new jswButton(this, "Save");
 		filebar.add(" RIGHT ", savebutton);
 		this.add(filebar);
 		importbar = new jswHorizontalPanel();
-		importbutton = new jswButton(this, "Export File");
-		importbar.add(" MIDDLE  ", importbutton);
-		importbutton.setVisible(false);
-		importbutton.setVisible(false);
+		exportbutton = new jswButton(this, "Export File");
+		importbar.add(" MIDDLE  ", exportbutton);
+		exportbutton.setVisible(false);
 		testbutton = new jswButton(this, "Davtest");
 		importbar.add(" RIGHT  ", testbutton);
 		testbutton.setVisible(true);
@@ -143,11 +144,12 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		{
 			JFileChooser fc = new JFileChooser();
 			fc.setDialogTitle("Specify a file to save");
+			 fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			FileNameExtensionFilter filter = new FileNameExtensionFilter(
 					"Contacts", "csv", "vcf", "ldif", "kdif", "ics", "xml");
 			fc.setFileFilter(filter);
 			int returnVal = fc.showSaveDialog(this);
-
+			System.out.println(" return value =" + returnVal); 
 			if (returnVal == JFileChooser.APPROVE_OPTION)
 			{
 				File fileToSave = fc.getSelectedFile();
@@ -171,6 +173,10 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 				exporttypebox.repaint();
 				selectedfile.setText(fileToSave.getName());
 				exportfile = fileToSave;
+				System.out.println(" export =" + exportfile ); 
+				exportbutton.setVisible(true);
+				
+				
 			} else
 			{
 				System.out.println("Open command cancelled by user.");
@@ -183,7 +189,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 			System.out.println(" et=" + exporttype); 
 			
 			new File(exportfilename);
-			importbutton.setVisible(true);
+			exportbutton.setVisible(true);
 			countlabel.setVisible(false);
 			selectors.removeAll();
 			selectors.setVisible(true);

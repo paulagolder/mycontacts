@@ -146,6 +146,12 @@ public class mcAttributeValue
 				ataglist);
 		setValue(newtagvalues,"now");
 	}
+	
+	public void replaceTagValues(Set<String> ataglist)
+	{
+		String newtagvalues = mcTagListDataType.replaceTags(ataglist);
+		setValue(newtagvalues,"now");
+	}
 
 	public void setValue(String value, String updated, String country,
 			String user)
@@ -190,6 +196,21 @@ public class mcAttributeValue
 					String value = valuenode.getTextContent();
 					setValue(value,updated);
 				}			
+	}
+	
+	public void loadImageXML(Node anode,String updated)
+	{
+		Element at = (Element) anode;
+				NodeList nl = at.getElementsByTagName("value");
+				String value="";
+				for( int i=0;i<nl.getLength();i++)
+				{
+					Node valuenode = nl.item(i);
+					String val = valuenode.getTextContent();
+					value += val;					
+				}
+				setValue(value,updated);
+							
 	}
 	
 	public void loadValueXML_b(Node anode,String updated)
