@@ -310,7 +310,7 @@ public class mcAttribute extends mcDataObject
 
 	public String getFormattedValue(String fmt)
 	{
-		if (getAttributevalue() == null) return " *empty* ";
+		if (getAttributevalue() == null) return null;
 		return attributetype.getFormattedValue(getAttributevalue(), fmt);
 	}
 
@@ -406,6 +406,7 @@ public class mcAttribute extends mcDataObject
 	{
 		String val = getValue();
 		if (val == null) return true;
+		if (val.equalsIgnoreCase("null")) return true;
 		return (val.isEmpty());
 	}
 

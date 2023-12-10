@@ -147,7 +147,8 @@ public class exportBackupPanel extends jswVerticalPanel
 			FileNameExtensionFilter filter = new FileNameExtensionFilter(
 					"Backup", "xml", "XML");
 			fc.setFileFilter(filter);
-			  fc.setSelectedFile(file);
+			
+			fc.setSelectedFile(file);
 			int returnVal = fc.showSaveDialog(this);
 
 			if (returnVal == JFileChooser.APPROVE_OPTION)

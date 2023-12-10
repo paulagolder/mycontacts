@@ -531,7 +531,10 @@ public class mcContacts extends mcDataObject
 			for (Map.Entry<String, mcContact> entry : entrySet())
 			{
 				mcContact acontact = entry.getValue();
+				if(acontact.getTID() != null)
+				{
 				sortedcontacts.put(acontact.getTID().trim(), acontact);
+				}
 			}
 		}
 		return sortedcontacts;
@@ -927,6 +930,7 @@ public class mcContacts extends mcDataObject
 					mcAttribute anattribute = attributes.get(attkey);
 					if (anattribute != null
 							&& anattribute.getFormattedValue() != null
+			                && (anattribute.getFormattedValue().trim().length()>1)
 							&& !anattribute.getFormattedValue().isEmpty()
 							&& !attkey.equalsIgnoreCase("name"))
 						isok = true;

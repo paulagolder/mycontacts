@@ -96,6 +96,7 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 	{
 		int ncontacts = mcdb.selbox.countAll();
 		int nbrowsecontacts = mcdb.selbox.getBrowsecontactlist().size();
+
 		//String searchterm = mcdb.selbox.getSearchterm();
 		this.removeAll();
 		jswHorizontalPanel header = new jswHorizontalPanel();
@@ -106,7 +107,7 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 		
 		selectedcontacts = new jswLabel("Selected Contacts "
 				+ nbrowsecontacts);
-		
+		selectedcontacts.setText("Selected contacts (" + nbrowsecontacts + ")");
 		filterbar.add(" MIDDLE ", selectedcontacts);
 		add(filterbar);
 		jswHorizontalPanel filebar = new jswHorizontalPanel();
@@ -150,7 +151,7 @@ public class labelprintPanel extends jswVerticalPanel implements ActionListener
 
 	public void refresh()
 	{
-
+	mcContacts slist = mcdb.selbox.getBrowsecontactlist();
 		int nbrowsecontacts = mcdb.selbox.getBrowsecontactlist().size();
 		//String searchterm = mcdb.selbox.getSearchterm();
 		selectedcontacts.setText("Selected contacts (" + nbrowsecontacts + ")");

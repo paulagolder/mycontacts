@@ -1026,7 +1026,7 @@ public class mcContact extends mcDataObject implements Comparable<mcContact>
 		for (String attkey : attkeys)
 		{
 			mcAttribute anattribute = attributes.get(attkey);
-			if (anattribute != null)
+			if (anattribute != null && ! anattribute.isEmpty() )
 			{
 				String xmlatt = anattribute.toXML();
 				xmlout += xmlatt;

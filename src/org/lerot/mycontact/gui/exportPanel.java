@@ -21,6 +21,7 @@ import org.lerot.mywidgets.jswOptionset;
 import org.lerot.mywidgets.jswTextField;
 import org.lerot.mywidgets.jswVerticalPanel;
 import org.lerot.mycontact.mcContacts;
+import org.lerot.mycontact.mcDateDataType;
 import org.lerot.mycontact.mcMappings;
 import org.lerot.mycontact.mcdb;
 
@@ -39,7 +40,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 	jswButton selbutton;
 	jswTextField selectedfile;
 
-	String extension = "csv";
+	String extension = "xml";
 	private String exportfilename;
 	private jswVerticalPanel selectors;
 	private jswVerticalPanel options;
@@ -71,11 +72,16 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		selbutton = new jswButton(this, "Select");
 		filebar.add(" LEFT ", selbutton);
 		selectedfile = new jswTextField();
-		selectedfile.setText("Select Export File >");
+
+		
+		String date = mcDateDataType.getNow("_yyyyMMdd");
+		String  filename = "Export_contacts_" + date;
+		selectedfile.setText(filename);
 		selectedfile.setEnabled(true);
 		filebar.add(" LEFT WIDTH=200 ", selectedfile);
 		exporttypebox = new jswDropDownBox(this,"type");
 		Vector<String> varry = new Vector<String>();
+		varry.add("xml");
 		varry.add("CSV");
 		varry.add("gOutlookExport");
 		varry.add("gGoogleExport");
@@ -142,12 +148,17 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		String command = e.getActionCommand();
 		if (command == "Select")
 		{
+			exporttype = exporttypebox.getSelectedValue();		
 			JFileChooser fc = new JFileChooser();
-			fc.setDialogTitle("Specify a file to save");
-			 fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+			fc.setDialogTitle("Specify a file to save");		
+		    fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 			FileNameExtensionFilter filter = new FileNameExtensionFilter(
 					"Contacts", "csv", "vcf", "ldif", "kdif", "ics", "xml");
 			fc.setFileFilter(filter);
+			String bufilename = selectedfile.getText()+"."+exporttype;
+			File file = new File(bufilename);	
+			fc.setSelectedFile(file);
+			fc.setCurrentDirectory(new File(mcdb.topgui.dotcontacts));
 			int returnVal = fc.showSaveDialog(this);
 			System.out.println(" return value =" + returnVal); 
 			if (returnVal == JFileChooser.APPROVE_OPTION)
@@ -174,9 +185,7 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 				selectedfile.setText(fileToSave.getName());
 				exportfile = fileToSave;
 				System.out.println(" export =" + exportfile ); 
-				exportbutton.setVisible(true);
-				
-				
+				exportbutton.setVisible(true);			
 			} else
 			{
 				System.out.println("Open command cancelled by user.");
@@ -184,11 +193,9 @@ public class exportPanel extends jswVerticalPanel implements ActionListener
 		} else if (command == "Save")
 		{
 			exportfilename = exportfile.getPath();
-			exporttype = exporttypebox.getSelectedValue();
-			
-			System.out.println(" et=" + exporttype); 
-			
-			new File(exportfilename);
+			exporttype = exporttypebox.getSelectedValue();		
+			System.out.println(" et=" + exporttype); 	
+			new File(exportfilename +"."+ exporttype);
 			exportbutton.setVisible(true);
 			countlabel.setVisible(false);
 			selectors.removeAll();

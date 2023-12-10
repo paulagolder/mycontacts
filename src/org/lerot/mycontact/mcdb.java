@@ -197,7 +197,7 @@ public class mcdb extends JFrame implements ActionListener
 		propsfile = dotcontacts + "properties.xml";
 		props = readProperties(propsfile);
 		dbsource = props.getProperty("database", "mcdb.sqlite");
-		budir = props.getProperty("backupdirectory", dotcontacts + "/backup");
+		budir = props.getProperty("backxupdirectory", dotcontacts + "backups");
 		docs = props.getProperty("docs", "Documents/correspondance/");
 		currentcon = new mcDataSource(dotcontacts + dbsource);
 
